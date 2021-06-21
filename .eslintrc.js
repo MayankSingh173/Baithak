@@ -4,6 +4,7 @@ module.exports = {
     'prettier/prettier': ['error', {endOfLine: 'auto'}],
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': ['warn'],
+    'no-inline-styles': false,
   },
   extends: [
     '@react-native-community',

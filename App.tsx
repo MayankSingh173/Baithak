@@ -1,29 +1,52 @@
 import React, {FC} from 'react';
-import {View, Appearance} from 'react-native';
+import {Appearance} from 'react-native';
 import * as eva from '@eva-design/eva';
-import {ApplicationProvider, Text, IconRegistry} from '@ui-kitten/components';
+import {
+  ApplicationProvider,
+  Text,
+  IconRegistry,
+  Layout,
+} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import {default as appTheme} from './src/themes/custom-theme.json';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {store} from './src/store/store';
+import {Provider} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from './src/store/rootReducer';
+import {updateTheme} from './src/store/theme/actionCreator/updateTheme';
 
-const theme = {
-  ...(Appearance.getColorScheme() === 'dark' ? eva.dark : eva.light),
-  ...appTheme,
-};
+const App = () => {
+  const storeDispatch = useDispatch();
+  const theme = useSelector(
+    (reduxState: RootState) => reduxState.ThemeReducer.theme,
+  );
 
-const App: FC = () => {
   return (
     <React.Fragment>
-      <SafeAreaProvider>
-        <ApplicationProvider {...eva} theme={theme}>
-          <IconRegistry icons={EvaIconsPack} />
-          <View>
-            <Text>Hello World!!</Text>
-          </View>
-        </ApplicationProvider>
-      </SafeAreaProvider>
+      <IconRegistry icons={EvaIconsPack} />
+      <ApplicationProvider {...eva} theme={{...eva[theme], ...appTheme}}>
+        <Layout
+          style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
+          level="1">
+          <Text
+            onPress={() =>
+              storeDispatch(updateTheme(theme === 'light' ? 'dark' : 'light'))
+            }>
+            Welcome to UI Kitten
+          </Text>
+        </Layout>
+      </ApplicationProvider>
     </React.Fragment>
   );
 };
 
-export default App;
+export default () => {
+  return (
+    <SafeAreaProvider>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </SafeAreaProvider>
+  );
+};
