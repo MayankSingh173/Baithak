@@ -1,5 +1,6 @@
 import React, {FC} from 'react';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
+import MainStackNavigator from './MainStackNavigator/MainStackNavigator';
 
 const navigatorTheme = {
   ...DefaultTheme,

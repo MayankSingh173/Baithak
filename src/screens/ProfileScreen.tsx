@@ -1,13 +1,15 @@
 import React from 'react';
 import {View} from 'react-native';
-import {Text} from '@ui-kitten/components';
+import {Text, Layout} from '@ui-kitten/components';
 
-const HomeScreen = () => {
+const ProfileScreen = () => {
   return (
-    <View>
+    <Layout
+      style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
+      level="1">
       <Text>Profile Screen</Text>
-    </View>
+    </Layout>
   );
 };
 
-export default HomeScreen;
+export default ProfileScreen;

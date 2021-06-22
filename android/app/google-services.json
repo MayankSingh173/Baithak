@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "674208648605",
+    "project_id": "baithak-4a1fe",
+    "storage_bucket": "baithak-4a1fe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:674208648605:android:382905f6c2a962cf0cb374",
+        "android_client_info": {
+          "package_name": "com.baithak"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "674208648605-ulil75i3oidb59cemelerrqvffd6m5mp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8an4659NwlQhENYsrQmkpUDKkt3OaqNE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "674208648605-ulil75i3oidb59cemelerrqvffd6m5mp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

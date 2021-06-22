@@ -12,12 +12,11 @@ import {default as appTheme} from './src/themes/custom-theme.json';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {store} from './src/store/store';
 import {Provider} from 'react-redux';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {RootState} from './src/store/rootReducer';
-import {updateTheme} from './src/store/theme/actionCreator/updateTheme';
+import MainNavigator from './src/navigation/MainNavigator';
 
 const App = () => {
-  const storeDispatch = useDispatch();
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
@@ -26,16 +25,7 @@ const App = () => {
     <React.Fragment>
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider {...eva} theme={{...eva[theme], ...appTheme}}>
-        <Layout
-          style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
-          level="1">
-          <Text
-            onPress={() =>
-              storeDispatch(updateTheme(theme === 'light' ? 'dark' : 'light'))
-            }>
-            Welcome to UI Kitten
-          </Text>
-        </Layout>
+        <MainNavigator />
       </ApplicationProvider>
     </React.Fragment>
   );
