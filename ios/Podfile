@@ -18,6 +18,7 @@ target 'Baithak' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+
   target 'BaithakTests' do
     inherit! :complete
     # Pods for testing

@@ -2,8 +2,7 @@ module.exports = {
   root: true,
   rules: {
     'prettier/prettier': ['error', {endOfLine: 'auto'}],
-    'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': ['warn'],
+    '@typescript-eslint/no-unused-vars': ['warn', { 'argsIgnorePattern': '^_' }],
     'no-inline-styles': false,
   },
   extends: [

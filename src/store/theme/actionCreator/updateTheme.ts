@@ -1,11 +1,12 @@
+import {ColorSchemeName} from 'react-native';
 import {UPDATE_THEME} from '../actions/Theme';
 
 export interface updateThemeAction {
   type: typeof UPDATE_THEME;
-  theme: 'light' | 'dark';
+  theme: ColorSchemeName;
 }
 
-export const updateTheme = (theme: 'light' | 'dark'): updateThemeAction => {
+export const updateTheme = (theme: ColorSchemeName): updateThemeAction => {
   return {
     type: UPDATE_THEME,
     theme: theme,

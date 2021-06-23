@@ -24,7 +24,9 @@ const App = () => {
   return (
     <React.Fragment>
       <IconRegistry icons={EvaIconsPack} />
-      <ApplicationProvider {...eva} theme={{...eva[theme], ...appTheme}}>
+      <ApplicationProvider
+        {...eva}
+        theme={{...(theme && eva[theme]), ...appTheme}}>
         <MainNavigator />
       </ApplicationProvider>
     </React.Fragment>

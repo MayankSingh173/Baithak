@@ -4,6 +4,7 @@ import {
   BottomNavigation,
   BottomNavigationTab,
   Icon,
+  Layout,
 } from '@ui-kitten/components';
 import HomeScreen from '../../screens/HomeScreen';
 import NotificationScreen from '../../screens/NotificationScreen';

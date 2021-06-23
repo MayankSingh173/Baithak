@@ -1,13 +1,13 @@
 import {updateThemeAction} from '../actionCreator/updateTheme';
-import {Appearance} from 'react-native';
+import {Appearance, ColorSchemeName} from 'react-native';
 import {UPDATE_THEME} from '../actions/Theme';
 
 interface themes {
-  theme: 'light' | 'dark';
+  theme: ColorSchemeName;
 }
 
 const initialState: themes = {
-  theme: 'dark',
+  theme: Appearance.getColorScheme(),
 };
 
 const ThemeReducer = (
