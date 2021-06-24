@@ -19,6 +19,8 @@ target 'Baithak' do
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
 
+  pod 'RNGoogleSignin', :path => '../node_modules/@react-native-google-signin/google-signin'
+
   target 'BaithakTests' do
     inherit! :complete
     # Pods for testing

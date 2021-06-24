@@ -1,8 +1,11 @@
 import {combineReducers} from 'redux';
-import ThemeReducer from './theme/reducer/ThemeReducer';
+import ThemeReducer from './theme/reducer/themeReducer';
+import UserReducer from './User/reducer/userReducer';
 
+//To combine all reducers
 const rootReducer = combineReducers({
   ThemeReducer: ThemeReducer,
+  UserReducer: UserReducer,
 });
 
 export default rootReducer;

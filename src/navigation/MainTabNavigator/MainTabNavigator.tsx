@@ -39,7 +39,7 @@ const MainTabNavigator = () => (
   <Navigator
     tabBar={(props: any) => <BottomTabBar {...props} />}
     initialRouteName="Home">
-    <Screen name="Home" component={HomeScreen} />
+    <Screen name="Home" component={ProfileScreen} />
     <Screen name="Profile" component={ProfileScreen} />
     <Screen name="Activity" component={NotificationScreen} />
   </Navigator>

@@ -1,5 +1,5 @@
 import {ColorSchemeName} from 'react-native';
-import {UPDATE_THEME} from '../actions/Theme';
+import {UPDATE_THEME} from '../actions/action';
 
 export interface updateThemeAction {
   type: typeof UPDATE_THEME;

@@ -1,5 +1,4 @@
-import React, {FC} from 'react';
-import {Appearance} from 'react-native';
+import React from 'react';
 import * as eva from '@eva-design/eva';
 import {
   ApplicationProvider,
