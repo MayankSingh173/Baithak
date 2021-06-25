@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import MainStackNavigator from './MainStackNavigator/MainStackNavigator';
 import useAuth from '../hooks/User/useAuth';
 import {FAIL, SUCCESS} from '../constants/RemoteStates/remotestates';
 import AuthStackNavigator from './AuthStackNavigator/AuthStackNavigator';
 import PendingStackNavigator from './PendingStackNavigator/PendingStackNavigator';
+import SplashScreen from 'react-native-splash-screen';
 
 const navigatorTheme = {
   ...DefaultTheme,
@@ -19,6 +20,14 @@ const MainNavigator = () => {
   //check the status and get firebaseUser
   const {status, firebaseUser} = useAuth();
   console.log(status);
+
+  //close splash screeen
+  useEffect(() => {
+    if (status === SUCCESS || status === FAIL) {
+      SplashScreen.hide();
+    }
+  }, [status]);
+
   return (
     <NavigationContainer theme={navigatorTheme}>
       {status === SUCCESS && firebaseUser.uid ? (
