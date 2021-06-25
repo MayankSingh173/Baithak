@@ -20,8 +20,10 @@ const LogoButton = (props: any) => {
         <View style={styles.left}>
           <Image
             style={{
-              width: props.buttonType == 'facebook' ? 35 : 25,
-              height: props.buttonType == 'facebook' ? 35 : 25,
+              width: props.buttonType == 'facebook' ? 30 : 25,
+              height: props.buttonType == 'facebook' ? 30 : 25,
+              marginLeft: props.buttonType == 'facebook' ? 15 : 0,
+              marginVertical: props.buttonType == 'facebook' ? -8 : 0,
             }}
             source={props.src}
           />

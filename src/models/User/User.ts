@@ -5,7 +5,7 @@ export interface UserInterface {
   phone?: string;
   gender?: string;
   os?: 'android' | 'ios' | 'macos' | 'windows' | 'web';
-  imageURI?: string;
+  photoURL?: string;
 }
 
 export const defaultUser: UserInterface = {

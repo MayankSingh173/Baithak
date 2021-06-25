@@ -5,11 +5,13 @@ import {createNewUserObj} from './createNewUserObj';
 export const addNewUserObj = async (
   uid: string,
   os: 'android' | 'ios' | 'windows' | 'macos' | 'web',
+  name?: string,
   phone?: string,
   email?: string,
+  photoURL?: string,
   mergeCondition?: boolean,
 ) => {
-  const newUser = createNewUserObj(uid, os, phone, email);
+  const newUser = createNewUserObj(uid, os, name, phone, email, photoURL);
   await writeUserObj(newUser, mergeCondition ? true : false);
 };
 

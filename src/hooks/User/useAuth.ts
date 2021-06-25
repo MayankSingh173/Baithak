@@ -48,8 +48,10 @@ const useAuth = () => {
             await addNewUserObj(
               user.uid,
               Platform.OS,
+              user.displayName ? user.displayName : undefined,
               user.phoneNumber ? user.phoneNumber : undefined,
               user.email ? user.email : undefined,
+              user.photoURL ? user.photoURL : undefined,
               false,
             );
           } else {
@@ -57,8 +59,10 @@ const useAuth = () => {
             await updateUserObjOnAuth(
               user.uid,
               Platform.OS,
+              user.displayName ? user.displayName : undefined,
               user.phoneNumber ? user.phoneNumber : undefined,
               user.email ? user.email : undefined,
+              user.photoURL ? user.photoURL : '',
             );
           }
 
