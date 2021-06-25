@@ -31,6 +31,7 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import LogoButton from '../../../components/Buttons/LogoButton/LogoButton';
 import Divider from '../../../components/Divider/Divider';
 import {getErrorMessage} from '../../../utils/Errors/Auth/googleSignIn';
+import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
 
 interface props {
   navigation: any;
@@ -83,6 +84,35 @@ const SignIn = (props: props) => {
       const {idToken} = await GoogleSignin.signIn();
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
       await auth().signInWithCredential(googleCredential);
+    } catch (error) {
+      generalError(() => toggleModal(false), {
+        title: 'Authentication failed',
+        textMessage: getErrorMessage(error),
+        okText: OK_TEXT,
+      });
+    }
+  };
+
+  const onFacebookAuth = async () => {
+    toggleModal(true);
+    try {
+      //facebook login
+      const result = await LoginManager.logInWithPermissions([
+        'public_profile',
+        'email',
+      ]);
+
+      // Once signed in, get the users AccesToken
+      const data = await AccessToken.getCurrentAccessToken();
+
+      // Create a Firebase credential with the AccessToken
+      if (data) {
+        const facebookCredential = auth.FacebookAuthProvider.credential(
+          data.accessToken,
+        );
+        // Sign-in the user with the credential
+        await auth().signInWithCredential(facebookCredential);
+      }
     } catch (error) {
       generalError(() => toggleModal(false), {
         title: 'Authentication failed',
@@ -178,6 +208,14 @@ const SignIn = (props: props) => {
                 buttonType="google"
                 title="Sign in with Google"
                 style={styles.buttonHolder}
+                src={require('../../../assets/Logos/googleButton.png')}
+              />
+              <LogoButton
+                onPress={onFacebookAuth}
+                buttonType="facebook"
+                title="Sign in with Facebook"
+                style={styles.buttonHolder}
+                src={require('../../../assets/Logos/facebookButton.png')}
               />
             </View>
           )}

@@ -18,12 +18,13 @@ const LogoButton = (props: any) => {
         ]}
         onPress={props.onPress}>
         <View style={styles.left}>
-          {props.buttonType === 'google' ? (
-            <Image
-              style={styles.icon}
-              source={require('../../../assets/Logos/googleButton.png')}
-            />
-          ) : null}
+          <Image
+            style={{
+              width: props.buttonType == 'facebook' ? 35 : 25,
+              height: props.buttonType == 'facebook' ? 35 : 25,
+            }}
+            source={props.src}
+          />
         </View>
         <View style={styles.center}>
           <Text style={styles.text} category="s1">
