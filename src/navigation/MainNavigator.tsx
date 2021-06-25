@@ -3,7 +3,7 @@ import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import MainStackNavigator from './MainStackNavigator/MainStackNavigator';
 import useAuth from '../hooks/User/useAuth';
 import {FAIL, SUCCESS} from '../constants/RemoteStates/remotestates';
-import AuthStackNavigator from './AuthStackNavigator/AuthStackNavigator/AuthStackNavigator';
+import AuthStackNavigator from './AuthStackNavigator/AuthStackNavigator';
 import PendingStackNavigator from './PendingStackNavigator/PendingStackNavigator';
 
 const navigatorTheme = {
@@ -23,7 +23,7 @@ const MainNavigator = () => {
     <NavigationContainer theme={navigatorTheme}>
       {status === SUCCESS && firebaseUser.uid ? (
         <MainStackNavigator /> //Main App
-      ) : status === FAIL || (status === SUCCESS && !firebaseUser.uid) ? (
+      ) : status === FAIL || (status === SUCCESS && firebaseUser.uid !== '') ? (
         <AuthStackNavigator /> //Auth Stack
       ) : (
         <PendingStackNavigator /> //Edge case

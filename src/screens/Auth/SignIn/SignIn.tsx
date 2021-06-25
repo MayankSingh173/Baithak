@@ -24,7 +24,7 @@ import {signInSchema} from '../../../utils/validators/auth';
 import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
 import {EmailIcon, PasswordIcon} from '../../../components/Icons/Icons';
 import {
-  FORGOT_PASSWORD,
+  FORGOT_PASSWORD_SCREEN,
   SIGN_UP_SCREEN,
 } from '../../../constants/Navigation/Navigation';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
@@ -113,6 +113,7 @@ const SignIn = (props: props) => {
         // Sign-in the user with the credential
         await auth().signInWithCredential(facebookCredential);
       }
+      toggleModal(false);
     } catch (error) {
       generalError(() => toggleModal(false), {
         title: 'Authentication failed',
@@ -192,7 +193,9 @@ const SignIn = (props: props) => {
                   styles.createAccount,
                   {marginTop: 20, alignSelf: 'center'},
                 ]}
-                onPress={() => props.navigation.navigate(FORGOT_PASSWORD)}>
+                onPress={() =>
+                  props.navigation.navigate(FORGOT_PASSWORD_SCREEN)
+                }>
                 Forgot Password ? /
                 <Text style={{fontFamily: RALEWAY_MEDIUM}}> Reset</Text>
               </Text>

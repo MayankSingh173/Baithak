@@ -23,7 +23,7 @@ const LogoButton = (props: any) => {
               width: props.buttonType == 'facebook' ? 30 : 25,
               height: props.buttonType == 'facebook' ? 30 : 25,
               marginLeft: props.buttonType == 'facebook' ? 15 : 0,
-              marginVertical: props.buttonType == 'facebook' ? -8 : 0,
+              marginVertical: props.buttonType == 'facebook' ? -3 : 0,
             }}
             source={props.src}
           />

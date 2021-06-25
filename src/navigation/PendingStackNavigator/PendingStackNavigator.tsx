@@ -1,6 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import ProfileScreen from '../../screens/ProfileScreen';
+import PendingScreen from '../../screens/Auth/PendingScreen/PendingScreen';
+import {PENDING_STACK_SCREEN} from '../../constants/Navigation/Navigation';
 
 const Stack = createStackNavigator();
 
@@ -8,8 +9,8 @@ const PendingStackNavigator = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="MainTab"
-        component={ProfileScreen}
+        name={PENDING_STACK_SCREEN}
+        component={PendingScreen}
         options={{
           headerShown: false,
         }}
