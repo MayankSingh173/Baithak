@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux';
-import ThemeReducer from './theme/reducer/themeReducer';
+import ThemeReducer from './theme/reducer/ThemeReducer';
 import UserReducer from './User/reducer/userReducer';
 
 //To combine all reducers
