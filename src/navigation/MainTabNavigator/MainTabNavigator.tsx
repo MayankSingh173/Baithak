@@ -3,34 +3,66 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   BottomNavigation,
   BottomNavigationTab,
-  Icon,
-  Layout,
+  useTheme,
 } from '@ui-kitten/components';
-import HomeScreen from '../../screens/HomeScreen';
-import NotificationScreen from '../../screens/NotificationScreen';
-import ProfileScreen from '../../screens/ProfileScreen';
+import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store/rootReducer';
+import MeetScreen from '../../screens/Meeting/MeetScreen/MeetScreen';
+import {
+  BellIcon,
+  BellIconFill,
+  ChatIcon,
+  ChatIconFill,
+  MeetIcon,
+  MeetIconFill,
+  ProfileIcon,
+  ProfileIconFill,
+} from '../../components/Icons/Icons';
+import ChatHome from '../../screens/Chats/ChatHome/ChatHome';
+import ActivityScreen from '../../screens/ActivityScreen/ActivityScreen';
 
 interface props {
   navigation: any;
   state: any;
 }
 
-const PersonIcon = (props: any) => <Icon {...props} name="person-outline" />;
-
-const BellIcon = (props: any) => <Icon {...props} name="bell-outline" />;
-
-const EmailIcon = (props: any) => <Icon {...props} name="email-outline" />;
-
 const {Navigator, Screen} = createBottomTabNavigator();
 
 const BottomTabBar: FC<props> = ({navigation, state}) => {
+  const appTheme = useSelector(
+    (reduxState: RootState) => reduxState.ThemeReducer.theme,
+  );
+  const theme = useTheme();
   return (
     <BottomNavigation
       selectedIndex={state.index}
-      onSelect={(index) => navigation.navigate(state.routeNames[index])}>
-      <BottomNavigationTab icon={EmailIcon} title="Home" />
-      <BottomNavigationTab icon={PersonIcon} title="Profile" />
-      <BottomNavigationTab icon={BellIcon} title="Activity" />
+      onSelect={(index) => navigation.navigate(state.routeNames[index])}
+      style={{
+        backgroundColor:
+          appTheme === 'dark'
+            ? theme['color-basic-1000']
+            : theme['color-basic-100'],
+        borderTopColor: 'black',
+        borderTopWidth: 0.25,
+        paddingTop: 10,
+      }}>
+      <BottomNavigationTab
+        icon={state.index === 0 ? MeetIconFill : MeetIcon}
+        title="Meet"
+      />
+      <BottomNavigationTab
+        icon={state.index === 1 ? ChatIconFill : ChatIcon}
+        title="Chat"
+      />
+      <BottomNavigationTab
+        icon={state.index === 2 ? BellIconFill : BellIcon}
+        title="Activity"
+      />
+      <BottomNavigationTab
+        icon={state.index === 3 ? ProfileIconFill : ProfileIcon}
+        title="Profile"
+      />
     </BottomNavigation>
   );
 };
@@ -39,9 +71,10 @@ const MainTabNavigator = () => (
   <Navigator
     tabBar={(props: any) => <BottomTabBar {...props} />}
     initialRouteName="Home">
-    <Screen name="Home" component={ProfileScreen} />
+    <Screen name="Meet" component={MeetScreen} />
+    <Screen name="Chat" component={ChatHome} />
+    <Screen name="Activity" component={ActivityScreen} />
     <Screen name="Profile" component={ProfileScreen} />
-    <Screen name="Activity" component={NotificationScreen} />
   </Navigator>
 );
 

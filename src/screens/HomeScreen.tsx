@@ -2,7 +2,7 @@ import React, {useState, useRef, useEffect} from 'react';
 import {Layout} from '@ui-kitten/components';
 import Button from './Button';
 import GettingCall from './GettingCall';
-import MeetScreen from './MeetScreen';
+import MeetScreenTemp from './MeetScreenTemp';
 import {
   MediaStream,
   RTCPeerConnection,
@@ -256,7 +256,7 @@ const HomeScreen = () => {
   //if stream is there display video
   if (localStream) {
     return (
-      <MeetScreen
+      <MeetScreenTemp
         remoteStream={remoteStream}
         localStream={localStream}
         hangUp={hangUp}

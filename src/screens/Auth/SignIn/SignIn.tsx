@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, TouchableOpacity} from 'react-native';
 import {
   StyleService,
@@ -17,9 +17,6 @@ import {
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
 import {Formik} from 'formik';
-import {generalError} from '../../../components/Alerts/GeneralError';
-import {OK_TEXT, TITLE} from '../../../constants/Alerts/GeneralError';
-import auth from '@react-native-firebase/auth';
 import {signInSchema} from '../../../utils/validators/auth';
 import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
 import {EmailIcon, PasswordIcon} from '../../../components/Icons/Icons';
@@ -27,101 +24,29 @@ import {
   FORGOT_PASSWORD_SCREEN,
   SIGN_UP_SCREEN,
 } from '../../../constants/Navigation/Navigation';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import LogoButton from '../../../components/Buttons/LogoButton/LogoButton';
 import Divider from '../../../components/Divider/Divider';
-import {getErrorMessage} from '../../../utils/Errors/Auth/googleSignIn';
-import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
+import useOnLogin from '../../../hooks/auth/useOnLogin';
 
 interface props {
   navigation: any;
 }
 
-//Configure google signIn
-
-GoogleSignin.configure({
-  webClientId:
-    '674208648605-ulil75i3oidb59cemelerrqvffd6m5mp.apps.googleusercontent.com',
-});
-
-const initialFormState = {
-  email: '',
-  password: '',
-};
-
 const SignIn = (props: props) => {
-  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
-  const [isLoading, toggleModal] = useState<boolean>(false);
+  const {
+    passwordVisible,
+    isLoading,
+    initialFormState,
+    onPasswordIconPress,
+    onFacebookAuth,
+    onSignInButtonPress,
+    onGoogleAuth,
+  } = useOnLogin();
 
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
   const styles = useStyleSheet(themedStyles);
-
-  const onPasswordIconPress = () => {
-    setPasswordVisible(!passwordVisible);
-  };
-
-  const onSignInButtonPress = (props: any) => {
-    console.log('signUp');
-    toggleModal(true);
-    auth()
-      .signInWithEmailAndPassword(props.email, props.password)
-      .then((response: any) => {})
-      .catch((error) => {
-        generalError(() => toggleModal(false), {
-          title: TITLE,
-          textMessage: error.message,
-          okText: OK_TEXT,
-        });
-      });
-  };
-
-  const onGoogleAuth = async () => {
-    toggleModal(true);
-    try {
-      // google sign in
-      const {idToken} = await GoogleSignin.signIn();
-      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-      await auth().signInWithCredential(googleCredential);
-    } catch (error) {
-      generalError(() => toggleModal(false), {
-        title: 'Authentication failed',
-        textMessage: getErrorMessage(error),
-        okText: OK_TEXT,
-      });
-    }
-  };
-
-  const onFacebookAuth = async () => {
-    toggleModal(true);
-    try {
-      //facebook login
-      const result = await LoginManager.logInWithPermissions([
-        'public_profile',
-        'email',
-      ]);
-
-      // Once signed in, get the users AccesToken
-      const data = await AccessToken.getCurrentAccessToken();
-
-      // Create a Firebase credential with the AccessToken
-      if (data) {
-        const facebookCredential = auth.FacebookAuthProvider.credential(
-          data.accessToken,
-        );
-        // Sign-in the user with the credential
-        await auth().signInWithCredential(facebookCredential);
-      }
-      toggleModal(false);
-    } catch (error) {
-      generalError(() => toggleModal(false), {
-        title: 'Authentication failed',
-        textMessage: getErrorMessage(error),
-        okText: OK_TEXT,
-      });
-    }
-  };
 
   const EyeIcon = (props: any) => (
     <TouchableOpacity onPress={onPasswordIconPress}>

@@ -35,7 +35,6 @@ const useAuth = () => {
     // get auth state
     const unsubscribe = auth().onAuthStateChanged(async (user) => {
       try {
-        console.log('useAuth', user);
         if (user) {
           if (
             //If new user
@@ -66,12 +65,13 @@ const useAuth = () => {
             );
           }
 
-          // storeDispatch(updateFirebaseUserStatus(FAIL));
+          //update the firebase user with success status 'SUCCESS' in redux
           storeDispatch(updateFirebaseUserStatus(SUCCESS));
 
           // set remote user ref
           setFirebaseUserRef(firestore().collection('users').doc(user.uid));
         } else {
+          //update the firebase user with success status 'FAIL' in redux
           storeDispatch(updateFirebaseUserStatus(FAIL));
 
           // remove listener
@@ -89,6 +89,7 @@ const useAuth = () => {
     };
   }, [storeDispatch]);
 
+  //This is callback for update firebase user
   const userFetchCallback = useCallback(
     (fetchedUser: UserInterface) => {
       if (fetchedUser) {

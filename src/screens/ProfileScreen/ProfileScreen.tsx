@@ -1,5 +1,4 @@
 import React from 'react';
-import {View} from 'react-native';
 import {Text, Layout} from '@ui-kitten/components';
 
 const ProfileScreen = () => {

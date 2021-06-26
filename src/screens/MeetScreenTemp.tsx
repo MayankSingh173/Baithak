@@ -18,7 +18,7 @@ const ButtonContainer = (props: props) => {
   );
 };
 
-const MeetScreen = (props: props) => {
+const MeetScreenTemp = (props: props) => {
   //On call we will display the local stream
   if (props.localStream && !props.remoteStream) {
     return (
@@ -92,4 +92,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MeetScreen;
+export default MeetScreenTemp;
