@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import MainStackNavigator from './MainStackNavigator/MainStackNavigator';
-import useAuth from '../hooks/User/useAuth';
+import useAuth from '../hooks/auth/useAuth';
 import {FAIL, SUCCESS} from '../constants/RemoteStates/remotestates';
 import AuthStackNavigator from './AuthStackNavigator/AuthStackNavigator';
 import PendingStackNavigator from './PendingStackNavigator/PendingStackNavigator';

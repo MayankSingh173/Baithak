@@ -42,8 +42,10 @@ const BottomTabBar: FC<props> = ({navigation, state}) => {
         backgroundColor:
           appTheme === 'dark'
             ? theme['color-basic-1000']
-            : theme['color-basic-200'],
+            : theme['color-basic-100'],
         borderTopColor: 'black',
+        borderTopWidth: 0.25,
+        paddingTop: 10,
       }}>
       <BottomNavigationTab
         icon={state.index === 0 ? MeetIconFill : MeetIcon}

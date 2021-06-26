@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, TouchableOpacity} from 'react-native';
 import {
   StyleService,
@@ -17,50 +17,30 @@ import {
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
 import {Formik} from 'formik';
-import {generalError} from '../../../components/Alerts/GeneralError';
-import {OK_TEXT, TITLE} from '../../../constants/Alerts/GeneralError';
-import auth from '@react-native-firebase/auth';
 import {signUpSchema} from '../../../utils/validators/auth';
 import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
 import {EmailIcon, PasswordIcon} from '../../../components/Icons/Icons';
 import {SIGN_IN_SCREEN} from '../../../constants/Navigation/Navigation';
+import useOnSignUp from '../../../hooks/auth/useOnSignUp';
 
 interface props {
   navigation: any;
 }
 
-const initialFormState = {
-  email: '',
-  password: '',
-  passwordRepeat: '',
-};
-
 const SignUp = (props: props) => {
-  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
-  const [isLoading, toggleModal] = useState<boolean>(false);
+  //Custom hook for signup logic
+  const {
+    isLoading,
+    passwordVisible,
+    initialFormState,
+    onPasswordIconPress,
+    onSignUp,
+  } = useOnSignUp();
 
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
   const styles = useStyleSheet(themedStyles);
-
-  const onPasswordIconPress = () => {
-    setPasswordVisible(!passwordVisible);
-  };
-
-  const onSignUp = async (props: any) => {
-    console.log('Signup');
-    toggleModal(true);
-    try {
-      await auth().createUserWithEmailAndPassword(props.email, props.password);
-    } catch (error) {
-      generalError(() => toggleModal(false), {
-        title: TITLE,
-        textMessage: error.message,
-        okText: OK_TEXT,
-      });
-    }
-  };
 
   const EyeIcon = (props: any) => (
     <TouchableOpacity onPress={onPasswordIconPress}>

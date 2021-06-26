@@ -1,5 +1,5 @@
-import React, {useState, FC} from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import React, {FC} from 'react';
+import {View} from 'react-native';
 import {
   StyleService,
   useStyleSheet,
@@ -16,58 +16,25 @@ import {
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
 import {Formik} from 'formik';
-import {generalError} from '../../../components/Alerts/GeneralError';
-import auth from '@react-native-firebase/auth';
 import {passwordResetSchema} from '../../../utils/validators/auth';
 import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
 import {EmailIcon} from '../../../components/Icons/Icons';
 import {SIGN_IN_SCREEN} from '../../../constants/Navigation/Navigation';
+import useForgotPassword from '../../../hooks/auth/useForgotPassword';
 
 interface props {
   navigation: any;
 }
 
-const initialFormState = {
-  email: '',
-};
-
 const ForgotPassword: FC<props> = ({navigation}) => {
-  const [isLoading, toggleModal] = useState<boolean>(false);
+  //custom hook for forgot password logic
+  const {isLoading, onPasswordReset, initialFormState} =
+    useForgotPassword(navigation);
 
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
   const styles = useStyleSheet(themedStyles);
-
-  const onPasswordReset = async (props: any) => {
-    toggleModal(true);
-    try {
-      await auth().sendPasswordResetEmail(props.email);
-      generalError(
-        () => {
-          toggleModal(false);
-          navigation.goBack();
-        },
-        {
-          title: 'Link sent',
-          textMessage:
-            'We have sent a password reset link to the email provided',
-          okText: 'Sign In',
-        },
-      );
-    } catch (error) {
-      generalError(
-        () => {
-          toggleModal(false);
-        },
-        {
-          title: 'Something went wrong',
-          textMessage: `Looks like your account is not valid anymore. Sign up again`,
-          okText: 'Ok',
-        },
-      );
-    }
-  };
 
   return (
     <Layout level={theme === 'dark' ? '4' : '1'} style={styles.main}>
