@@ -19,7 +19,6 @@ const navigatorTheme = {
 const MainNavigator = () => {
   //check the status and get firebaseUser
   const {status, firebaseUser} = useAuth();
-  console.log(status);
 
   //close splash screeen
   useEffect(() => {

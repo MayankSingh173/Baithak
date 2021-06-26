@@ -1,4 +1,5 @@
 import React from 'react';
+import {StatusBar} from 'react-native';
 import * as eva from '@eva-design/eva';
 import {
   ApplicationProvider,
@@ -22,6 +23,7 @@ const App = () => {
 
   return (
     <React.Fragment>
+      <StatusBar backgroundColor={theme === 'dark' ? '#141414' : '#FFFFFF'} />
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider
         {...eva}
