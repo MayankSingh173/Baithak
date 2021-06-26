@@ -21,6 +21,12 @@ import {
 } from '../../components/Icons/Icons';
 import ChatHome from '../../screens/Chats/ChatHome/ChatHome';
 import ActivityScreen from '../../screens/ActivityScreen/ActivityScreen';
+import {
+  ACTIVITY_HOME_SCREEN,
+  CHAT_HOME_SCREEN,
+  MEET_HOME_SCREEN,
+  PROFILE_SCREEN,
+} from '../../constants/Navigation/Navigation';
 
 interface props {
   navigation: any;
@@ -71,10 +77,10 @@ const MainTabNavigator = () => (
   <Navigator
     tabBar={(props: any) => <BottomTabBar {...props} />}
     initialRouteName="Home">
-    <Screen name="Meet" component={MeetScreen} />
-    <Screen name="Chat" component={ChatHome} />
-    <Screen name="Activity" component={ActivityScreen} />
-    <Screen name="Profile" component={ProfileScreen} />
+    <Screen name={MEET_HOME_SCREEN} component={MeetScreen} />
+    <Screen name={CHAT_HOME_SCREEN} component={ChatHome} />
+    <Screen name={ACTIVITY_HOME_SCREEN} component={ActivityScreen} />
+    <Screen name={PROFILE_SCREEN} component={ProfileScreen} />
   </Navigator>
 );
 

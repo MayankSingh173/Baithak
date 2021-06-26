@@ -52,3 +52,7 @@ export const ChatIcon = (style: any) => (
 export const ChatIconFill = (style: any) => (
   <Icon {...style} name="message-circle" />
 );
+
+export const AddIcon = (style: any) => (
+  <Icon {...style} name="plus-circle-outline" fill="black" />
+);

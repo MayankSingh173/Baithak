@@ -7,7 +7,7 @@ interface themes {
 }
 
 const initialThemeState: themes = {
-  theme: Appearance.getColorScheme(),
+  theme: 'dark',
 };
 
 const ThemeReducer = (
