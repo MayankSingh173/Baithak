@@ -4,11 +4,12 @@ import {
   BottomNavigation,
   BottomNavigationTab,
   Icon,
-  Layout,
+  useTheme,
 } from '@ui-kitten/components';
-import HomeScreen from '../../screens/HomeScreen';
 import NotificationScreen from '../../screens/NotificationScreen';
 import ProfileScreen from '../../screens/ProfileScreen';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store/rootReducer';
 
 interface props {
   navigation: any;
@@ -24,10 +25,21 @@ const EmailIcon = (props: any) => <Icon {...props} name="email-outline" />;
 const {Navigator, Screen} = createBottomTabNavigator();
 
 const BottomTabBar: FC<props> = ({navigation, state}) => {
+  const appTheme = useSelector(
+    (reduxState: RootState) => reduxState.ThemeReducer.theme,
+  );
+  const theme = useTheme();
   return (
     <BottomNavigation
       selectedIndex={state.index}
-      onSelect={(index) => navigation.navigate(state.routeNames[index])}>
+      onSelect={(index) => navigation.navigate(state.routeNames[index])}
+      style={{
+        backgroundColor:
+          appTheme === 'dark'
+            ? theme['color-basic-1000']
+            : theme['color-basic-200'],
+        borderTopColor: 'black',
+      }}>
       <BottomNavigationTab icon={EmailIcon} title="Home" />
       <BottomNavigationTab icon={PersonIcon} title="Profile" />
       <BottomNavigationTab icon={BellIcon} title="Activity" />
