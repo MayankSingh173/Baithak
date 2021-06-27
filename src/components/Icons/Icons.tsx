@@ -56,3 +56,11 @@ export const ChatIconFill = (style: any) => (
 export const AddIcon = (style: any) => (
   <Icon {...style} name="plus-circle-outline" fill="black" />
 );
+
+export const NameIcon = (style: any) => (
+  <Icon {...style} name="edit-2-outline" />
+);
+
+export const DescriptionIcon = (style: any) => (
+  <Icon {...style} name="menu-outline" />
+);

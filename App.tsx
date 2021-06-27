@@ -9,6 +9,9 @@ import {Provider} from 'react-redux';
 import {useSelector} from 'react-redux';
 import {RootState} from './src/store/rootReducer';
 import MainNavigator from './src/navigation/MainNavigator';
+import {LogBox} from 'react-native';
+
+LogBox.ignoreAllLogs();
 
 const App = () => {
   const theme = useSelector(
