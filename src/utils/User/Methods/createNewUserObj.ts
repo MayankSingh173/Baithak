@@ -1,6 +1,7 @@
 import {UserInterface} from '../../../models/User/User';
 
 export const createNewUserObj = (
+  agoraId: number,
   uid: string,
   os: 'android' | 'ios' | 'macos' | 'windows' | 'web',
   name?: string,
@@ -9,6 +10,7 @@ export const createNewUserObj = (
   photoURL?: string,
 ): UserInterface => {
   return {
+    agoraId: agoraId,
     uid: uid,
     ...(os ? {os: os} : {}),
     ...(name ? {name: name} : {}),

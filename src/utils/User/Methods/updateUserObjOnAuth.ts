@@ -1,4 +1,5 @@
 import {writeAsync} from '../../Firestore/write';
+import {randomUId} from './addNewUserObj';
 
 export const updateUserObjOnAuth = async (
   uid: string,
@@ -13,6 +14,7 @@ export const updateUserObjOnAuth = async (
     uid,
     {
       uid: uid,
+      agoraId: randomUId(),
       ...(os ? {os: os} : {}),
       ...(name ? {name: name} : {}),
       ...(phone ? {phone: phone} : {}),

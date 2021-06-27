@@ -20,13 +20,20 @@ import {DescriptionIcon, NameIcon} from '../../../components/Icons/Icons';
 import {createMeetingSchema} from '../../../utils/validators/meeting';
 import useOnCreateMeet from '../../../hooks/Meeting/useOnCreateMeet';
 import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../../store/rootReducer';
 
 const CreateMeetScreen = (props: any) => {
   const appTheme = useTheme();
   const styles = useStyleSheet(themedStyles);
 
+  const firebaseUser = useSelector(
+    (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
+  );
+
   const {initialFormState, handleSubmit, isLoading} = useOnCreateMeet(
     props.navigation,
+    firebaseUser.agoraId,
   );
 
   return (

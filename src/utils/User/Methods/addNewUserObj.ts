@@ -11,7 +11,16 @@ export const addNewUserObj = async (
   photoURL?: string,
   mergeCondition?: boolean,
 ) => {
-  const newUser = createNewUserObj(uid, os, name, phone, email, photoURL);
+  const agora_ID = randomUId();
+  const newUser = createNewUserObj(
+    agora_ID,
+    uid,
+    os,
+    name,
+    phone,
+    email,
+    photoURL,
+  );
   await writeUserObj(newUser, mergeCondition ? true : false);
 };
 
@@ -20,4 +29,10 @@ export const writeUserObj = async (
   mergeCondition: boolean,
 ) => {
   await writeAsync('users', user.uid, user, mergeCondition);
+};
+
+export const randomUId = () => {
+  var maxInt = 2147483647; // max 32-bit signed int
+  // generate random value between 1 and maxInt inclusive of both values
+  return Math.floor(Math.random() * maxInt) + 1;
 };

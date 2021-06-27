@@ -5,7 +5,7 @@ import {VIDEO_STREAM} from '../../constants/Navigation/Navigation';
 import {CreateMeetForm} from '../../models/Meeting/CreateMeeting/interface';
 import {onCreateMeet} from '../../utils/Meeting/Methods/createMeeting';
 
-const useOnCreateMeet = (navigation: any) => {
+const useOnCreateMeet = (navigation: any, agoraId: number) => {
   const initialFormState: CreateMeetForm = {
     name: '',
     description: '',
@@ -15,11 +15,16 @@ const useOnCreateMeet = (navigation: any) => {
 
   const handleSubmit = async (meetDetails: CreateMeetForm) => {
     toggleModal(true);
-    const token = await onCreateMeet(meetDetails);
-    if (token) {
+    const {token, channelName} = await onCreateMeet(meetDetails, agoraId);
+    if (token && channelName) {
       navigation.navigate(VIDEO_STREAM, {
         token: token,
-        meetDetails: meetDetails,
+        name: meetDetails.name,
+        description: meetDetails.description,
+        meetId: channelName.split('=')[1],
+        password: channelName.split('=')[2],
+        channelName: channelName,
+        agoraId: agoraId,
       });
     } else {
       generalError(() => toggleModal(false), {
