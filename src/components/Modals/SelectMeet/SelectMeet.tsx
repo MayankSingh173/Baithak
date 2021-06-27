@@ -12,7 +12,6 @@ interface props {
   onCreateMeet: () => void;
   onJoinMeet: () => void;
 }
-
 const SelectMeet = (props: props) => {
   const styles = useStyleSheet(themedStyles);
 
