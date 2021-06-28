@@ -1,112 +1,104 @@
-import {useEffect, useState} from 'react';
-import {PermissionsAndroid, Platform} from 'react-native';
+import {useEffect, useRef, useState} from 'react';
+import {Platform, PermissionsAndroid} from 'react-native';
 import RtcEngine from 'react-native-agora';
+import {VideoStreamParams} from '../../models/Meeting/CreateMeeting/interface';
+import {requestCameraAndAudioPermission} from '../../utils/Permissions/Permission';
 
 interface props {
   appId: string;
-  channelName: string;
-  token: string;
-  meetId: string;
-  password: string;
-  description?: string;
-  agoraId: number;
+  meetConfig: VideoStreamParams;
 }
 
-interface State {
-  appId: string;
-  channelName: string;
-  token: string;
-  joinSucceed: boolean;
-  peerIds: number[];
-}
-
-const useStartMeeting = ({
-  channelName,
-  token,
-  appId,
-  agoraId,
-  meetId,
-  password,
-  description,
-}: props) => {
-  const [state, setState] = useState<State>({
-    appId: appId,
-    channelName: channelName,
-    token: token,
-    joinSucceed: false,
-    peerIds: [],
-  });
-
-  const [joined, setJoined] = useState<boolean>(false);
-
+const useStartMeeting = ({appId, meetConfig}: props) => {
+  const [joinSucceed, setJoinSucceed] = useState<boolean>(false);
+  const [peerIds, setPeerIds] = useState<Array<number>>([]);
+  const [muteAudio, setMuteAudio] = useState<boolean>(false);
+  const [muteVideo, setMuteVideo] = useState<boolean>(false);
   const [modalVisible, toggleModal] = useState<boolean>(true);
 
-  const [engine, setEngine] = useState<RtcEngine>();
-
-  const requestCameraAndAudioPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.requestMultiple([
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-      ]);
-      if (
-        granted['android.permission.RECORD_AUDIO'] ===
-          PermissionsAndroid.RESULTS.GRANTED &&
-        granted['android.permission.CAMERA'] ===
-          PermissionsAndroid.RESULTS.GRANTED
-      ) {
-        console.log('You can use the cameras & mic');
-      } else {
-        console.log('Permission denied');
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  };
+  let engine = useRef<RtcEngine | null>(null);
 
   const startCall = async () => {
     console.log('Start call');
-
     try {
-      await engine?.joinChannel(
-        state.token,
-        state.channelName.split(' ')[0],
+      await engine.current?.joinChannel(
+        meetConfig.token,
+        meetConfig.channelName,
         null,
-        agoraId,
+        meetConfig.agoraId,
       );
-      setJoined(true);
     } catch (err) {
-      console.log(err);
+      console.log('Error in Start Call', err);
     }
   };
 
   const endCall = async () => {
-    await engine?.leaveChannel();
-    setState((prev) => ({...prev, peerIds: [], joinSucceed: false}));
+    try {
+      console.log('end Call');
+      await engine.current?.leaveChannel();
+      setPeerIds([]);
+      setJoinSucceed(false);
+    } catch (err) {
+      console.log('Error in End call', err);
+    }
   };
 
   const intializeRTC = async () => {
     try {
-      console.log('Initialize');
-      const {appId} = state;
-      const new_engine = await RtcEngine.create(appId);
+      if (
+        Platform.OS === 'android' &&
+        !PermissionsAndroid.check('android.permission.CAMERA') &&
+        !PermissionsAndroid.check('android.permission.RECORD_AUDIO')
+      ) {
+        requestCameraAndAudioPermission();
+      }
+
+      engine.current = await RtcEngine.create(appId);
+
       // Enable the video module.
-      setEngine(new_engine);
-      await engine?.enableVideo();
+      await engine.current?.enableVideo();
+
+      //Start the call
       await startCall();
-      // await startCall().catch((err) => console.log('start', err));
+
+      engine.current?.addListener('UserJoined', (uid, elapsed) => {
+        console.log('UserJoined', uid, elapsed);
+        if (peerIds.indexOf(uid) === -1) {
+          setPeerIds((prev) => [...prev, uid]);
+        }
+      });
+
+      engine.current?.getEffectsVolume;
+
+      // Listen for the UserOffline callback.
+      // This callback occurs when the remote user leaves the channel or drops offline.
+      engine.current?.addListener('UserOffline', (uid, reason) => {
+        console.log('UserOffline', uid, reason);
+        setPeerIds((prev) => [...prev, ...prev.filter((id) => id !== uid)]);
+      });
+
+      // Listen for the JoinChannelSuccess callback.
+      // This callback occurs when the local user successfully joins the channel.
+      engine.current?.addListener(
+        'JoinChannelSuccess',
+        (channel, uid, elapsed) => {
+          console.log('JoinChannelSuccess', channel, uid, elapsed);
+          setJoinSucceed(true);
+          toggleModal(false);
+        },
+      );
+
+      engine.current?.addListener('Warning', (warn) => {
+        console.log('Warn', warn);
+      });
+
+      engine.current?.addListener('Error', (err) => {
+        console.log('Error', err);
+      });
     } catch (err) {
       console.log('Error in initialize RTC', err);
     }
   };
-
-  useEffect(() => {
-    if (Platform.OS === 'android') {
-      requestCameraAndAudioPermission().then(() => {
-        console.log('requested!');
-      });
-    }
-  }, []);
 
   useEffect(() => {
     try {
@@ -114,49 +106,42 @@ const useStartMeeting = ({
     } catch (err) {
       console.log('Error in initializing RTC', err);
     }
-  }, [joined]);
+  }, []);
 
-  engine?.addListener('UserJoined', (uid, elapsed) => {
-    console.log('UserJoined', uid, elapsed);
-    const {peerIds} = state;
-    if (peerIds.indexOf(uid) === -1) {
-      setState((prev) => ({...prev, peerIds: [...peerIds, uid]}));
+  //switch between front and back camera
+  const omSwitchCamera = () => {
+    if (engine.current) {
+      engine.current?.switchCamera();
     }
-  });
+  };
 
-  // Listen for the UserOffline callback.
-  // This callback occurs when the remote user leaves the channel or drops offline.
-  engine?.addListener('UserOffline', (uid, reason) => {
-    console.log('UserOffline', uid, reason);
-    const {peerIds} = state;
-    setState((prev) => ({
-      ...prev,
-      // Remove peer ID from state array
-      peerIds: peerIds.filter((id) => id !== uid),
-    }));
-  });
+  //Make the camera to flash on
+  const onCamerFlashOn = () => {
+    if (engine.current) {
+      engine.current?.setCameraTorchOn(true);
+    }
+  };
 
-  // Listen for the JoinChannelSuccess callback.
-  // This callback occurs when the local user successfully joins the channel.
-  engine?.addListener('JoinChannelSuccess', (channel, uid, elapsed) => {
-    console.log('JoinChannelSuccess', channel, uid, elapsed);
-    setState((prev) => ({
-      ...prev,
-      joinSucceed: true,
-    }));
-    toggleModal(false);
-  });
+  //Enables auto focus camera
+  const enableAutoCameraFocus = () => {
+    if (engine.current) {
+      engine.current?.setCameraAutoFocusFaceModeEnabled;
+    }
+  };
 
-  engine?.addListener('Warning', (warn) => {
-    console.log('Warn', warn);
-  });
+  const onClickMic = () => {
+    setMuteAudio(!muteAudio);
+    engine.current?.muteLocalAudioStream(muteAudio);
+  };
 
-  engine?.addListener('Error', (err) => {
-    console.log('Error', err);
-  });
+  const onClickCamera = () => {
+    setMuteVideo(!muteVideo);
+    engine.current?.muteLocalVideoStream(muteVideo);
+  };
 
   return {
-    state,
+    peerIds,
+    joinSucceed,
     startCall,
     endCall,
     toggleModal,

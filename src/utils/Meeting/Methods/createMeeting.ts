@@ -23,7 +23,6 @@ export const generateToken = async (channelName: string, agoraId: number) => {
 
   //Fetching request
   const req = await getRequest(URL);
-  console.log(req);
   return {token: req.token};
 };
 

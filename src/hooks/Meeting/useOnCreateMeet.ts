@@ -2,7 +2,10 @@ import {useState} from 'react';
 import {generalError} from '../../components/Alerts/GeneralError';
 import {TITLE} from '../../constants/Alerts/GeneralError';
 import {VIDEO_STREAM} from '../../constants/Navigation/Navigation';
-import {CreateMeetForm} from '../../models/Meeting/CreateMeeting/interface';
+import {
+  CreateMeetForm,
+  VideoStreamParams,
+} from '../../models/Meeting/CreateMeeting/interface';
 import {onCreateMeet} from '../../utils/Meeting/Methods/createMeeting';
 
 const useOnCreateMeet = (navigation: any, agoraId: number) => {
@@ -24,7 +27,8 @@ const useOnCreateMeet = (navigation: any, agoraId: number) => {
         password: password,
         channelName: meetDetails.name,
         agoraId: agoraId,
-      });
+        creater: 'Host',
+      } as VideoStreamParams);
     } else {
       generalError(() => toggleModal(false), {
         title: TITLE,

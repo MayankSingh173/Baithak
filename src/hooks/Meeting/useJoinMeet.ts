@@ -2,7 +2,10 @@ import {useState} from 'react';
 import {generalError} from '../../components/Alerts/GeneralError';
 import {TITLE} from '../../constants/Alerts/GeneralError';
 import {VIDEO_STREAM} from '../../constants/Navigation/Navigation';
-import {JoinMeetForm} from '../../models/Meeting/CreateMeeting/interface';
+import {
+  JoinMeetForm,
+  VideoStreamParams,
+} from '../../models/Meeting/CreateMeeting/interface';
 import {onJoinMeet} from '../../utils/Meeting/Methods/joinMeeting';
 
 const initialFormState: JoinMeetForm = {
@@ -29,7 +32,8 @@ const useJoinMeet = (navigation: any, agoraId: number) => {
         password: meetDetails.password,
         channelName: meetDetails.meetId,
         agoraId: agoraId,
-      });
+        creater: 'Member',
+      } as VideoStreamParams);
     } else {
       generalError(() => toggleModal(false), {
         title: TITLE,
