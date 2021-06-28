@@ -1,10 +1,12 @@
+require('dotenv').config({path: '../.env'});
+
 const express = require('express');
 const {RtcTokenBuilder, RtcRole} = require('agora-access-token');
 
-const PORT = 8080;
+const PORT = 3000;
 
-const APP_ID = '214682f487d14dfbbb8ff290b96d9c6e';
-const APP_CERTIFICATE = 'f688d9e0b8de46c39a19248b87f401c0';
+const APP_ID = process.env.APP_ID;
+const APP_CERTIFICATE = process.env.APP_CERTIFICATE;
 
 const app = express();
 
@@ -19,25 +21,29 @@ const generateAccessToken = (req, resp) => {
   if (APP_ID && APP_CERTIFICATE) {
     // set response header
     resp.header('Acess-Control-Allow-Origin', '*');
-    // get channel name
+
+    // channel name from query
     const channelName = req.query.channelName;
 
     if (!channelName) {
       return resp.status(500).json({error: 'channel is required'});
     }
-    // get uid
+
+    // get uid from query
     let uid = req.query.uid;
-    if (!uid || uid == '') {
+    if (!uid || uid === '') {
       uid = 0;
     }
-    // get role
+
+    // get RtcRole from quesry
     let role = RtcRole.SUBSCRIBER;
-    if (req.query.role == 'publisher') {
+    if (req.query.role === 'publisher') {
       role = RtcRole.PUBLISHER;
     }
-    // get the expire time
+
+    // If there is any expiry time get it otherwise set on your own
     let expireTime = req.query.expireTime;
-    if (!expireTime || expireTime == '') {
+    if (!expireTime || expireTime === '') {
       expireTime = 3600;
     } else {
       expireTime = parseInt(expireTime, 10);

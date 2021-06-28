@@ -1,139 +1,40 @@
-import {Layout, Text, useStyleSheet} from '@ui-kitten/components';
-import React, {Component} from 'react';
-import {useEffect} from 'react';
-import {useState} from 'react';
-import {StyleSheet, Dimensions} from 'react-native';
+import {Text, useStyleSheet, Layout} from '@ui-kitten/components';
+import React from 'react';
 import {
-  Platform,
+  StyleSheet,
+  Dimensions,
   ScrollView,
-  TouchableOpacity,
   View,
-  PermissionsAndroid,
+  TouchableOpacity,
 } from 'react-native';
-// Import the RtcEngine class and view rendering components into your project.
-import RtcEngine, {
-  RtcLocalView,
-  RtcRemoteView,
-  VideoRenderMode,
-} from 'react-native-agora';
+import {RtcLocalView, RtcRemoteView, VideoRenderMode} from 'react-native-agora';
+import useStartMeeting from '../../../hooks/Meeting/useStartMeeting';
+import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
 
+const APP_ID = '63ad64d4cbcb4222b288c85cfb41be47';
 const dimensions = {
   width: Dimensions.get('window').width,
   height: Dimensions.get('window').height,
 };
 
-// Define a Props interface.
-interface Props {}
-
-// Define a State interface.
-interface State {
-  appId: string;
-  channelName: string;
-  token: string;
-  joinSucceed: boolean;
-  peerIds: number[];
-}
-
 const VideoStream = (props: any) => {
-  const {token, name, meetId, password, description, channelName, agoraId} =
+  const {token, meetId, password, description, channelName, agoraId} =
     props.route.params;
+
+  const {state, startCall, endCall, modalVisible, engine} = useStartMeeting({
+    appId: APP_ID,
+    channelName,
+    token,
+    meetId,
+    password,
+    agoraId,
+  });
 
   const styles = useStyleSheet(themedStyles);
 
-  const [state, setState] = useState<State>({
-    appId: '214682f487d14dfbbb8ff290b96d9c6e',
-    channelName: channelName,
-    token: token,
-    joinSucceed: false,
-    peerIds: [],
-  });
-
-  const [engine, setEngine] = useState<RtcEngine>();
-
-  useEffect(() => {
-    const requestCameraAndAudioPermission = async () => {
-      try {
-        const granted = await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.CAMERA,
-          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-        ]);
-        if (
-          granted['android.permission.RECORD_AUDIO'] ===
-            PermissionsAndroid.RESULTS.GRANTED &&
-          granted['android.permission.CAMERA'] ===
-            PermissionsAndroid.RESULTS.GRANTED
-        ) {
-          console.log('You can use the cameras & mic');
-        } else {
-          console.log('Permission denied');
-        }
-      } catch (err) {
-        console.warn(err);
-      }
-    };
-
-    if (Platform.OS === 'android') {
-      requestCameraAndAudioPermission().then(() => {
-        console.log('requested!');
-      });
-    }
-
-    intializeRTC();
-    return () => {};
-  }, []);
-
-  const intializeRTC = async () => {
-    try {
-      const {token, appId} = state;
-      const new_engine = await RtcEngine.create(appId);
-      // Enable the video module.
-      setEngine(new_engine);
-
-      await engine?.enableVideo().then(() => console.log('video enable'));
-    } catch (err) {
-      console.log(err);
-    }
-    // Listen for the UserJoined callback.
-    // This callback occurs when the remote user successfully joins the channel.
-  };
-
-  engine?.addListener('UserJoined', (uid, elapsed) => {
-    console.log('UserJoined', uid, elapsed);
-    const {peerIds} = state;
-    if (peerIds.indexOf(uid) === -1) {
-      setState((prev) => ({...prev, peerIds: [...peerIds, uid]}));
-    }
-  });
-
-  // Listen for the UserOffline callback.
-  // This callback occurs when the remote user leaves the channel or drops offline.
-  engine?.addListener('UserOffline', (uid, reason) => {
-    console.log('UserOffline', uid, reason);
-    const {peerIds} = state;
-    setState((prev) => ({
-      ...prev,
-      // Remove peer ID from state array
-      peerIds: peerIds.filter((id) => id !== uid),
-    }));
-  });
-
-  // Listen for the JoinChannelSuccess callback.
-  // This callback occurs when the local user successfully joins the channel.
-  engine?.addListener('JoinChannelSuccess', (channel, uid, elapsed) => {
-    console.log('JoinChannelSuccess', channel, uid, elapsed);
-    setState((prev) => ({
-      ...prev,
-      joinSucceed: true,
-    }));
-  });
-
-  engine?.addListener('Warning', (warn) => {
-    console.log('Warn', warn);
-  });
-
-  engine?.addListener('Error', (err) => {
-    console.log('Error', err);
-  });
+  if (!state.joinSucceed) {
+    return <ModalActivityIndicator modalVisible={modalVisible} />;
+  }
 
   const renderVideos = () => {
     const {joinSucceed} = state;
@@ -153,6 +54,7 @@ const VideoStream = (props: any) => {
   // which uniformly scales the video until it fills the visible boundaries.
   const renderRemoteVideos = () => {
     const {peerIds} = state;
+    if (peerIds.length === 0) return null;
     return (
       <ScrollView
         style={styles.remoteContainer}
@@ -173,36 +75,25 @@ const VideoStream = (props: any) => {
     );
   };
 
-  const startCall = async () => {
-    try {
-      await engine
-        ?.joinChannel(state.token, state.channelName, null, agoraId)
-        .then(() => console.log('join'));
-      engine?.joinChannel;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const endCall = async () => {
-    await engine?.leaveChannel();
-    setState((prev) => ({...prev, peerIds: [], joinSucceed: false}));
-  };
-
   return (
-    <View style={styles.max}>
+    <Layout level="1" style={styles.max}>
       <View style={styles.max}>
-        <View style={styles.buttonHolder}>
-          <TouchableOpacity onPress={startCall} style={styles.button}>
-            <Text style={styles.buttonText}> Start Call </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={endCall} style={styles.button}>
-            <Text style={styles.buttonText}> End Call </Text>
-          </TouchableOpacity>
+        <View style={styles.max}>
+          <View style={styles.buttonHolder}>
+            <TouchableOpacity
+              onPress={() => {
+                endCall;
+                engine?.destroy();
+                props.navigation.goBack();
+              }}
+              style={styles.button}>
+              <Text style={styles.buttonText}> End Call </Text>
+            </TouchableOpacity>
+          </View>
+          {renderVideos()}
         </View>
-        {renderVideos()}
       </View>
-    </View>
+    </Layout>
   );
 };
 

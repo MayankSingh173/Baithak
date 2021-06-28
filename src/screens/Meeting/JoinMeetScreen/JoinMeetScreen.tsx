@@ -19,24 +19,26 @@ import {
 import {Formik} from 'formik';
 import {NameIcon, PasswordIcon} from '../../../components/Icons/Icons';
 import {joinMeetingSchema} from '../../../utils/validators/meeting';
-import {useState} from 'react';
-import {JoinMeetForm} from '../../../models/Meeting/CreateMeeting/interface';
-
-const initialFormState: JoinMeetForm = {
-  meetId: '',
-  password: '',
-};
+import useJoinMeet from '../../../hooks/Meeting/useJoinMeet';
+import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../../store/rootReducer';
 
 const JoinMeetScreen = (props: any) => {
-  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const appTheme = useTheme();
   const styles = useStyleSheet(themedStyles);
 
-  const onJoinMeeting = () => {
-    console.log('create');
-  };
+  const firebaseUser = useSelector(
+    (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
+  );
 
-  const onPasswordIconPress = () => setPasswordVisible(!passwordVisible);
+  const {
+    initialFormState,
+    passwordVisible,
+    onPasswordIconPress,
+    handleSubmit,
+    isLoading,
+  } = useJoinMeet(props.navigation, firebaseUser.agoraId);
 
   const EyeIcon = (props: any) => (
     <TouchableOpacity onPress={onPasswordIconPress}>
@@ -46,6 +48,7 @@ const JoinMeetScreen = (props: any) => {
 
   return (
     <Layout level="1" style={styles.main}>
+      <ModalActivityIndicator modalVisible={isLoading} />
       <BackHeader
         leftIcon="arrow-back-outline"
         onLeftPress={() => props.navigation.goBack()}
@@ -61,7 +64,7 @@ const JoinMeetScreen = (props: any) => {
       </Text>
       <Formik
         initialValues={initialFormState}
-        onSubmit={onJoinMeeting}
+        onSubmit={handleSubmit}
         validationSchema={joinMeetingSchema}
         validateOnBlur>
         {(formikProps) => (

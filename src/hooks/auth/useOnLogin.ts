@@ -27,7 +27,7 @@ const useOnLogin = () => {
 
   //Sign in with email and password
   const onSignInButtonPress = (props: any) => {
-    console.log('signUp');
+    console.log('signIn');
     toggleModal(true);
     auth()
       .signInWithEmailAndPassword(props.email, props.password)
