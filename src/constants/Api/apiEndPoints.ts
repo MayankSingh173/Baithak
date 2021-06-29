@@ -1,2 +1,2 @@
-export const BASE_URL = 'http://192.168.1.6:3000';
+export const BASE_URL = 'https://baithak-app.herokuapp.com';
 export const ACCESS_TOKEN = '/access_token';
