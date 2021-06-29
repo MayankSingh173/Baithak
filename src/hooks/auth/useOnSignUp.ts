@@ -2,9 +2,10 @@ import {useState} from 'react';
 import auth from '@react-native-firebase/auth';
 import {OK_TEXT, TITLE} from '../../constants/Alerts/GeneralError';
 import {generalError} from '../../components/Alerts/GeneralError';
+import {SignUpForm} from '../../models/Auth/interface';
 
 const useOnSignUp = () => {
-  const initialFormState = {
+  const initialFormState: SignUpForm = {
     email: '',
     password: '',
     passwordRepeat: '',

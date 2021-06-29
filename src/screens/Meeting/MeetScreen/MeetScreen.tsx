@@ -3,7 +3,11 @@ import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import GeneralHeader from '../../../components/Headers/GeneralHeader/GeneralHeader';
-import {PROFILE_SCREEN} from '../../../constants/Navigation/Navigation';
+import {
+  CREATE_MEET_SCREEN,
+  JOIN_MEET_SCREEN,
+  PROFILE_SCREEN,
+} from '../../../constants/Navigation/Navigation';
 import {RootState} from '../../../store/rootReducer';
 import {RALEWAY_BOLD, RALEWAY_REGULAR} from '../../../constants/Fonts/Fonts';
 import LottieView from 'lottie-react-native';
@@ -24,8 +28,14 @@ const MeetScreen = (props: any) => {
       <SelectMeet
         modalVisible={selectMeet}
         onBackDropPress={() => setSelectMeet(!selectMeet)}
-        onJoinMeet={() => console.log('join meet')}
-        onCreateMeet={() => console.log('create meet')}
+        onJoinMeet={() => {
+          setSelectMeet(!selectMeet);
+          props.navigation.navigate(JOIN_MEET_SCREEN);
+        }}
+        onCreateMeet={() => {
+          setSelectMeet(!selectMeet);
+          props.navigation.navigate(CREATE_MEET_SCREEN);
+        }}
       />
       <GeneralHeader
         firebaseUser={firebaseUser}

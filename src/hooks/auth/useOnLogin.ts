@@ -5,6 +5,7 @@ import {OK_TEXT, TITLE} from '../../constants/Alerts/GeneralError';
 import {getErrorMessage} from '../../utils/Errors/Auth/googleSignIn';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useState} from 'react';
+import {SignInForm} from '../../models/Auth/interface';
 
 //Configure google signin
 GoogleSignin.configure({
@@ -13,7 +14,7 @@ GoogleSignin.configure({
 });
 
 const useOnLogin = () => {
-  const initialFormState = {
+  const initialFormState: SignInForm = {
     email: '',
     password: '',
   };
@@ -26,7 +27,7 @@ const useOnLogin = () => {
 
   //Sign in with email and password
   const onSignInButtonPress = (props: any) => {
-    console.log('signUp');
+    console.log('signIn');
     toggleModal(true);
     auth()
       .signInWithEmailAndPassword(props.email, props.password)

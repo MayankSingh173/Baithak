@@ -5,7 +5,6 @@ import Modal from 'react-native-modal';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
 import {RALEWAY_BOLD, RALEWAY_REGULAR} from '../../../constants/Fonts/Fonts';
-import {AddIcon} from '../../Icons/Icons';
 
 interface props {
   modalVisible: boolean;
@@ -33,7 +32,7 @@ const SelectMeet = (props: props) => {
       onBackButtonPress={props.onBackDropPress}>
       <Layout level={theme === 'dark' ? '3' : '1'} style={styles.main}>
         <View style={styles.header}>
-          <Layout level="2" style={styles.drop} />
+          <Layout level={theme === 'dark' ? '2' : '4'} style={styles.drop} />
         </View>
         <View style={styles.container}>
           <Text category="h6" style={styles.heading}>
@@ -43,19 +42,23 @@ const SelectMeet = (props: props) => {
             <Icon
               style={styles.icon}
               name="plus-circle-outline"
-              fill={theme === 'dark' ? '#45F1DE' : 'black'}
+              fill={'#45F1DE'}
             />
-            <Text style={[styles.createMeet, {color: '#D4D4D4'}]}>
+            <Text
+              style={[
+                styles.createMeet,
+                {color: theme === 'dark' ? '#D4D4D4' : 'black'},
+              ]}>
               Create Meeting
             </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.option} onPress={props.onJoinMeet}>
-            <Icon
-              style={styles.icon}
-              name="video-outline"
-              fill={theme === 'dark' ? '#45F1DE' : 'black'}
-            />
-            <Text style={[styles.createMeet, {color: '#D4D4D4'}]}>
+            <Icon style={styles.icon} name="video-outline" fill={'#45F1DE'} />
+            <Text
+              style={[
+                styles.createMeet,
+                {color: theme === 'dark' ? '#D4D4D4' : 'black'},
+              ]}>
               Join Meeting
             </Text>
           </TouchableOpacity>

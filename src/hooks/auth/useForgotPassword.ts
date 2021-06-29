@@ -1,12 +1,13 @@
 import auth from '@react-native-firebase/auth';
 import {useState} from 'react';
 import {generalError} from '../../components/Alerts/GeneralError';
+import {ForgoPassForm} from '../../models/Auth/interface';
 
 interface props {
   navigation: any;
 }
 const useForgotPassword = (props: props) => {
-  const initialFormState = {
+  const initialFormState: ForgoPassForm = {
     email: '',
   };
 
