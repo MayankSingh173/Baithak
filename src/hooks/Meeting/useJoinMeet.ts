@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {generalError} from '../../components/Alerts/GeneralError';
 import {TITLE} from '../../constants/Alerts/GeneralError';
 import {VIDEO_STREAM} from '../../constants/Navigation/Navigation';
@@ -16,32 +16,34 @@ const initialFormState: JoinMeetForm = {
 const useJoinMeet = (navigation: any, agoraId: number) => {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [isLoading, toggleModal] = useState<boolean>(false);
+  const [formState, setFormState] = useState<JoinMeetForm>(initialFormState);
 
   const onPasswordIconPress = () => setPasswordVisible(!passwordVisible);
 
   //Here meetId = channelName
   const handleSubmit = async (meetDetails: JoinMeetForm) => {
     toggleModal(true);
+    setFormState(meetDetails);
+  };
 
-    const {token} = await onJoinMeet(meetDetails, agoraId);
-    if (token && meetDetails.meetId) {
-      navigation.navigate(VIDEO_STREAM, {
-        token: token,
-        description: '',
-        meetId: meetDetails.meetId,
-        password: meetDetails.password,
-        channelName: meetDetails.meetId,
-        agoraId: agoraId,
-        creater: 'Member',
-      } as VideoStreamParams);
+  const joinMeet = async () => {
+    const videoStreamParams = await onJoinMeet(formState, agoraId);
+    if (videoStreamParams) {
+      navigation.navigate(VIDEO_STREAM, videoStreamParams);
     } else {
       generalError(() => toggleModal(false), {
         title: TITLE,
-        textMessage: 'Please Try Again',
+        textMessage: 'Please check your id and password',
         okText: 'Ok',
       });
     }
   };
+
+  useEffect(() => {
+    if (initialFormState.meetId && initialFormState.password) {
+      joinMeet;
+    }
+  }, [formState]);
 
   return {
     passwordVisible,

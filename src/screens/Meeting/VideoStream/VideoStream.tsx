@@ -11,6 +11,11 @@ import {RtcLocalView, RtcRemoteView, VideoRenderMode} from 'react-native-agora';
 import useStartMeeting from '../../../hooks/Meeting/useStartMeeting';
 import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
 import {VideoStreamParams} from '../../../models/Meeting/CreateMeeting/interface';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../../store/rootReducer';
+import BackHeader from '../../../components/Headers/BackHeader/BackHeader';
+import VideoFooter from '../../../components/Footers/VideoFooter/VideoFooter';
+import MainStream from '../../../components/VideoStream/MainStream';
 
 const APP_ID = '63ad64d4cbcb4222b288c85cfb41be47';
 
@@ -22,11 +27,27 @@ const dimensions = {
 const VideoStream = (props: any) => {
   const meetConfig: VideoStreamParams = props.route.params;
 
-  const {joinSucceed, peerIds, startCall, endCall, modalVisible, engine} =
-    useStartMeeting({
-      appId: APP_ID,
-      meetConfig,
-    });
+  const firebaseUser = useSelector(
+    (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
+  );
+
+  const {
+    joinSucceed,
+    peerIds,
+    endCall,
+    modalVisible,
+    onClickMenu,
+    onClickMessage,
+    onClickMic,
+    onClickCamera,
+    muteAudio,
+    muteVideo,
+    onSwitchCamera,
+  } = useStartMeeting({
+    appId: APP_ID,
+    meetConfig,
+    firebaseUser,
+  });
 
   const styles = useStyleSheet(themedStyles);
 
@@ -34,62 +55,52 @@ const VideoStream = (props: any) => {
     return <ModalActivityIndicator modalVisible={modalVisible} />;
   }
 
-  const renderVideos = () => {
-    return joinSucceed ? (
-      <View style={styles.fullView}>
-        <RtcLocalView.SurfaceView
-          style={styles.max}
-          channelId={meetConfig.channelName}
-          renderMode={VideoRenderMode.Hidden}
-        />
-        {renderRemoteVideos()}
-      </View>
-    ) : null;
-  };
-
-  // Set the rendering mode of the video view as Hidden,
-  // which uniformly scales the video until it fills the visible boundaries.
-  const renderRemoteVideos = () => {
-    if (peerIds.length === 0) return null;
-    return (
-      <ScrollView
-        style={styles.remoteContainer}
-        contentContainerStyle={{paddingHorizontal: 2.5}}
-        horizontal={true}>
-        {peerIds.map((value, index, array) => {
-          return (
-            <RtcRemoteView.SurfaceView
-              style={styles.remote}
-              uid={value}
-              channelId={meetConfig.channelName}
-              renderMode={VideoRenderMode.Hidden}
-              zOrderMediaOverlay={true}
-            />
-          );
-        })}
-      </ScrollView>
-    );
-  };
-
   return (
-    <Layout level="1" style={styles.max}>
-      <View style={styles.max}>
-        <View style={styles.max}>
-          <View style={styles.buttonHolder}>
-            <TouchableOpacity onPress={endCall} style={styles.button}>
-              <Text style={styles.buttonText}> End Call </Text>
-            </TouchableOpacity>
-          </View>
-          {renderVideos()}
-        </View>
+    <Layout style={styles.main}>
+      <View style={styles.header}>
+        <BackHeader
+          leftIcon="arrow-back-outline"
+          onLeftPress={() => console.log('On back')}
+          rightIcon="sync-outline"
+          onRightPress={onSwitchCamera}
+          centerText={meetConfig.channelName}
+        />
+      </View>
+      <View style={styles.mainStream}>
+        <MainStream channelName={meetConfig.channelName} peerId={peerIds} />
+      </View>
+      <View style={styles.footer}>
+        <VideoFooter
+          onClickCamera={onClickCamera}
+          endCall={endCall}
+          onClickMic={onClickMic}
+          onClickMenu={onClickMenu}
+          onClickMessage={onClickMessage}
+          muteAudio={muteAudio}
+          muteVideo={muteVideo}
+        />
       </View>
     </Layout>
   );
 };
 
 const themedStyles = StyleSheet.create({
-  max: {
+  main: {
     flex: 1,
+  },
+  header: {
+    margin: 10,
+    marginHorizontal: 20,
+    borderBottomWidth: 0.5,
+    paddingBottom: 10,
+    borderColor: 'grey',
+  },
+  mainStream: {
+    flex: 1,
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 25,
   },
   buttonHolder: {
     height: 100,

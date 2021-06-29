@@ -18,13 +18,13 @@ const useOnCreateMeet = (navigation: any, agoraId: number) => {
 
   const handleSubmit = async (meetDetails: CreateMeetForm) => {
     toggleModal(true);
-    const {token, meetId, password} = await onCreateMeet(meetDetails, agoraId);
-    if (token && meetDetails.name && meetId && password) {
+    const meet = await onCreateMeet(meetDetails, agoraId);
+    if (meet?.token && meetDetails.name && meet?.meetId && meet?.password) {
       navigation.navigate(VIDEO_STREAM, {
-        token: token,
+        token: meet.token,
         description: meetDetails.description,
-        meetId: meetId,
-        password: password,
+        meetId: meet.meetId,
+        password: meet.password,
         channelName: meetDetails.name,
         agoraId: agoraId,
         creater: 'Host',

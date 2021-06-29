@@ -2,6 +2,7 @@ import {useTheme, useStyleSheet, Text, Icon} from '@ui-kitten/components';
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
+import {RALEWAY_BOLD} from '../../../constants/Fonts/Fonts';
 import {RootState} from '../../../store/rootReducer';
 
 interface props {
@@ -41,7 +42,7 @@ const BackHeader = (props: props) => {
         <TouchableOpacity onPress={props.onRightPress} style={styles.rightView}>
           <Icon
             name={props.rightIcon}
-            style={styles.icon}
+            style={styles.rightIcon}
             fill={theme === 'dark' ? 'white' : 'black'}
           />
         </TouchableOpacity>
@@ -56,15 +57,26 @@ const themedStyles = StyleSheet.create({
     width: '100%',
     justifyContent: 'space-between',
     marginTop: 10,
+    alignItems: 'center',
   },
   leftView: {},
   rightView: {},
   icon: {
     height: 30,
     width: 30,
+    marginTop: 2,
   },
-  centerText: {},
-  textView: {},
+  centerText: {
+    fontFamily: RALEWAY_BOLD,
+  },
+  textView: {
+    width: '75%',
+  },
+  rightIcon: {
+    height: 25,
+    width: 25,
+    marginTop: 10,
+  },
 });
 
 export default BackHeader;

@@ -5,12 +5,22 @@ export interface Baithak {
   meetId: string;
   password: string;
   createAt: number;
-  hostId: string;
-  memebers: string[];
-  membersDetails: UserInterface[];
+  host: Host;
+  members: MembersDetails[];
   description?: string;
 }
 
+export interface Host {
+  agoraId: number;
+  uid: string;
+}
+
+export interface MembersDetails {
+  uid: string;
+  name?: string;
+  agoraId: number;
+  imageUrl?: string;
+}
 export interface VideoStreamParams {
   token: string;
   meetId: string;

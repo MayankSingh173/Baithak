@@ -1,20 +1,21 @@
 import {ACCESS_TOKEN, BASE_URL} from '../../../constants/Api/apiEndPoints';
-import {
-  CreateMeetForm,
-  JoinMeetForm,
-} from '../../../models/Meeting/CreateMeeting/interface';
+import {CreateMeetForm} from '../../../models/Meeting/CreateMeeting/interface';
 import {getRequest} from '../../Api/apiRequest';
 
 export const onCreateMeet = async (
   meetDetails: CreateMeetForm,
   agoraId: number,
 ) => {
-  //create a random id and password
-  const {meetId, password} = generateMeetIdAndPassword();
+  try {
+    //create a random id and password
+    const {meetId, password} = generateMeetIdAndPassword();
 
-  //generate tokens
-  const {token} = await generateToken(meetDetails.name, agoraId);
-  return {token, meetId, password};
+    //generate tokens
+    const {token} = await generateToken(meetDetails.name, agoraId);
+    return {token, meetId, password};
+  } catch (err) {
+    console.log('Error in genrating token', err);
+  }
 };
 
 export const generateToken = async (channelName: string, agoraId: number) => {

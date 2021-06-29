@@ -2,19 +2,28 @@ import {useEffect, useRef, useState} from 'react';
 import {Platform, PermissionsAndroid} from 'react-native';
 import RtcEngine from 'react-native-agora';
 import {VideoStreamParams} from '../../models/Meeting/CreateMeeting/interface';
+import {UserInterface} from '../../models/User/User';
+import {onHostJoinMeet} from '../../utils/Meeting/Methods/onHostJoinMeet';
+import {
+  onMemberJoinMeet,
+  onMemberLeftMeet,
+} from '../../utils/Meeting/Methods/onMemberJoinMeet';
 import {requestCameraAndAudioPermission} from '../../utils/Permissions/Permission';
 
 interface props {
   appId: string;
   meetConfig: VideoStreamParams;
+  firebaseUser: UserInterface;
 }
 
-const useStartMeeting = ({appId, meetConfig}: props) => {
+const useStartMeeting = ({appId, meetConfig, firebaseUser}: props) => {
   const [joinSucceed, setJoinSucceed] = useState<boolean>(false);
   const [peerIds, setPeerIds] = useState<Array<number>>([]);
   const [muteAudio, setMuteAudio] = useState<boolean>(false);
   const [muteVideo, setMuteVideo] = useState<boolean>(false);
   const [modalVisible, toggleModal] = useState<boolean>(true);
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [messageOpen, setMessageOpen] = useState<boolean>(false);
 
   let engine = useRef<RtcEngine | null>(null);
 
@@ -36,6 +45,10 @@ const useStartMeeting = ({appId, meetConfig}: props) => {
     try {
       console.log('end Call');
       await engine.current?.leaveChannel();
+
+      //remove the user from the list
+      await onMemberLeftMeet(meetConfig, firebaseUser);
+
       setPeerIds([]);
       setJoinSucceed(false);
     } catch (err) {
@@ -72,7 +85,7 @@ const useStartMeeting = ({appId, meetConfig}: props) => {
 
       // Listen for the UserOffline callback.
       // This callback occurs when the remote user leaves the channel or drops offline.
-      engine.current?.addListener('UserOffline', (uid, reason) => {
+      engine.current?.addListener('UserOffline', async (uid, reason) => {
         console.log('UserOffline', uid, reason);
         setPeerIds((prev) => [...prev, ...prev.filter((id) => id !== uid)]);
       });
@@ -81,8 +94,13 @@ const useStartMeeting = ({appId, meetConfig}: props) => {
       // This callback occurs when the local user successfully joins the channel.
       engine.current?.addListener(
         'JoinChannelSuccess',
-        (channel, uid, elapsed) => {
+        async (channel, uid, elapsed) => {
           console.log('JoinChannelSuccess', channel, uid, elapsed);
+          if (meetConfig.creater === 'Host') {
+            await onHostJoinMeet(meetConfig, firebaseUser);
+          } else {
+            await onMemberJoinMeet(meetConfig, firebaseUser);
+          }
           setJoinSucceed(true);
           toggleModal(false);
         },
@@ -109,7 +127,7 @@ const useStartMeeting = ({appId, meetConfig}: props) => {
   }, []);
 
   //switch between front and back camera
-  const omSwitchCamera = () => {
+  const onSwitchCamera = () => {
     if (engine.current) {
       engine.current?.switchCamera();
     }
@@ -129,11 +147,25 @@ const useStartMeeting = ({appId, meetConfig}: props) => {
     }
   };
 
+  //Mic mute and unmute
   const onClickMic = () => {
     setMuteAudio(!muteAudio);
     engine.current?.muteLocalAudioStream(muteAudio);
   };
 
+  //Menu open and close
+  const onClickMenu = () => {
+    setMenuOpen(!menuOpen);
+    console.log(menuOpen);
+  };
+
+  //Menu open and close
+  const onClickMessage = () => {
+    setMessageOpen(!messageOpen);
+    console.log(messageOpen);
+  };
+
+  //Camera open and close
   const onClickCamera = () => {
     setMuteVideo(!muteVideo);
     engine.current?.muteLocalVideoStream(muteVideo);
@@ -147,6 +179,15 @@ const useStartMeeting = ({appId, meetConfig}: props) => {
     toggleModal,
     modalVisible,
     engine,
+    onClickCamera,
+    onClickMic,
+    menuOpen,
+    messageOpen,
+    onClickMessage,
+    onClickMenu,
+    muteAudio,
+    muteVideo,
+    onSwitchCamera,
   };
 };
 
