@@ -1,6 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
 import {Platform, PermissionsAndroid} from 'react-native';
 import RtcEngine from 'react-native-agora';
+import {MEET_HOME_SCREEN} from '../../constants/Navigation/Navigation';
 import {VideoStreamParams} from '../../models/Meeting/CreateMeeting/interface';
 import {UserInterface} from '../../models/User/User';
 import {onHostJoinMeet} from '../../utils/Meeting/Methods/onHostJoinMeet';
@@ -16,7 +17,10 @@ interface props {
   firebaseUser: UserInterface;
 }
 
-const useStartMeeting = ({appId, meetConfig, firebaseUser}: props) => {
+const useStartMeeting = (
+  {appId, meetConfig, firebaseUser}: props,
+  navigation: any,
+) => {
   const [joinSucceed, setJoinSucceed] = useState<boolean>(false);
   const [peerIds, setPeerIds] = useState<Array<number>>([]);
   const [muteAudio, setMuteAudio] = useState<boolean>(false);
@@ -51,6 +55,7 @@ const useStartMeeting = ({appId, meetConfig, firebaseUser}: props) => {
 
       setPeerIds([]);
       setJoinSucceed(false);
+      navigation.navigate(MEET_HOME_SCREEN);
     } catch (err) {
       console.log('Error in End call', err);
     }

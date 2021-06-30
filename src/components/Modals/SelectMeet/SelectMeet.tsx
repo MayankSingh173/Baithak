@@ -4,7 +4,11 @@ import {Layout, useStyleSheet, Text, Icon} from '@ui-kitten/components';
 import Modal from 'react-native-modal';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
-import {RALEWAY_BOLD, RALEWAY_REGULAR} from '../../../constants/Fonts/Fonts';
+import {
+  RALEWAY_BOLD,
+  RALEWAY_MEDIUM,
+  RALEWAY_REGULAR,
+} from '../../../constants/Fonts/Fonts';
 
 interface props {
   modalVisible: boolean;
@@ -36,7 +40,7 @@ const SelectMeet = (props: props) => {
         </View>
         <View style={styles.container}>
           <Text category="h6" style={styles.heading}>
-            Want a Meeting?
+            Want a start Baithak ?
           </Text>
           <TouchableOpacity style={styles.option} onPress={props.onCreateMeet}>
             <Icon
@@ -49,7 +53,7 @@ const SelectMeet = (props: props) => {
                 styles.createMeet,
                 {color: theme === 'dark' ? '#D4D4D4' : 'black'},
               ]}>
-              Create Meeting
+              Create Baithak
             </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.option} onPress={props.onJoinMeet}>
@@ -59,7 +63,23 @@ const SelectMeet = (props: props) => {
                 styles.createMeet,
                 {color: theme === 'dark' ? '#D4D4D4' : 'black'},
               ]}>
-              Join Meeting
+              Join Baithak
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.option}
+            onPress={props.onBackDropPress}>
+            <Icon
+              style={{width: 30, height: 30}}
+              name="close-outline"
+              fill={'#FFFF'}
+            />
+            <Text
+              style={[
+                styles.createMeet,
+                {color: theme === 'dark' ? '#D4D4D4' : 'black'},
+              ]}>
+              Close
             </Text>
           </TouchableOpacity>
         </View>
@@ -92,6 +112,7 @@ const themedStyles = StyleSheet.create({
   },
   container: {
     padding: 20,
+    paddingBottom: 0,
   },
   heading: {
     fontFamily: RALEWAY_BOLD,
@@ -106,7 +127,7 @@ const themedStyles = StyleSheet.create({
     marginTop: 20,
   },
   createMeet: {
-    fontFamily: RALEWAY_REGULAR,
+    fontFamily: RALEWAY_MEDIUM,
     marginLeft: 10,
   },
 });

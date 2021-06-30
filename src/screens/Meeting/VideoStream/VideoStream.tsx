@@ -1,13 +1,6 @@
 import {Text, useStyleSheet, Layout} from '@ui-kitten/components';
 import React from 'react';
-import {
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-  View,
-  TouchableOpacity,
-} from 'react-native';
-import {RtcLocalView, RtcRemoteView, VideoRenderMode} from 'react-native-agora';
+import {StyleSheet, Dimensions, View} from 'react-native';
 import useStartMeeting from '../../../hooks/Meeting/useStartMeeting';
 import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
 import {VideoStreamParams} from '../../../models/Meeting/CreateMeeting/interface';
@@ -43,11 +36,14 @@ const VideoStream = (props: any) => {
     muteAudio,
     muteVideo,
     onSwitchCamera,
-  } = useStartMeeting({
-    appId: APP_ID,
-    meetConfig,
-    firebaseUser,
-  });
+  } = useStartMeeting(
+    {
+      appId: APP_ID,
+      meetConfig,
+      firebaseUser,
+    },
+    props.navigation,
+  );
 
   const styles = useStyleSheet(themedStyles);
 
