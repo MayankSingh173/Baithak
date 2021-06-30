@@ -1,6 +1,6 @@
 import {Layout, Button, Text, useTheme} from '@ui-kitten/components';
 import React, {useState} from 'react';
-import {StyleSheet, View, Dimensions} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import GeneralHeader from '../../../components/Headers/GeneralHeader/GeneralHeader';
 import {
@@ -13,9 +13,7 @@ import {RALEWAY_BOLD, RALEWAY_REGULAR} from '../../../constants/Fonts/Fonts';
 import LottieView from 'lottie-react-native';
 import {MeetIcon} from '../../../components/Icons/Icons';
 import SelectMeet from '../../../components/Modals/SelectMeet/SelectMeet';
-
-const screenWidth = Math.round(Dimensions.get('window').width);
-const screenHeight = Math.round(Dimensions.get('window').height);
+import {screenHeight} from '../../../constants/screen/screenInfo';
 
 const MeetScreen = (props: any) => {
   const [selectMeet, setSelectMeet] = useState<boolean>(false);
@@ -79,7 +77,7 @@ const MeetScreen = (props: any) => {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    padding: 10,
+    // padding: 10,
   },
   container: {
     flex: 1,

@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import BackHeader from '../../../components/Headers/BackHeader/BackHeader';
 import {
   RALEWAY_BOLD,
@@ -38,86 +38,94 @@ const CreateMeetScreen = (props: any) => {
 
   return (
     <Layout level="1" style={styles.main}>
-      <ModalActivityIndicator modalVisible={isLoading} />
-      <BackHeader
-        leftIcon="arrow-back-outline"
-        onLeftPress={() => props.navigation.goBack()}
-      />
-      <Text category="h3" style={styles.heading}>
-        Create a
-        <Text
-          category="h2"
-          style={[styles.heading, {color: appTheme['color-primary-default']}]}>
-          {' '}
-          Baithak
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <ModalActivityIndicator modalVisible={isLoading} />
+        <BackHeader
+          leftIcon="arrow-back-outline"
+          onLeftPress={() => props.navigation.goBack()}
+        />
+        <Text category="h3" style={styles.heading}>
+          Create a
+          <Text
+            category="h2"
+            style={[
+              styles.heading,
+              {color: appTheme['color-primary-default']},
+            ]}>
+            {' '}
+            Baithak
+          </Text>
         </Text>
-      </Text>
-      <Formik
-        initialValues={initialFormState}
-        onSubmit={handleSubmit}
-        validationSchema={createMeetingSchema}
-        validateOnBlur>
-        {(formikProps) => (
-          <View style={styles.formContainer}>
-            <Input
-              textStyle={{fontFamily: RALEWAY_MEDIUM}}
-              style={styles.nameInput}
-              status="basic"
-              placeholder="Baithak Name"
-              onBlur={() => formikProps.setFieldTouched('name')}
-              keyboardType="email-address"
-              accessoryLeft={NameIcon}
-              value={formikProps.values.name}
-              onChangeText={formikProps.handleChange('name')}
-              size="large"
-              caption={
-                formikProps.errors.name && formikProps.touched.name
-                  ? formikProps.errors.name
-                  : ''
-              }
-            />
-            <Input
-              textStyle={{fontFamily: RALEWAY_MEDIUM, minHeight: 70}}
-              style={styles.descriptionInput}
-              status="basic"
-              placeholder="Description (optional)"
-              onBlur={() => formikProps.setFieldTouched('description')}
-              accessoryLeft={DescriptionIcon}
-              value={formikProps.values.description}
-              onChangeText={formikProps.handleChange('description')}
-              size="large"
-              multiline={true}
-            />
-            <Button
-              style={styles.createButton}
-              size="large"
-              onPress={formikProps.handleSubmit}>
-              Create Baithak
-            </Button>
-            <View
-              style={{
-                marginTop: '80%',
-              }}>
-              <Text style={styles.worry}>
-                Worry about{' '}
+        <Formik
+          initialValues={initialFormState}
+          onSubmit={handleSubmit}
+          validationSchema={createMeetingSchema}
+          validateOnBlur>
+          {(formikProps) => (
+            <View style={styles.formContainer}>
+              <Input
+                textStyle={{fontFamily: RALEWAY_MEDIUM}}
+                style={styles.nameInput}
+                status="basic"
+                placeholder="Baithak Name"
+                onBlur={() => formikProps.setFieldTouched('name')}
+                keyboardType="email-address"
+                accessoryLeft={NameIcon}
+                value={formikProps.values.name}
+                onChangeText={formikProps.handleChange('name')}
+                size="large"
+                caption={
+                  formikProps.errors.name && formikProps.touched.name
+                    ? formikProps.errors.name
+                    : ''
+                }
+              />
+              <Input
+                textStyle={{fontFamily: RALEWAY_MEDIUM, minHeight: 70}}
+                style={styles.descriptionInput}
+                status="basic"
+                placeholder="Description (optional)"
+                onBlur={() => formikProps.setFieldTouched('description')}
+                accessoryLeft={DescriptionIcon}
+                value={formikProps.values.description}
+                onChangeText={formikProps.handleChange('description')}
+                size="large"
+                multiline={true}
+              />
+              <Button
+                style={styles.createButton}
+                size="large"
+                onPress={formikProps.handleSubmit}>
+                Create Baithak
+              </Button>
+              <View
+                style={{
+                  marginTop: '80%',
+                }}>
+                <Text style={styles.worry}>
+                  Worry about{' '}
+                  <Text
+                    category="h6"
+                    style={[
+                      styles.security,
+                      {color: appTheme['color-primary-default']},
+                    ]}>
+                    Security
+                  </Text>{' '}
+                  ?
+                </Text>
                 <Text
-                  category="h6"
                   style={[
-                    styles.security,
-                    {color: appTheme['color-primary-default']},
+                    styles.tagLine,
+                    {color: appTheme['color-basic-500']},
                   ]}>
-                  Security
-                </Text>{' '}
-                ?
-              </Text>
-              <Text
-                style={[styles.tagLine, {color: appTheme['color-basic-500']}]}>
-                ID and Password will be auto-generated
-              </Text>
+                  ID and Password will be auto-generated
+                </Text>
+              </View>
             </View>
-          </View>
-        )}
-      </Formik>
+          )}
+        </Formik>
+      </ScrollView>
     </Layout>
   );
 };

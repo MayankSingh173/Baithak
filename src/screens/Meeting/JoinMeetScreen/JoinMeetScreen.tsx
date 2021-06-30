@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, ScrollView} from 'react-native';
 import BackHeader from '../../../components/Headers/BackHeader/BackHeader';
 import {
   RALEWAY_BOLD,
@@ -49,90 +49,98 @@ const JoinMeetScreen = (props: any) => {
   return (
     <Layout level="1" style={styles.main}>
       <ModalActivityIndicator modalVisible={isLoading} />
-      <BackHeader
-        leftIcon="arrow-back-outline"
-        onLeftPress={() => props.navigation.goBack()}
-      />
-      <Text category="h3" style={styles.heading}>
-        Join
-        <Text
-          category="h2"
-          style={[styles.heading, {color: appTheme['color-primary-default']}]}>
-          {' '}
-          Baithak
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <BackHeader
+          leftIcon="arrow-back-outline"
+          onLeftPress={() => props.navigation.goBack()}
+        />
+        <Text category="h3" style={styles.heading}>
+          Join
+          <Text
+            category="h2"
+            style={[
+              styles.heading,
+              {color: appTheme['color-primary-default']},
+            ]}>
+            {' '}
+            Baithak
+          </Text>
         </Text>
-      </Text>
-      <Formik
-        initialValues={initialFormState}
-        onSubmit={handleSubmit}
-        validationSchema={joinMeetingSchema}
-        validateOnBlur>
-        {(formikProps) => (
-          <View style={styles.formContainer}>
-            <Input
-              textStyle={{fontFamily: RALEWAY_MEDIUM}}
-              style={styles.nameInput}
-              status="basic"
-              placeholder="Baithak ID"
-              onBlur={() => formikProps.setFieldTouched('meetId')}
-              keyboardType="email-address"
-              accessoryLeft={NameIcon}
-              value={formikProps.values.meetId}
-              onChangeText={formikProps.handleChange('meetId')}
-              size="large"
-              caption={
-                formikProps.errors.meetId && formikProps.touched.meetId
-                  ? formikProps.errors.meetId
-                  : ''
-              }
-            />
-            <Input
-              textStyle={{fontFamily: RALEWAY_MEDIUM}}
-              style={styles.passwordInput}
-              status="basic"
-              size="large"
-              placeholder="Password"
-              onBlur={() => formikProps.setFieldTouched('password')}
-              accessoryRight={EyeIcon}
-              value={formikProps.values.password}
-              caption={
-                formikProps.errors.password && formikProps.touched.password
-                  ? formikProps.errors.password
-                  : ''
-              }
-              accessoryLeft={PasswordIcon}
-              secureTextEntry={!passwordVisible}
-              onChangeText={formikProps.handleChange('password')}
-            />
-            <Button
-              style={styles.createButton}
-              size="large"
-              onPress={formikProps.handleSubmit}>
-              Join Baithak
-            </Button>
-            <View
-              style={{
-                marginTop: '95%',
-              }}>
-              <Text style={styles.worry}>
-                Head on{' '}
-                <Text
-                  category="h6"
-                  style={[
-                    styles.security,
-                    {color: appTheme['color-primary-default']},
-                  ]}>
-                  Baithak
+        <Formik
+          initialValues={initialFormState}
+          onSubmit={handleSubmit}
+          validationSchema={joinMeetingSchema}
+          validateOnBlur>
+          {(formikProps) => (
+            <View style={styles.formContainer}>
+              <Input
+                textStyle={{fontFamily: RALEWAY_MEDIUM}}
+                style={styles.nameInput}
+                status="basic"
+                placeholder="Baithak ID"
+                onBlur={() => formikProps.setFieldTouched('meetId')}
+                keyboardType="email-address"
+                accessoryLeft={NameIcon}
+                value={formikProps.values.meetId}
+                onChangeText={formikProps.handleChange('meetId')}
+                size="large"
+                caption={
+                  formikProps.errors.meetId && formikProps.touched.meetId
+                    ? formikProps.errors.meetId
+                    : ''
+                }
+              />
+              <Input
+                textStyle={{fontFamily: RALEWAY_MEDIUM}}
+                style={styles.passwordInput}
+                status="basic"
+                size="large"
+                placeholder="Password"
+                onBlur={() => formikProps.setFieldTouched('password')}
+                accessoryRight={EyeIcon}
+                value={formikProps.values.password}
+                caption={
+                  formikProps.errors.password && formikProps.touched.password
+                    ? formikProps.errors.password
+                    : ''
+                }
+                accessoryLeft={PasswordIcon}
+                secureTextEntry={!passwordVisible}
+                onChangeText={formikProps.handleChange('password')}
+              />
+              <Button
+                style={styles.createButton}
+                size="large"
+                onPress={formikProps.handleSubmit}>
+                Join Baithak
+              </Button>
+              <View
+                style={{
+                  marginTop: '95%',
+                }}>
+                <Text style={styles.worry}>
+                  Head on{' '}
+                  <Text
+                    category="h6"
+                    style={[
+                      styles.security,
+                      {color: appTheme['color-primary-default']},
+                    ]}>
+                    Baithak
+                  </Text>
                 </Text>
-              </Text>
-              <Text
-                style={[styles.tagLine, {color: appTheme['color-basic-500']}]}>
-                Your're friends are waiting for you!!
-              </Text>
+                <Text
+                  style={[
+                    styles.tagLine,
+                    {color: appTheme['color-basic-500']},
+                  ]}>
+                  Your're friends are waiting for you!!
+                </Text>
+              </View>
             </View>
-          </View>
-        )}
-      </Formik>
+          )}
+        </Formik>
+      </ScrollView>
     </Layout>
   );
 };

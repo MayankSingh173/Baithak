@@ -28,20 +28,20 @@ export const generateToken = async (channelName: string, agoraId: number) => {
 };
 
 const generateMeetIdAndPassword = () => {
-  const meetId = randPassword(10, 0, 0);
-  const password = randPassword(3, 3, 3);
+  const meetId = randPassword(5, 0, 5);
+  const password = randPassword(0, 4, 5);
   return {meetId, password};
 };
 
 //This function generate a random password.
-function randPassword(letters: number, numbers: number, either: number) {
+function randPassword(uppercase: number, numbers: number, lowercase: number) {
   var chars = [
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', // letters
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ', //Uppercase letters
     '0123456789', // numbers
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', // either
+    'abcdefghijklmnopqrstuvwxyz', // Lowercase letters
   ];
 
-  return [letters, numbers, either]
+  return [uppercase, numbers, lowercase]
     .map(function (len, i) {
       return Array(len)
         .fill(chars[i])

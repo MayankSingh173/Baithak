@@ -9,8 +9,7 @@ import {RootState} from '../../../store/rootReducer';
 import BackHeader from '../../../components/Headers/BackHeader/BackHeader';
 import VideoFooter from '../../../components/Footers/VideoFooter/VideoFooter';
 import MainStream from '../../../components/VideoStream/MainStream';
-
-const APP_ID = '63ad64d4cbcb4222b288c85cfb41be47';
+import {APP_ID} from '../../../../environment';
 
 const dimensions = {
   width: Dimensions.get('window').width,
@@ -63,7 +62,11 @@ const VideoStream = (props: any) => {
         />
       </View>
       <View style={styles.mainStream}>
-        <MainStream channelName={meetConfig.channelName} peerId={peerIds} />
+        <MainStream
+          channelName={meetConfig.channelName}
+          peerId={peerIds}
+          headerHeight={60.5}
+        />
       </View>
       <View style={styles.footer}>
         <VideoFooter
@@ -85,11 +88,12 @@ const themedStyles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    margin: 10,
-    marginHorizontal: 20,
+    // marin: 10,
+    paddingHorizontal: 15,
     borderBottomWidth: 0.5,
-    paddingBottom: 10,
+    paddingBottom: 15,
     borderColor: 'grey',
+    paddingRight: 20,
   },
   mainStream: {
     flex: 1,

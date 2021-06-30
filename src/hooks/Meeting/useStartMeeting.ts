@@ -1,6 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
-import {Platform, PermissionsAndroid} from 'react-native';
 import RtcEngine from 'react-native-agora';
+import {generalError} from '../../components/Alerts/GeneralError';
+import {TITLE} from '../../constants/Alerts/GeneralError';
 import {MEET_HOME_SCREEN} from '../../constants/Navigation/Navigation';
 import {VideoStreamParams} from '../../models/Meeting/CreateMeeting/interface';
 import {UserInterface} from '../../models/User/User';
@@ -9,7 +10,7 @@ import {
   onMemberJoinMeet,
   onMemberLeftMeet,
 } from '../../utils/Meeting/Methods/onMemberJoinMeet';
-import {requestCameraAndAudioPermission} from '../../utils/Permissions/Permission';
+import {checkPermission} from '../../utils/Permissions/Permission';
 
 interface props {
   appId: string;
@@ -63,13 +64,7 @@ const useStartMeeting = (
 
   const intializeRTC = async () => {
     try {
-      if (
-        Platform.OS === 'android' &&
-        !PermissionsAndroid.check('android.permission.CAMERA') &&
-        !PermissionsAndroid.check('android.permission.RECORD_AUDIO')
-      ) {
-        requestCameraAndAudioPermission();
-      }
+      await checkPermission();
 
       engine.current = await RtcEngine.create(appId);
 
@@ -86,21 +81,11 @@ const useStartMeeting = (
         }
       });
 
-      engine.current?.getEffectsVolume;
-
-      // Listen for the UserOffline callback.
-      // This callback occurs when the remote user leaves the channel or drops offline.
-      engine.current?.addListener('UserOffline', async (uid, reason) => {
-        console.log('UserOffline', uid, reason);
-        setPeerIds((prev) => [...prev, ...prev.filter((id) => id !== uid)]);
-      });
-
       // Listen for the JoinChannelSuccess callback.
       // This callback occurs when the local user successfully joins the channel.
       engine.current?.addListener(
         'JoinChannelSuccess',
         async (channel, uid, elapsed) => {
-          console.log('JoinChannelSuccess', channel, uid, elapsed);
           if (meetConfig.creater === 'Host') {
             await onHostJoinMeet(meetConfig, firebaseUser);
           } else {
@@ -117,6 +102,13 @@ const useStartMeeting = (
 
       engine.current?.addListener('Error', (err) => {
         console.log('Error', err);
+        toggleModal(false);
+        navigation.goBack();
+        generalError(() => toggleModal(false), {
+          title: TITLE,
+          textMessage: 'Please try again',
+          okText: 'Ok',
+        });
       });
     } catch (err) {
       console.log('Error in initialize RTC', err);
@@ -153,9 +145,14 @@ const useStartMeeting = (
   };
 
   //Mic mute and unmute
-  const onClickMic = () => {
-    setMuteAudio(!muteAudio);
-    engine.current?.muteLocalAudioStream(muteAudio);
+  const onClickMic = async () => {
+    try {
+      setMuteAudio(!muteAudio);
+      console.log('n');
+      await engine.current?.enableLocalAudio(muteAudio);
+    } catch (err) {
+      console.log('Error in toggle mic', err);
+    }
   };
 
   //Menu open and close
@@ -171,9 +168,9 @@ const useStartMeeting = (
   };
 
   //Camera open and close
-  const onClickCamera = () => {
+  const onClickCamera = async () => {
     setMuteVideo(!muteVideo);
-    engine.current?.muteLocalVideoStream(muteVideo);
+    await engine.current?.enableLocalVideo(muteVideo);
   };
 
   return {

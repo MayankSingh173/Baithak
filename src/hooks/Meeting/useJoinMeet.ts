@@ -30,6 +30,7 @@ const useJoinMeet = (navigation: any, agoraId: number) => {
     const videoStreamParams = await onJoinMeet(meetDetails, agoraId);
     if (videoStreamParams) {
       navigation.navigate(VIDEO_STREAM, videoStreamParams);
+      toggleModal(false);
     } else {
       generalError(() => toggleModal(false), {
         title: TITLE,

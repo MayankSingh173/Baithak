@@ -36,7 +36,7 @@ const SelectMeet = (props: props) => {
       onBackButtonPress={props.onBackDropPress}>
       <Layout level={theme === 'dark' ? '3' : '1'} style={styles.main}>
         <View style={styles.header}>
-          <Layout level={theme === 'dark' ? '2' : '4'} style={styles.drop} />
+          <Layout level={theme === 'dark' ? '2' : '3'} style={styles.drop} />
         </View>
         <View style={styles.container}>
           <Text category="h6" style={styles.heading}>
@@ -72,7 +72,7 @@ const SelectMeet = (props: props) => {
             <Icon
               style={{width: 30, height: 30}}
               name="close-outline"
-              fill={'#FFFF'}
+              fill={theme === 'dark' ? '#FFFF' : 'black'}
             />
             <Text
               style={[

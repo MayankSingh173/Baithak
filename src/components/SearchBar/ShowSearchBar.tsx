@@ -36,7 +36,7 @@ const ShowSearchBar = (props: props) => {
 
 const themedStyles = StyleSheet.create({
   main: {
-    borderRadius: 8,
+    borderRadius: 30,
     padding: 8,
     paddingLeft: 10,
     flexDirection: 'row',
@@ -48,7 +48,7 @@ const themedStyles = StyleSheet.create({
   search: {
     fontFamily: RALEWAY_REGULAR,
     marginLeft: 10,
-    marginTop: 5,
+    marginTop: '1%',
     color: '#B3B3B3',
   },
 });
