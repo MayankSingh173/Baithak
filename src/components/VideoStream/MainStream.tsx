@@ -7,11 +7,10 @@ import {getRemoteStreamDimensions} from '../../utils/Screen/screen';
 interface props {
   channelName: string;
   peerId: number[];
-  headerHeight: number;
 }
 
-const MainStream = ({peerId, channelName, headerHeight}: props) => {
-  const {height, width} = getRemoteStreamDimensions(peerId.length, 70);
+const MainStream = ({peerId, channelName}: props) => {
+  const {height, width} = getRemoteStreamDimensions(peerId.length);
 
   if (peerId.length === 0) {
     return (

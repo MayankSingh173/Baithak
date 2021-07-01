@@ -1,46 +1,51 @@
 import React from 'react';
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, Image} from 'react-native';
 import {Layout, useStyleSheet, Text, Icon} from '@ui-kitten/components';
 import Modal from 'react-native-modal';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
 import {RALEWAY_BOLD, RALEWAY_MEDIUM} from '../../../constants/Fonts/Fonts';
-import {optionProp} from '../../../models/Meeting/CreateMeeting/interface';
+import FullDivider from '../../Divider/FullDivider';
+import {MembersDetails} from '../../../models/Meeting/CreateMeeting/interface';
+import {FlatList} from 'react-native-gesture-handler';
+import {screenWidth} from '../../../constants/screen/screenInfo';
+import FastImage from 'react-native-fast-image';
 
 interface props {
   modalVisible: boolean;
   onBackDropPress: () => void;
-  onCreateMeet: () => void;
-  onJoinMeet: () => void;
+  participants: MembersDetails[] | undefined;
 }
 
-const SelectMeet = (props: props) => {
-  const styles = useStyleSheet(themedStyles);
+const MeetParticpants = (props: props) => {
+  if (!props.participants) return null;
 
-  const options: optionProp[] = [
-    {
-      icon: 'plus-circle-outline',
-      onPress: props.onCreateMeet,
-      text: 'Create Baithak',
-    },
-    {
-      icon: 'video-outline',
-      onPress: props.onJoinMeet,
-      text: 'Join Baithak',
-    },
-  ];
+  const styles = useStyleSheet(themedStyles);
 
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
+
+  const renderItem = ({item}: any) => {
+    return (
+      <View style={styles.imgView}>
+        <FastImage
+          style={{height: 60, width: 60, borderRadius: 20}}
+          source={{uri: item.imageUrl}}
+        />
+        <Text style={styles.name}>{item.name}</Text>
+      </View>
+    );
+  };
+
   return (
     <Modal
       isVisible={props.modalVisible}
       hasBackdrop={true}
       onBackdropPress={props.onBackDropPress}
       style={styles.modal}
-      animationIn="slideInUp"
-      animationOut="slideOutDown"
+      animationIn="zoomIn"
+      animationOut="zoomOut"
       coverScreen={true}
       useNativeDriver
       onBackButtonPress={props.onBackDropPress}>
@@ -50,25 +55,23 @@ const SelectMeet = (props: props) => {
         </View>
         <View style={styles.container}>
           <Text category="h6" style={styles.heading}>
-            Want a start Baithak ?
+            Participants
           </Text>
-          {options.map((option, index) => {
-            return (
-              <TouchableOpacity
-                style={styles.option}
-                onPress={option.onPress}
-                key={index}>
-                <Icon style={styles.icon} name={option.icon} fill={'#45F1DE'} />
-                <Text
-                  style={[
-                    styles.createMeet,
-                    {color: theme === 'dark' ? '#D4D4D4' : 'black'},
-                  ]}>
-                  {option.text}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
+          <FullDivider />
+          {props.participants.length === 0 ? (
+            <Text style={styles.no}>Oops! No one is there</Text>
+          ) : (
+            <View style={styles.partiView}>
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                data={props.participants}
+                renderItem={renderItem}
+                numColumns={3}
+                keyExtractor={(item) => item.agoraId}
+                ItemSeparatorComponent={() => <View style={{height: 15}} />}
+              />
+            </View>
+          )}
           <TouchableOpacity
             style={styles.option}
             onPress={props.onBackDropPress}>
@@ -119,6 +122,7 @@ const themedStyles = StyleSheet.create({
   },
   heading: {
     fontFamily: RALEWAY_BOLD,
+    marginBottom: 5,
   },
   icon: {
     height: 25,
@@ -133,6 +137,30 @@ const themedStyles = StyleSheet.create({
     fontFamily: RALEWAY_MEDIUM,
     marginLeft: 10,
   },
+  imgView: {
+    padding: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: (screenWidth - 30) / 3,
+    margin: 1,
+  },
+  img: {
+    height: 60,
+    width: 60,
+    borderRadius: 20,
+  },
+  partiView: {
+    marginTop: 20,
+  },
+  name: {
+    fontFamily: RALEWAY_MEDIUM,
+    marginTop: 5,
+  },
+  no: {
+    alignSelf: 'center',
+    fontFamily: RALEWAY_MEDIUM,
+    marginTop: 20,
+  },
 });
 
-export default SelectMeet;
+export default MeetParticpants;

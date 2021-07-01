@@ -1,6 +1,6 @@
 import {Text, useStyleSheet, Layout} from '@ui-kitten/components';
 import React from 'react';
-import {StyleSheet, Dimensions, View} from 'react-native';
+import {StyleSheet, Dimensions, View, Alert} from 'react-native';
 import useStartMeeting from '../../../hooks/Meeting/useStartMeeting';
 import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
 import {VideoStreamParams} from '../../../models/Meeting/CreateMeeting/interface';
@@ -10,6 +10,11 @@ import BackHeader from '../../../components/Headers/BackHeader/BackHeader';
 import VideoFooter from '../../../components/Footers/VideoFooter/VideoFooter';
 import MainStream from '../../../components/VideoStream/MainStream';
 import {APP_ID} from '../../../../environment';
+import VideoOptions from '../../../components/Modals/VideoOptions/VideoOptions';
+import VideoMessage from '../../../components/Modals/VideoMessage/VideoMessage';
+import MeetInfo from '../../../components/Modals/MeetInfo/MeetInfo';
+import MeetParticpants from '../../../components/Modals/MeetParticipants/MeetParticipants';
+import {getRefinedTest} from '../../../utils/Miscellaneous/utils';
 
 const dimensions = {
   width: Dimensions.get('window').width,
@@ -26,7 +31,6 @@ const VideoStream = (props: any) => {
   const {
     joinSucceed,
     peerIds,
-    endCall,
     modalVisible,
     onClickMenu,
     onClickMessage,
@@ -35,6 +39,19 @@ const VideoStream = (props: any) => {
     muteAudio,
     muteVideo,
     onSwitchCamera,
+    menuOpen,
+    confirmEnd,
+    messageOpen,
+    baithak,
+    meetInfo,
+    onPressMeetInfo,
+    showParticipants,
+    onPressParticipants,
+    onShare,
+    speakerOff,
+    onPressSpeaker,
+    inVideoOff,
+    onPressInVideo,
   } = useStartMeeting(
     {
       appId: APP_ID,
@@ -52,26 +69,49 @@ const VideoStream = (props: any) => {
 
   return (
     <Layout style={styles.main}>
-      <View style={styles.header}>
+      <VideoOptions
+        modalVisible={menuOpen}
+        onBackDropPress={onClickMenu}
+        onPressMeetInfo={onPressMeetInfo}
+        onPressParticipants={onPressParticipants}
+        onShare={onShare}
+        onPressSpeaker={onPressSpeaker}
+        speakerOff={speakerOff}
+        inVideoOff={inVideoOff}
+        onPressInVideo={onPressInVideo}
+      />
+      <VideoMessage
+        modalVisible={messageOpen}
+        onBackDropPress={onClickMessage}
+        baithak={baithak}
+      />
+      <MeetInfo
+        modalVisible={meetInfo}
+        onBackDropPress={onPressMeetInfo}
+        onShare={onShare}
+        meetConfig={meetConfig}
+      />
+      <MeetParticpants
+        modalVisible={showParticipants}
+        onBackDropPress={onPressParticipants}
+        participants={baithak?.members}
+      />
+      <View style={[styles.header, {backgroundColor: 'rgba(0, 0, 0, 0.4)'}]}>
         <BackHeader
           leftIcon="arrow-back-outline"
-          onLeftPress={() => console.log('On back')}
+          onLeftPress={confirmEnd}
           rightIcon="sync-outline"
           onRightPress={onSwitchCamera}
-          centerText={meetConfig.channelName}
+          centerText={getRefinedTest(meetConfig.channelName, 22)}
         />
       </View>
       <View style={styles.mainStream}>
-        <MainStream
-          channelName={meetConfig.channelName}
-          peerId={peerIds}
-          headerHeight={60.5}
-        />
+        <MainStream channelName={meetConfig.channelName} peerId={peerIds} />
       </View>
       <View style={styles.footer}>
         <VideoFooter
           onClickCamera={onClickCamera}
-          endCall={endCall}
+          endCall={confirmEnd}
           onClickMic={onClickMic}
           onClickMenu={onClickMenu}
           onClickMessage={onClickMessage}
@@ -90,10 +130,14 @@ const themedStyles = StyleSheet.create({
   header: {
     // marin: 10,
     paddingHorizontal: 15,
-    borderBottomWidth: 0.5,
     paddingBottom: 15,
-    borderColor: 'grey',
     paddingRight: 20,
+    zIndex: 2,
+    borderRadius: 10,
+    position: 'absolute',
+    right: 10,
+    left: 10,
+    top: 10,
   },
   mainStream: {
     flex: 1,

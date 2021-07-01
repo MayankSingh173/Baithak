@@ -41,7 +41,7 @@ const VideoFooter = (props: props) => {
           borderRadius: 30,
         }}>
         <Icon
-          name="phone-call-outline"
+          name="phone-outline"
           style={{width: 30, height: 30}}
           fill="#FFFF"
         />
@@ -56,7 +56,7 @@ const VideoFooter = (props: props) => {
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={props.onClickMenu}
+        onPress={props.onClickMessage}
         style={[styles.iconView, {backgroundColor: 'rgba(0, 0, 0, 0.2)'}]}>
         <Icon
           name="message-square-outline"

@@ -6,28 +6,46 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
 import {RALEWAY_BOLD, RALEWAY_MEDIUM} from '../../../constants/Fonts/Fonts';
 import {optionProp} from '../../../models/Meeting/CreateMeeting/interface';
+import {useState} from 'react';
 
 interface props {
   modalVisible: boolean;
   onBackDropPress: () => void;
-  onCreateMeet: () => void;
-  onJoinMeet: () => void;
+  onPressMeetInfo: () => void;
+  onPressParticipants: () => void;
+  onShare: () => void;
+  onPressSpeaker: () => void;
+  speakerOff: boolean;
+  inVideoOff: boolean;
+  onPressInVideo: () => void;
 }
 
-const SelectMeet = (props: props) => {
+const VideoOptions = (props: props) => {
   const styles = useStyleSheet(themedStyles);
+  const [meetInfo, toogleMeetInfo] = useState<boolean>(false);
 
   const options: optionProp[] = [
     {
-      icon: 'plus-circle-outline',
-      onPress: props.onCreateMeet,
-      text: 'Create Baithak',
+      icon: 'info-outline',
+      onPress: props.onPressMeetInfo,
+      text: 'Baithak info',
     },
     {
-      icon: 'video-outline',
-      onPress: props.onJoinMeet,
-      text: 'Join Baithak',
+      icon: 'people-outline',
+      onPress: props.onPressParticipants,
+      text: 'Participants',
     },
+    {
+      icon: props.speakerOff ? 'volume-up-outline' : 'volume-off-outline',
+      onPress: props.onPressSpeaker,
+      text: props.speakerOff ? 'Audio On' : 'Audio Off',
+    },
+    {
+      icon: props.inVideoOff ? 'video-outline' : 'video-off-outline',
+      onPress: props.onPressInVideo,
+      text: `Turn ${props.inVideoOff ? 'on' : 'off'} incoming video`,
+    },
+    {icon: 'share-outline', onPress: props.onShare, text: 'Share'},
   ];
 
   const theme = useSelector(
@@ -50,7 +68,7 @@ const SelectMeet = (props: props) => {
         </View>
         <View style={styles.container}>
           <Text category="h6" style={styles.heading}>
-            Want a start Baithak ?
+            Options
           </Text>
           {options.map((option, index) => {
             return (
@@ -135,4 +153,4 @@ const themedStyles = StyleSheet.create({
   },
 });
 
-export default SelectMeet;
+export default VideoOptions;

@@ -35,7 +35,9 @@ const MainNavigator = () => {
         ) : status === FAIL ||
           (status === SUCCESS && firebaseUser.uid !== '') ? (
           <AuthStackNavigator /> //Auth Stack
-        ) : null //Edge case
+        ) : (
+          <PendingStackNavigator />
+        ) //Edge case
       }
     </NavigationContainer>
   );

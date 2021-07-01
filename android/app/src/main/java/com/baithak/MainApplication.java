@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.goodatlas.audiorecord.RNAudioRecordPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.oblador.vectoricons.VectorIconsPackage;

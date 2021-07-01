@@ -29,8 +29,6 @@ export const checkPermission = async () => {
     const micPerm = await PermissionsAndroid.check(
       'android.permission.RECORD_AUDIO',
     );
-
-    console.log(cameraPerm, micPerm);
     if (!cameraPerm || !micPerm) {
       await requestCameraAndAudioPermission();
     } else {
