@@ -20,6 +20,7 @@ import {checkPermission} from '../../utils/Permissions/Permission';
 import firestore from '@react-native-firebase/firestore';
 import {Share, ToastAndroid} from 'react-native';
 import {getShareMessage} from '../../utils/Meeting/Methods/getShareMessage';
+import Toast from 'react-native-toast-message';
 
 interface props {
   appId: string;
@@ -189,10 +190,12 @@ const useStartMeeting = (
   const onPressSpeaker = () => {
     if (engine.current) {
       toogleSpeaker(!speakerOff);
-      ToastAndroid.show(
-        `Incoming Audios are ${speakerOff ? 'On' : 'Off'}!`,
-        ToastAndroid.SHORT,
-      );
+      Toast.show({
+        type: 'info',
+        text1: `Incoming Audios are ${speakerOff ? 'On' : 'Off'}!`,
+        position: 'top',
+      });
+      if (menuOpen) setMenuOpen(!menuOpen);
       engine.current?.muteAllRemoteAudioStreams(speakerOff);
     }
   };
@@ -201,10 +204,12 @@ const useStartMeeting = (
   const onPressInVideo = () => {
     if (engine.current) {
       toogleInVideoOff(!inVideoOff);
-      ToastAndroid.show(
-        `Incoming Videos are ${inVideoOff ? 'On' : 'Off'}!`,
-        ToastAndroid.SHORT,
-      );
+      Toast.show({
+        type: 'info',
+        text1: `Incoming Videos are ${inVideoOff ? 'On' : 'Off'}!`,
+        position: 'top',
+      });
+      if (menuOpen) setMenuOpen(!menuOpen);
       engine.current?.muteAllRemoteVideoStreams(inVideoOff);
     }
   };

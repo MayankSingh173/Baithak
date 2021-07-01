@@ -15,6 +15,7 @@ import {UserInterface} from '../../models/User/User';
 import {addNewUserObj} from '../../utils/User/Methods/addNewUserObj';
 import {updateUserObjOnAuth} from '../../utils/User/Methods/updateUserObjOnAuth';
 import useFirestore from '../Firestore/useFirestore';
+import Toast from 'react-native-toast-message';
 
 const useAuth = () => {
   const [firebaseUserRef, setFirebaseUserRef] = useState<
@@ -53,7 +54,12 @@ const useAuth = () => {
               user.photoURL ? user.photoURL : undefined,
               false,
             );
-            ToastAndroid.show('Successfully login !', ToastAndroid.SHORT);
+            Toast.show({
+              type: 'success',
+              text1: 'Great Success👍',
+              text2: 'You have successfully login into the app',
+              position: 'top',
+            });
           } else {
             //Update the User
             await updateUserObjOnAuth(

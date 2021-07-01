@@ -80,7 +80,11 @@ const MainTabNavigator = () => (
     <Screen name={MEET_HOME_SCREEN} component={MeetScreen} />
     <Screen name={CHAT_HOME_SCREEN} component={ChatHome} />
     <Screen name={ACTIVITY_HOME_SCREEN} component={ActivityScreen} />
-    <Screen name={PROFILE_SCREEN} component={ProfileScreen} />
+    <Screen
+      name={PROFILE_SCREEN}
+      component={ProfileScreen}
+      initialParams={{myProfile: true}}
+    />
   </Navigator>
 );
 

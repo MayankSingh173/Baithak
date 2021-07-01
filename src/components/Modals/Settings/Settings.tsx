@@ -1,55 +1,33 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
-import {Layout, useStyleSheet, Text, Icon} from '@ui-kitten/components';
+import {Layout, useStyleSheet, Text, Icon, Toggle} from '@ui-kitten/components';
 import Modal from 'react-native-modal';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
 import {RALEWAY_BOLD, RALEWAY_MEDIUM} from '../../../constants/Fonts/Fonts';
 import {optionProp} from '../../../models/Meeting/CreateMeeting/interface';
 import {useState} from 'react';
+import FullDivider from '../../Divider/FullDivider';
+import {updateTheme} from '../../../store/theme/actionCreator/updateTheme';
 
 interface props {
   modalVisible: boolean;
   onBackDropPress: () => void;
-  onPressMeetInfo: () => void;
-  onPressParticipants: () => void;
-  onShare: () => void;
-  onPressSpeaker: () => void;
-  speakerOff: boolean;
-  inVideoOff: boolean;
-  onPressInVideo: () => void;
 }
 
-const VideoOptions = (props: props) => {
+const Settings = (props: props) => {
   const styles = useStyleSheet(themedStyles);
 
-  const options: optionProp[] = [
-    {
-      icon: 'info-outline',
-      onPress: props.onPressMeetInfo,
-      text: 'Baithak info',
-    },
-    {
-      icon: 'people-outline',
-      onPress: props.onPressParticipants,
-      text: 'Participants',
-    },
-    {
-      icon: props.speakerOff ? 'volume-up-outline' : 'volume-off-outline',
-      onPress: props.onPressSpeaker,
-      text: props.speakerOff ? 'Audio On' : 'Audio Off',
-    },
-    {
-      icon: props.inVideoOff ? 'video-outline' : 'video-off-outline',
-      onPress: props.onPressInVideo,
-      text: `Turn ${props.inVideoOff ? 'on' : 'off'} incoming video`,
-    },
-    {icon: 'share-outline', onPress: props.onShare, text: 'Share'},
-  ];
+  const storeDispatch = useDispatch();
 
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
+
+  const changeTheme = () => {
+    storeDispatch(updateTheme(theme === 'dark' ? 'light' : 'dark'));
+  };
+
   return (
     <Modal
       isVisible={props.modalVisible}
@@ -67,25 +45,15 @@ const VideoOptions = (props: props) => {
         </View>
         <View style={styles.container}>
           <Text category="h6" style={styles.heading}>
-            Options
+            Settings
           </Text>
-          {options.map((option, index) => {
-            return (
-              <TouchableOpacity
-                style={styles.option}
-                onPress={option.onPress}
-                key={index}>
-                <Icon style={styles.icon} name={option.icon} fill={'#45F1DE'} />
-                <Text
-                  style={[
-                    styles.createMeet,
-                    {color: theme === 'dark' ? '#D4D4D4' : 'black'},
-                  ]}>
-                  {option.text}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
+          <FullDivider />
+          <View style={styles.modeView}>
+            <Text category="h6" style={styles.dark}>
+              Dark Mode
+            </Text>
+            <Toggle checked={theme === 'dark'} onChange={changeTheme} />
+          </View>
           <TouchableOpacity
             style={styles.option}
             onPress={props.onBackDropPress}>
@@ -150,6 +118,15 @@ const themedStyles = StyleSheet.create({
     fontFamily: RALEWAY_MEDIUM,
     marginLeft: 10,
   },
+  modeView: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  dark: {
+    fontFamily: RALEWAY_MEDIUM,
+  },
 });
 
-export default VideoOptions;
+export default Settings;

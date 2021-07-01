@@ -8,11 +8,13 @@ import {Message} from '../../../models/Messages/interface';
 import {getUser} from '../../../utils/Messages/Meeting/utils';
 import {debounce} from 'lodash';
 import {getTime} from '../../../utils/Miscellaneous/utils';
+import Toast from 'react-native-toast-message';
 
 const useGetMeetMssg = (Baithak: Baithak) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [lastDoc, setLastDoc] = useState<FirebaseFirestoreTypes.DocumentData>();
   const [isMoreLoading, setIsMoreLoading] = useState<boolean>(false);
+  const [lastMessage, setLastMssg] = useState<Message>();
 
   useEffect(() => {
     try {
@@ -23,6 +25,11 @@ const useGetMeetMssg = (Baithak: Baithak) => {
         .orderBy('createdAt', 'desc')
         .limit(15)
         .onSnapshot((querySnapshot) => {
+          querySnapshot.docChanges().forEach((change) => {
+            if (change.type === 'added') {
+              change.doc.exists && setLastMssg(change.doc.data() as Message);
+            }
+          });
           const chats: IMessage[] = [];
           querySnapshot.forEach((doc) => {
             const local_message = doc.exists && (doc.data() as Message);
@@ -84,6 +91,20 @@ const useGetMeetMssg = (Baithak: Baithak) => {
     }, 40),
     [lastDoc],
   );
+
+  useEffect(() => {
+    if (lastMessage) {
+      const user = getUser(lastMessage.uid, Baithak);
+      if (lastMessage.uid !== user._id) {
+        Toast.show({
+          type: 'success',
+          text1: user.name,
+          text2: lastMessage.text,
+          position: 'bottom',
+        });
+      }
+    }
+  }, [lastMessage]);
 
   const handleSend = async (mssgs: IMessage[]) => {
     try {

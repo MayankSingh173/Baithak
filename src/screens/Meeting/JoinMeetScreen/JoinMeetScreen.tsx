@@ -79,7 +79,7 @@ const JoinMeetScreen = (props: any) => {
                 status="basic"
                 placeholder="Baithak ID"
                 onBlur={() => formikProps.setFieldTouched('meetId')}
-                keyboardType="email-address"
+                keyboardType="phone-pad"
                 accessoryLeft={NameIcon}
                 value={formikProps.values.meetId}
                 onChangeText={formikProps.handleChange('meetId')}
