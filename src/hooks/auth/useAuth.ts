@@ -10,7 +10,7 @@ import {
   setFirebaseUser,
 } from '../../store/User/actionCreator/addFirebaseUser';
 import {FAIL, SUCCESS} from '../../constants/RemoteStates/remotestates';
-import {Platform} from 'react-native';
+import {Platform, ToastAndroid} from 'react-native';
 import {UserInterface} from '../../models/User/User';
 import {addNewUserObj} from '../../utils/User/Methods/addNewUserObj';
 import {updateUserObjOnAuth} from '../../utils/User/Methods/updateUserObjOnAuth';
@@ -53,6 +53,7 @@ const useAuth = () => {
               user.photoURL ? user.photoURL : undefined,
               false,
             );
+            ToastAndroid.show('Successfully login !', ToastAndroid.SHORT);
           } else {
             //Update the User
             await updateUserObjOnAuth(

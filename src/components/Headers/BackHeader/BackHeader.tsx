@@ -32,8 +32,9 @@ const BackHeader = (props: props) => {
         </TouchableOpacity>
       )}
       {props.centerText && (
-        <View style={styles.textView}>
-          <Text category="h5" style={styles.centerText}>
+        <View
+          style={[styles.textView, {width: props.rightIcon ? '75%' : '85%'}]}>
+          <Text category="h5" style={[styles.centerText]}>
             {props.centerText}
           </Text>
         </View>
@@ -58,6 +59,7 @@ const themedStyles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 10,
     alignItems: 'center',
+    position: 'relative',
   },
   leftView: {},
   rightView: {},
@@ -71,6 +73,7 @@ const themedStyles = StyleSheet.create({
   },
   textView: {
     width: '75%',
+    alignItems: 'flex-start',
   },
   rightIcon: {
     height: 25,

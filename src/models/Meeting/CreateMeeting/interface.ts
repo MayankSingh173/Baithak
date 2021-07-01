@@ -40,3 +40,9 @@ export interface JoinMeetForm {
   meetId: string;
   password: string;
 }
+
+export interface optionProp {
+  icon: string;
+  onPress: () => void;
+  text: string;
+}

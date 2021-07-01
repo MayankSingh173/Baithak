@@ -4,7 +4,8 @@ import {Layout, useStyleSheet, Text, Icon} from '@ui-kitten/components';
 import Modal from 'react-native-modal';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
-import {RALEWAY_BOLD, RALEWAY_REGULAR} from '../../../constants/Fonts/Fonts';
+import {RALEWAY_BOLD, RALEWAY_MEDIUM} from '../../../constants/Fonts/Fonts';
+import {optionProp} from '../../../models/Meeting/CreateMeeting/interface';
 
 interface props {
   modalVisible: boolean;
@@ -15,6 +16,19 @@ interface props {
 
 const SelectMeet = (props: props) => {
   const styles = useStyleSheet(themedStyles);
+
+  const options: optionProp[] = [
+    {
+      icon: 'plus-circle-outline',
+      onPress: props.onCreateMeet,
+      text: 'Create Baithak',
+    },
+    {
+      icon: 'video-outline',
+      onPress: props.onJoinMeet,
+      text: 'Join Baithak',
+    },
+  ];
 
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
@@ -32,34 +46,43 @@ const SelectMeet = (props: props) => {
       onBackButtonPress={props.onBackDropPress}>
       <Layout level={theme === 'dark' ? '3' : '1'} style={styles.main}>
         <View style={styles.header}>
-          <Layout level={theme === 'dark' ? '2' : '4'} style={styles.drop} />
+          <Layout level={theme === 'dark' ? '2' : '3'} style={styles.drop} />
         </View>
         <View style={styles.container}>
           <Text category="h6" style={styles.heading}>
-            Want a Meeting?
+            Want a start Baithak ?
           </Text>
-          <TouchableOpacity style={styles.option} onPress={props.onCreateMeet}>
+          {options.map((option, index) => {
+            return (
+              <TouchableOpacity
+                style={styles.option}
+                onPress={option.onPress}
+                key={index}>
+                <Icon style={styles.icon} name={option.icon} fill={'#45F1DE'} />
+                <Text
+                  style={[
+                    styles.createMeet,
+                    {color: theme === 'dark' ? '#D4D4D4' : 'black'},
+                  ]}>
+                  {option.text}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+          <TouchableOpacity
+            style={styles.option}
+            onPress={props.onBackDropPress}>
             <Icon
-              style={styles.icon}
-              name="plus-circle-outline"
-              fill={'#45F1DE'}
+              style={{width: 30, height: 30}}
+              name="close-outline"
+              fill={theme === 'dark' ? '#FFFF' : 'black'}
             />
             <Text
               style={[
                 styles.createMeet,
                 {color: theme === 'dark' ? '#D4D4D4' : 'black'},
               ]}>
-              Create Meeting
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.option} onPress={props.onJoinMeet}>
-            <Icon style={styles.icon} name="video-outline" fill={'#45F1DE'} />
-            <Text
-              style={[
-                styles.createMeet,
-                {color: theme === 'dark' ? '#D4D4D4' : 'black'},
-              ]}>
-              Join Meeting
+              Close
             </Text>
           </TouchableOpacity>
         </View>
@@ -92,6 +115,7 @@ const themedStyles = StyleSheet.create({
   },
   container: {
     padding: 20,
+    paddingBottom: 0,
   },
   heading: {
     fontFamily: RALEWAY_BOLD,
@@ -106,7 +130,7 @@ const themedStyles = StyleSheet.create({
     marginTop: 20,
   },
   createMeet: {
-    fontFamily: RALEWAY_REGULAR,
+    fontFamily: RALEWAY_MEDIUM,
     marginLeft: 10,
   },
 });

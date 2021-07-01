@@ -13,6 +13,7 @@ import {RALEWAY_BOLD, RALEWAY_REGULAR} from '../../../constants/Fonts/Fonts';
 import LottieView from 'lottie-react-native';
 import {MeetIcon} from '../../../components/Icons/Icons';
 import SelectMeet from '../../../components/Modals/SelectMeet/SelectMeet';
+import {screenHeight} from '../../../constants/screen/screenInfo';
 
 const MeetScreen = (props: any) => {
   const [selectMeet, setSelectMeet] = useState<boolean>(false);
@@ -39,10 +40,10 @@ const MeetScreen = (props: any) => {
       />
       <GeneralHeader
         firebaseUser={firebaseUser}
-        heading="Meet"
-        rightIcon="settings-outline"
+        heading="Baithak"
+        rightIcon="video-outline"
         onPressLeft={() => props.navigation.navigate(PROFILE_SCREEN)}
-        onPressRight={() => console.log('Move to Settings Screen')}
+        onPressRight={() => setSelectMeet(!selectMeet)}
       />
       <View style={styles.container}>
         <View style={styles.imageView}>
@@ -54,7 +55,7 @@ const MeetScreen = (props: any) => {
           />
         </View>
         <Text category="h6" style={styles.startMeet}>
-          Start a meeting
+          Start a Baithak
         </Text>
         <Text style={[styles.tagLine, {color: appTheme['color-basic-600']}]}>
           You're friends are waiting for you. Join Now!
@@ -76,7 +77,7 @@ const MeetScreen = (props: any) => {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    padding: 10,
+    // padding: 10,
   },
   container: {
     flex: 1,
@@ -84,8 +85,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: 210,
-    height: 210,
+    height: screenHeight - 500,
   },
   imageView: {
     alignItems: 'center',

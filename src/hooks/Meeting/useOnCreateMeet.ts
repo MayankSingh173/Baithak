@@ -29,6 +29,7 @@ const useOnCreateMeet = (navigation: any, agoraId: number) => {
         agoraId: agoraId,
         creater: 'Host',
       } as VideoStreamParams);
+      toggleModal(false);
     } else {
       generalError(() => toggleModal(false), {
         title: TITLE,

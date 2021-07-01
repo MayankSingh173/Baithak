@@ -1,11 +1,11 @@
 import {Layout, Text} from '@ui-kitten/components';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 
 const ActivityScreen = () => {
   return (
     <Layout level="1" style={styles.main}>
-      <Text>Activity Screen</Text>
+      <Text>Activity</Text>
     </Layout>
   );
 };

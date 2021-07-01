@@ -23,13 +23,14 @@ const useJoinMeet = (navigation: any, agoraId: number) => {
   //Here meetId = channelName
   const handleSubmit = async (meetDetails: JoinMeetForm) => {
     toggleModal(true);
-    setFormState(meetDetails);
+    await joinMeet(meetDetails);
   };
 
-  const joinMeet = async () => {
-    const videoStreamParams = await onJoinMeet(formState, agoraId);
+  const joinMeet = async (meetDetails: JoinMeetForm) => {
+    const videoStreamParams = await onJoinMeet(meetDetails, agoraId);
     if (videoStreamParams) {
       navigation.navigate(VIDEO_STREAM, videoStreamParams);
+      toggleModal(false);
     } else {
       generalError(() => toggleModal(false), {
         title: TITLE,
@@ -38,12 +39,6 @@ const useJoinMeet = (navigation: any, agoraId: number) => {
       });
     }
   };
-
-  useEffect(() => {
-    if (initialFormState.meetId && initialFormState.password) {
-      joinMeet;
-    }
-  }, [formState]);
 
   return {
     passwordVisible,

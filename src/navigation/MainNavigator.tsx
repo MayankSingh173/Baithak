@@ -29,13 +29,16 @@ const MainNavigator = () => {
 
   return (
     <NavigationContainer theme={navigatorTheme}>
-      {status === SUCCESS && firebaseUser.uid ? (
-        <MainStackNavigator /> //Main App
-      ) : status === FAIL || (status === SUCCESS && firebaseUser.uid !== '') ? (
-        <AuthStackNavigator /> //Auth Stack
-      ) : (
-        <PendingStackNavigator /> //Edge case
-      )}
+      {
+        status === SUCCESS && firebaseUser.uid ? (
+          <MainStackNavigator /> //Main App
+        ) : status === FAIL ||
+          (status === SUCCESS && firebaseUser.uid !== '') ? (
+          <AuthStackNavigator /> //Auth Stack
+        ) : (
+          <PendingStackNavigator />
+        ) //Edge case
+      }
     </NavigationContainer>
   );
 };

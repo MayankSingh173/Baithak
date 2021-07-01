@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {View} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import {
   StyleService,
   useStyleSheet,
@@ -39,61 +39,63 @@ const ForgotPassword: FC<props> = ({navigation}) => {
   return (
     <Layout level={theme === 'dark' ? '4' : '1'} style={styles.main}>
       <ModalActivityIndicator modalVisible={isLoading} />
-      <View style={styles.semiCircle} />
-      <View style={styles.container}>
-        <Text style={styles.heading} category="h3">
-          Hey,
-        </Text>
-        <Text style={styles.heading} category="h3">
-          Forgot Password ?
-        </Text>
-        <Text style={styles.createAccount}>
-          No Worries /
-          <Text style={{fontFamily: RALEWAY_MEDIUM}}> Create New</Text>
-        </Text>
-        <Formik
-          initialValues={initialFormState}
-          validationSchema={passwordResetSchema}
-          validateOnBlur
-          onSubmit={onPasswordReset}>
-          {(formikProps) => (
-            <View style={styles.formContainer}>
-              <Input
-                textStyle={{fontFamily: RALEWAY_MEDIUM}}
-                style={styles.emailInput}
-                status="basic"
-                placeholder="Email"
-                onBlur={() => formikProps.setFieldTouched('email')}
-                keyboardType="email-address"
-                caption={
-                  formikProps.errors.email && formikProps.touched.email
-                    ? formikProps.errors.email
-                    : ''
-                }
-                accessoryLeft={EmailIcon}
-                value={formikProps.values.email}
-                onChangeText={formikProps.handleChange('email')}
-                size="large"
-              />
-              <Text
-                style={[
-                  styles.createAccount,
-                  {marginTop: 20, alignSelf: 'center'},
-                ]}
-                onPress={() => navigation.navigate(SIGN_IN_SCREEN)}>
-                Want to Login ? /
-                <Text style={{fontFamily: RALEWAY_MEDIUM}}> Sign In</Text>
-              </Text>
-              <Button
-                style={styles.resetButton}
-                size="large"
-                onPress={formikProps.handleSubmit}>
-                Get Reset link
-              </Button>
-            </View>
-          )}
-        </Formik>
-      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.semiCircle} />
+        <View style={styles.container}>
+          <Text style={styles.heading} category="h3">
+            Hey,
+          </Text>
+          <Text style={styles.heading} category="h3">
+            Forgot Password ?
+          </Text>
+          <Text style={styles.createAccount}>
+            No Worries /
+            <Text style={{fontFamily: RALEWAY_MEDIUM}}> Create New</Text>
+          </Text>
+          <Formik
+            initialValues={initialFormState}
+            validationSchema={passwordResetSchema}
+            validateOnBlur
+            onSubmit={onPasswordReset}>
+            {(formikProps) => (
+              <View style={styles.formContainer}>
+                <Input
+                  textStyle={{fontFamily: RALEWAY_MEDIUM}}
+                  style={styles.emailInput}
+                  status="basic"
+                  placeholder="Email"
+                  onBlur={() => formikProps.setFieldTouched('email')}
+                  keyboardType="email-address"
+                  caption={
+                    formikProps.errors.email && formikProps.touched.email
+                      ? formikProps.errors.email
+                      : ''
+                  }
+                  accessoryLeft={EmailIcon}
+                  value={formikProps.values.email}
+                  onChangeText={formikProps.handleChange('email')}
+                  size="large"
+                />
+                <Text
+                  style={[
+                    styles.createAccount,
+                    {marginTop: 20, alignSelf: 'center'},
+                  ]}
+                  onPress={() => navigation.navigate(SIGN_IN_SCREEN)}>
+                  Want to Login ? /
+                  <Text style={{fontFamily: RALEWAY_MEDIUM}}> Sign In</Text>
+                </Text>
+                <Button
+                  style={styles.resetButton}
+                  size="large"
+                  onPress={formikProps.handleSubmit}>
+                  Get Reset link
+                </Button>
+              </View>
+            )}
+          </Formik>
+        </View>
+      </ScrollView>
     </Layout>
   );
 };

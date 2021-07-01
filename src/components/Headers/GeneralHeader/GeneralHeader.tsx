@@ -8,7 +8,7 @@ import {
   useTheme,
 } from '@ui-kitten/components';
 import {UserInterface} from '../../../models/User/User';
-import {RALEWAY_BOLD, RALEWAY_MEDIUM} from '../../../constants/Fonts/Fonts';
+import {RALEWAY_BOLD} from '../../../constants/Fonts/Fonts';
 import {DEFAULT_AVATAR} from '../../../constants/Images/Images';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
@@ -55,6 +55,16 @@ const GeneralHeader: FC<props> = ({
             {heading}
           </Text>
         </View>
+        <View style={styles.dotView}>
+          <View
+            style={[
+              styles.dot,
+              {
+                backgroundColor: theme['color-primary-default'],
+              },
+            ]}
+          />
+        </View>
         {rightIcon && (
           <TouchableOpacity style={styles.iconView} onPress={onPressRight}>
             <Icon
@@ -74,8 +84,10 @@ const GeneralHeader: FC<props> = ({
 
 const themedStyles = StyleSheet.create({
   main: {
-    marginTop: 10,
+    marginTop: '3%',
     borderBottomWidth: 0.3,
+    padding: 5,
+    paddingBottom: 2,
   },
   firstRow: {
     flexDirection: 'row',
@@ -89,9 +101,7 @@ const themedStyles = StyleSheet.create({
     marginLeft: 15,
   },
   headingView: {
-    width: '68%',
     justifyContent: 'center',
-    //  alignItems: 'center',
   },
   iconView: {
     width: '30%',
@@ -105,7 +115,19 @@ const themedStyles = StyleSheet.create({
   searchBarView: {
     padding: 10,
     paddingHorizontal: 5,
-    marginVertical: 6,
+    marginTop: 6,
+  },
+  dot: {
+    height: 10,
+    marginHorizontal: 10,
+    borderRadius: 30,
+    width: 10,
+    marginTop: 12,
+  },
+  dotView: {
+    justifyContent: 'center',
+    width: '45%',
+    alignItems: 'flex-start',
   },
 });
 

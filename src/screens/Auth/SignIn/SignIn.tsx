@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity, ScrollView} from 'react-native';
 import {
   StyleService,
   useStyleSheet,
@@ -56,99 +56,101 @@ const SignIn = (props: props) => {
 
   return (
     <Layout level={theme === 'dark' ? '4' : '1'} style={styles.main}>
-      <ModalActivityIndicator modalVisible={isLoading} />
-      <View style={styles.semiCircle} />
-      <View style={styles.container}>
-        <Text style={styles.heading} category="h3">
-          Hey,
-        </Text>
-        <Text style={styles.heading} category="h3">
-          Login Now,
-        </Text>
-        <Text
-          style={styles.createAccount}
-          onPress={() => props.navigation.navigate(SIGN_UP_SCREEN)}>
-          If you are new /
-          <Text style={{fontFamily: RALEWAY_MEDIUM}}> Create New</Text>
-        </Text>
-        <Formik
-          initialValues={initialFormState}
-          validationSchema={signInSchema}
-          validateOnBlur
-          onSubmit={onSignInButtonPress}>
-          {(formikProps) => (
-            <View style={styles.formContainer}>
-              <Input
-                textStyle={{fontFamily: RALEWAY_MEDIUM}}
-                style={styles.emailInput}
-                status="basic"
-                placeholder="Email"
-                onBlur={() => formikProps.setFieldTouched('email')}
-                keyboardType="email-address"
-                caption={
-                  formikProps.errors.email && formikProps.touched.email
-                    ? formikProps.errors.email
-                    : ''
-                }
-                accessoryLeft={EmailIcon}
-                value={formikProps.values.email}
-                onChangeText={formikProps.handleChange('email')}
-                size="large"
-              />
-              <Input
-                textStyle={{fontFamily: RALEWAY_MEDIUM}}
-                style={styles.passwordInput}
-                status="basic"
-                size="large"
-                placeholder="Password"
-                onBlur={() => formikProps.setFieldTouched('password')}
-                accessoryRight={EyeIcon}
-                value={formikProps.values.password}
-                caption={
-                  formikProps.errors.password && formikProps.touched.password
-                    ? formikProps.errors.password
-                    : ''
-                }
-                accessoryLeft={PasswordIcon}
-                secureTextEntry={!passwordVisible}
-                onChangeText={formikProps.handleChange('password')}
-              />
-              <Text
-                style={[
-                  styles.createAccount,
-                  {marginTop: 20, alignSelf: 'center'},
-                ]}
-                onPress={() =>
-                  props.navigation.navigate(FORGOT_PASSWORD_SCREEN)
-                }>
-                Forgot Password ? /
-                <Text style={{fontFamily: RALEWAY_MEDIUM}}> Reset</Text>
-              </Text>
-              <Button
-                style={styles.signInButton}
-                size="large"
-                onPress={formikProps.handleSubmit}>
-                Sign In
-              </Button>
-              <Divider centerText="Or" />
-              <LogoButton
-                onPress={onGoogleAuth}
-                buttonType="google"
-                title="Sign in with Google"
-                style={styles.buttonHolder}
-                src={require('../../../assets/Logos/googleButton.png')}
-              />
-              <LogoButton
-                onPress={onFacebookAuth}
-                buttonType="facebook"
-                title="Sign in with Facebook"
-                style={styles.buttonHolder}
-                src={require('../../../assets/Logos/facebookButton.png')}
-              />
-            </View>
-          )}
-        </Formik>
-      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <ModalActivityIndicator modalVisible={isLoading} />
+        <View style={styles.semiCircle} />
+        <View style={styles.container}>
+          <Text style={styles.heading} category="h3">
+            Hey,
+          </Text>
+          <Text style={styles.heading} category="h3">
+            Login Now,
+          </Text>
+          <Text
+            style={styles.createAccount}
+            onPress={() => props.navigation.navigate(SIGN_UP_SCREEN)}>
+            If you are new /
+            <Text style={{fontFamily: RALEWAY_MEDIUM}}> Create New</Text>
+          </Text>
+          <Formik
+            initialValues={initialFormState}
+            validationSchema={signInSchema}
+            validateOnBlur
+            onSubmit={onSignInButtonPress}>
+            {(formikProps) => (
+              <View style={styles.formContainer}>
+                <Input
+                  textStyle={{fontFamily: RALEWAY_MEDIUM}}
+                  style={styles.emailInput}
+                  status="basic"
+                  placeholder="Email"
+                  onBlur={() => formikProps.setFieldTouched('email')}
+                  keyboardType="email-address"
+                  caption={
+                    formikProps.errors.email && formikProps.touched.email
+                      ? formikProps.errors.email
+                      : ''
+                  }
+                  accessoryLeft={EmailIcon}
+                  value={formikProps.values.email}
+                  onChangeText={formikProps.handleChange('email')}
+                  size="large"
+                />
+                <Input
+                  textStyle={{fontFamily: RALEWAY_MEDIUM}}
+                  style={styles.passwordInput}
+                  status="basic"
+                  size="large"
+                  placeholder="Password"
+                  onBlur={() => formikProps.setFieldTouched('password')}
+                  accessoryRight={EyeIcon}
+                  value={formikProps.values.password}
+                  caption={
+                    formikProps.errors.password && formikProps.touched.password
+                      ? formikProps.errors.password
+                      : ''
+                  }
+                  accessoryLeft={PasswordIcon}
+                  secureTextEntry={!passwordVisible}
+                  onChangeText={formikProps.handleChange('password')}
+                />
+                <Text
+                  style={[
+                    styles.createAccount,
+                    {marginTop: 20, alignSelf: 'center'},
+                  ]}
+                  onPress={() =>
+                    props.navigation.navigate(FORGOT_PASSWORD_SCREEN)
+                  }>
+                  Forgot Password ? /
+                  <Text style={{fontFamily: RALEWAY_MEDIUM}}> Reset</Text>
+                </Text>
+                <Button
+                  style={styles.signInButton}
+                  size="large"
+                  onPress={formikProps.handleSubmit}>
+                  Login
+                </Button>
+                <Divider centerText="Or" />
+                <LogoButton
+                  onPress={onGoogleAuth}
+                  buttonType="google"
+                  title="Sign in with Google"
+                  style={styles.buttonHolder}
+                  src={require('../../../assets/Logos/googleButton.png')}
+                />
+                <LogoButton
+                  onPress={onFacebookAuth}
+                  buttonType="facebook"
+                  title="Sign in with Facebook"
+                  style={styles.buttonHolder}
+                  src={require('../../../assets/Logos/facebookButton.png')}
+                />
+              </View>
+            )}
+          </Formik>
+        </View>
+      </ScrollView>
     </Layout>
   );
 };

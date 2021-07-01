@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "674208648605-1i6jfh0e357mtti5nrd16q9u3jo6kmvc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.baithak",
+            "certificate_hash": "a835582ce77c923b3c3ec33e1bee1d9d98b08621"
+          }
+        },
+        {
+          "client_id": "674208648605-ekc8f1rlquhkf4ki9r9l9etf7eag4j7f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.baithak",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
           "client_id": "674208648605-ulil75i3oidb59cemelerrqvffd6m5mp.apps.googleusercontent.com",
           "client_type": 3
         }

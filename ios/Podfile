@@ -23,6 +23,8 @@ target 'Baithak' do
 
   pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
 
+  pod 'RNAudioRecord', :path => '../node_modules/react-native-audio-record'
+
   target 'BaithakTests' do
     inherit! :complete
     # Pods for testing

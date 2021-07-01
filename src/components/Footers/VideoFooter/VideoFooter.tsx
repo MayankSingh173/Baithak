@@ -15,19 +15,12 @@ interface props {
 }
 
 const VideoFooter = (props: props) => {
-  const theme = useSelector(
-    (reduxState: RootState) => reduxState.ThemeReducer.theme,
-  );
   return (
     <View style={styles.main}>
       <TouchableOpacity
         onPress={props.onClickMenu}
         style={[styles.iconView, {backgroundColor: 'rgba(0, 0, 0, 0.2)'}]}>
-        <Icon
-          name="more-vertical-outline"
-          style={[styles.icon]}
-          fill={theme === 'dark' ? 'white' : 'black'}
-        />
+        <Icon name="more-vertical-outline" style={[styles.icon]} fill="white" />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={props.onClickCamera}
@@ -35,15 +28,21 @@ const VideoFooter = (props: props) => {
         <Icon
           name={props.muteVideo ? 'video-off-outline' : 'video-outline'}
           style={[styles.icon]}
-          fill={theme === 'dark' ? 'white' : 'black'}
+          fill="white"
         />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={props.endCall}
-        style={[styles.iconView, {backgroundColor: 'red'}]}>
+        style={{
+          backgroundColor: 'red',
+          padding: 15,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: 30,
+        }}>
         <Icon
           name="phone-outline"
-          style={{width: 35, height: 35}}
+          style={{width: 30, height: 30}}
           fill="#FFFF"
         />
       </TouchableOpacity>
@@ -53,16 +52,16 @@ const VideoFooter = (props: props) => {
         <Icon
           name={props.muteAudio ? 'mic-off-outline' : 'mic-outline'}
           style={[styles.icon]}
-          fill={theme === 'dark' ? 'white' : 'black'}
+          fill="white"
         />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={props.onClickMenu}
+        onPress={props.onClickMessage}
         style={[styles.iconView, {backgroundColor: 'rgba(0, 0, 0, 0.2)'}]}>
         <Icon
           name="message-square-outline"
           style={[styles.icon]}
-          fill={theme === 'dark' ? 'white' : 'black'}
+          fill="white"
         />
       </TouchableOpacity>
     </View>

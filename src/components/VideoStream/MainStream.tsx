@@ -1,6 +1,8 @@
 import React from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {StyleSheet, View, FlatList} from 'react-native';
 import {RtcLocalView, RtcRemoteView, VideoRenderMode} from 'react-native-agora';
+import {screenHeight, screenWidth} from '../../constants/screen/screenInfo';
+import {getRemoteStreamDimensions} from '../../utils/Screen/screen';
 
 interface props {
   channelName: string;
@@ -8,6 +10,8 @@ interface props {
 }
 
 const MainStream = ({peerId, channelName}: props) => {
+  const {height, width} = getRemoteStreamDimensions(peerId.length);
+
   if (peerId.length === 0) {
     return (
       <RtcLocalView.SurfaceView
@@ -20,39 +24,58 @@ const MainStream = ({peerId, channelName}: props) => {
 
   return (
     <View style={styles.main}>
-      <RtcLocalView.SurfaceView
-        channelId={channelName}
-        style={styles.localView}
-        renderMode={VideoRenderMode.Hidden}
-      />
+      <View style={styles.localView}>
+        <RtcLocalView.SurfaceView
+          channelId={channelName}
+          style={{flex: 1, borderRadius: 30}}
+          renderMode={VideoRenderMode.Hidden}
+          zOrderMediaOverlay={true}
+        />
+      </View>
       {peerId.length <= 2 ? (
-        <View style={styles.main}>
-          {peerId.map((value, index, array) => {
+        <FlatList
+          key={'#'}
+          data={peerId}
+          keyExtractor={(item) => '#' + item}
+          renderItem={({index, item}) => {
             return (
-              <RtcRemoteView.SurfaceView
-                style={styles.main}
-                uid={value}
-                channelId={channelName}
-                renderMode={VideoRenderMode.Hidden}
-                zOrderMediaOverlay={true}
-              />
+              <View
+                style={{
+                  height: height,
+                  width: width,
+                  borderWidth: 2,
+                  borderColor: 'white',
+                }}>
+                <RtcRemoteView.SurfaceView
+                  style={{flex: 1}}
+                  uid={item}
+                  channelId={channelName}
+                  renderMode={VideoRenderMode.Hidden}
+                  key={index}
+                />
+              </View>
             );
-          })}
-        </View>
+          }}
+          numColumns={1}
+        />
       ) : (
-        <ScrollView>
-          {peerId.map((value, index, array) => {
+        <FlatList
+          data={peerId}
+          key={'_'}
+          keyExtractor={(item) => '_' + item}
+          renderItem={({index, item}) => {
             return (
               <RtcRemoteView.SurfaceView
-                style={styles.remoteView}
-                uid={value}
+                style={{height: height, width: width}}
+                uid={item}
                 channelId={channelName}
                 renderMode={VideoRenderMode.Hidden}
-                zOrderMediaOverlay={true}
+                key={index}
               />
             );
-          })}
-        </ScrollView>
+          }}
+          numColumns={1}
+        />
       )}
     </View>
   );
@@ -63,18 +86,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   localView: {
-    height: 100,
-    width: 100,
-    backgroundColor: 'red',
+    height: 150,
+    width: 90,
     position: 'absolute',
     bottom: 100,
     right: 20,
-    borderRadius: 50,
     elevation: 10,
-  },
-  remoteView: {
-    height: '50%',
-    width: '100%',
+    zIndex: 5,
+    borderWidth: 2,
+    borderColor: 'white',
   },
 });
 

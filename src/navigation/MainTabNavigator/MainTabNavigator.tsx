@@ -55,7 +55,7 @@ const BottomTabBar: FC<props> = ({navigation, state}) => {
       }}>
       <BottomNavigationTab
         icon={state.index === 0 ? MeetIconFill : MeetIcon}
-        title="Meet"
+        title="Baithak"
       />
       <BottomNavigationTab
         icon={state.index === 1 ? ChatIconFill : ChatIcon}

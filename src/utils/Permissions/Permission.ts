@@ -1,4 +1,4 @@
-import {PermissionsAndroid} from 'react-native';
+import {PermissionsAndroid, Platform} from 'react-native';
 
 export const requestCameraAndAudioPermission = async () => {
   try {
@@ -18,5 +18,21 @@ export const requestCameraAndAudioPermission = async () => {
     }
   } catch (err) {
     console.warn(err);
+  }
+};
+
+export const checkPermission = async () => {
+  if (Platform.OS === 'android') {
+    const cameraPerm = await PermissionsAndroid.check(
+      'android.permission.CAMERA',
+    );
+    const micPerm = await PermissionsAndroid.check(
+      'android.permission.RECORD_AUDIO',
+    );
+    if (!cameraPerm || !micPerm) {
+      await requestCameraAndAudioPermission();
+    } else {
+      console.log('granted');
+    }
   }
 };
