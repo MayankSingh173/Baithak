@@ -19,6 +19,7 @@ import {getShareMessage} from '../../utils/Meeting/Methods/getShareMessage';
 import Toast from 'react-native-toast-message';
 import {getBaithakPartiFromAgoraId} from '../../utils/Messages/Meeting/utils';
 import Sound from 'react-native-sound';
+import {getRemoteUserByAgoraId} from '../../utils/User/Methods/getRemoteUser';
 
 interface props {
   appId: string;
@@ -42,6 +43,7 @@ const useStartMeeting = (
   const [showParticipants, toogleParticipants] = useState<boolean>(false);
   const [speakerOff, toogleSpeaker] = useState<boolean>(false);
   const [inVideoOff, toogleInVideoOff] = useState<boolean>(false);
+  const [flashOn, toggleFlash] = useState<boolean>(false);
 
   let engine = useRef<RtcEngine | null>(null);
   let sound = useRef<Sound | null>(
@@ -110,6 +112,19 @@ const useStartMeeting = (
           }
         });
 
+        // Listen for the UserOffline callback.
+        // This callback occurs when the remote user gets cutt off the channel.
+        engine.current?.addListener('UserOffline', (uid, elapsed) => {
+          const user = getRemoteUserByAgoraId(uid);
+          if (user && user.name) {
+            Toast.show({
+              type: 'info',
+              text1: `${user.name} left the Baithak`,
+              position: 'top',
+            });
+          }
+        });
+
         // Listen for the JoinChannelSuccess callback.
         // This callback occurs when the local user successfully joins the channel.
         engine.current?.addListener(
@@ -120,9 +135,6 @@ const useStartMeeting = (
             } else {
               await onMemberJoinMeet(meetConfig, firebaseUser);
             }
-
-            sound.current?.play();
-
             setJoinSucceed(true);
             toggleModal(false);
           },
@@ -148,6 +160,7 @@ const useStartMeeting = (
           });
         });
       } catch (err) {
+        engine.current?.destroy();
         console.log('Error in initialize RTC', err);
         toggleModal(false);
         navigation.goBack();
@@ -195,7 +208,8 @@ const useStartMeeting = (
   //Make the camera to flash on
   const onCamerFlashOn = () => {
     if (engine.current) {
-      engine.current?.setCameraTorchOn(true);
+      engine.current?.setCameraTorchOn(!flashOn);
+      toggleFlash(!flashOn);
     }
   };
 
@@ -212,7 +226,7 @@ const useStartMeeting = (
       toogleSpeaker(!speakerOff);
       Toast.show({
         type: 'info',
-        text1: `Incoming Audios are ${speakerOff ? 'On' : 'Off'}!`,
+        text1: `Incoming Audios are ${speakerOff ? 'Off' : 'On'}!`,
         position: 'top',
       });
       if (menuOpen) setMenuOpen(!menuOpen);
@@ -226,7 +240,7 @@ const useStartMeeting = (
       toogleInVideoOff(!inVideoOff);
       Toast.show({
         type: 'info',
-        text1: `Incoming Videos are ${inVideoOff ? 'On' : 'Off'}!`,
+        text1: `Incoming Videos are ${inVideoOff ? 'Off' : 'On'}!`,
         position: 'top',
       });
       if (menuOpen) setMenuOpen(!menuOpen);
@@ -292,9 +306,13 @@ const useStartMeeting = (
   };
 
   const onShare = async () => {
-    if (menuOpen) setMenuOpen(!menuOpen);
-    if (meetInfo) toogleMeetInfo(!meetInfo);
-    const result = Share.share({message: getShareMessage(baithak)});
+    try {
+      if (menuOpen) setMenuOpen(!menuOpen);
+      if (meetInfo) toogleMeetInfo(!meetInfo);
+      await Share.share({message: getShareMessage(baithak)});
+    } catch (error) {
+      console.log('Error in sharing', error);
+    }
   };
 
   return {
@@ -324,6 +342,8 @@ const useStartMeeting = (
     onPressSpeaker,
     inVideoOff,
     onPressInVideo,
+    flashOn,
+    onCamerFlashOn,
   };
 };
 

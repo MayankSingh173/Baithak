@@ -52,6 +52,8 @@ const VideoStream = (props: any) => {
     onPressSpeaker,
     inVideoOff,
     onPressInVideo,
+    flashOn,
+    onCamerFlashOn,
   } = useStartMeeting(
     {
       appId: APP_ID,
@@ -102,7 +104,13 @@ const VideoStream = (props: any) => {
           onLeftPress={confirmEnd}
           rightIcon="sync-outline"
           onRightPress={onSwitchCamera}
-          centerText={getRefinedTest(meetConfig.channelName, 22)}
+          centerText={getRefinedTest(meetConfig.channelName, 18)}
+          leftIconColor="white"
+          centerTextColor="white"
+          rightIconColor="white"
+          rightLeftIcon={flashOn ? 'flash-outline' : 'flash-off-outline'}
+          rightLeftIconColor="white"
+          onPressRightLeftIcon={onCamerFlashOn}
         />
       </View>
       <View style={styles.mainStream}>

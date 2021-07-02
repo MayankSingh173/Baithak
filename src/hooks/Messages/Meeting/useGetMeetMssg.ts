@@ -10,8 +10,9 @@ import {debounce} from 'lodash';
 import {getTime} from '../../../utils/Miscellaneous/utils';
 import Toast from 'react-native-toast-message';
 import Sound from 'react-native-sound';
+import {UserInterface} from '../../../models/User/User';
 
-const useGetMeetMssg = (Baithak: Baithak) => {
+const useGetMeetMssg = (Baithak: Baithak, firebaseUser: UserInterface) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [lastDoc, setLastDoc] = useState<FirebaseFirestoreTypes.DocumentData>();
   const [isMoreLoading, setIsMoreLoading] = useState<boolean>(false);
@@ -97,8 +98,9 @@ const useGetMeetMssg = (Baithak: Baithak) => {
 
   useEffect(() => {
     if (lastMessage) {
-      const user = getBaithakPartiFromUid(lastMessage.uid, Baithak);
-      if (lastMessage.uid !== user._id) {
+      const lastMessgageUser = getBaithakPartiFromUid(lastMessage.uid, Baithak);
+
+      if (lastMessage.uid !== firebaseUser.uid) {
         sound.current = new Sound('message.mp3', Sound.MAIN_BUNDLE, (error) => {
           if (error) {
             console.log('Error in playing message sound', error);
@@ -110,9 +112,10 @@ const useGetMeetMssg = (Baithak: Baithak) => {
 
         Toast.show({
           type: 'success',
-          text1: user.name,
+          text1: lastMessgageUser.name ? lastMessgageUser.name : 'Someone',
           text2: lastMessage.text,
           position: 'bottom',
+          bottomOffset: 100,
         });
       }
     }

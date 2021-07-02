@@ -5,30 +5,28 @@ import Modal from 'react-native-modal';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
 import {RALEWAY_BOLD, RALEWAY_MEDIUM} from '../../../constants/Fonts/Fonts';
-import {optionProp} from '../../../models/Meeting/CreateMeeting/interface';
-import {useState} from 'react';
 import FullDivider from '../../Divider/FullDivider';
-import {writeAsync} from '../../../utils/Firestore/write';
+import {updateThemeRemotely} from '../../../store/theme/actionCreator/updateTheme';
 
 interface props {
   uid: string;
   modalVisible: boolean;
   onBackDropPress: () => void;
-  theme: 'light' | 'dark';
 }
 
 const Settings = (props: props) => {
   const styles = useStyleSheet(themedStyles);
-  const [theme, setThemeState] = useState<'light' | 'dark'>(props.theme);
+  const theme = useSelector(
+    (reduxState: RootState) => reduxState.ThemeReducer.theme,
+  );
+  const storeDispatch = useDispatch();
 
-  const changeTheme = async () => {
-    try {
-      const changedTheme = theme === 'dark' ? 'light' : 'dark';
-      setThemeState(changedTheme);
-      await writeAsync('users', props.uid, {theme: changedTheme}, true);
-    } catch (error) {
-      console.log('Error in updating theme', error);
-    }
+  const changeTheme = () => {
+    const themeAction = updateThemeRemotely(
+      theme === 'dark' ? 'light' : 'dark',
+      props.uid,
+    );
+    storeDispatch(themeAction);
   };
 
   return (

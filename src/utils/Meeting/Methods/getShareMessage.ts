@@ -1,11 +1,11 @@
 import moment from 'moment';
 import {Baithak} from '../../../models/Meeting/CreateMeeting/interface';
-import {getUser} from '../../Messages/Meeting/utils';
+import {getBaithakPartiFromUid} from '../../Messages/Meeting/utils';
 
 export const getShareMessage = (baithak: Baithak | undefined) => {
   if (baithak) {
     return `${
-      getUser(baithak.host.uid, baithak).name
+      getBaithakPartiFromUid(baithak.host.uid, baithak).name
     } would like you to join baithak? Here's a info
 
 Topic: ${baithak.channelName}

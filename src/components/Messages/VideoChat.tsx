@@ -150,7 +150,7 @@ const VideoChat = (props: props) => {
             props1,
             appTheme === 'dark'
               ? theme['color-basic-900']
-              : theme['color-basic-600'],
+              : theme['color-basic-300'],
           )
         }
         renderSend={(props2) =>
@@ -168,10 +168,10 @@ const VideoChat = (props: props) => {
         renderBubble={(props4) =>
           renderBubble(
             props4,
-            appTheme === 'dark'
-              ? theme['color-basic-700']
-              : theme['color-basic-400'],
             theme['color-primary-default'],
+            appTheme === 'dark'
+              ? theme['color-basic-200']
+              : theme['color-basic-600'],
           )
         }
         renderActions={(props5) => renderAction(props5)}

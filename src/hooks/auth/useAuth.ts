@@ -18,6 +18,7 @@ import useFirestore from '../Firestore/useFirestore';
 import Toast from 'react-native-toast-message';
 import {updateTheme} from '../../store/theme/actionCreator/updateTheme';
 import {getRemoteTheme, getTheme} from '../../utils/User/Methods/getTheme';
+import {DEFAULT_AVATAR} from '../../constants/Images/Images';
 
 const useAuth = () => {
   const [firebaseUserRef, setFirebaseUserRef] = useState<
@@ -52,8 +53,8 @@ const useAuth = () => {
               Platform.OS,
               getTheme(),
               user.email ? user.email : 'example@gmail.com',
-              user.displayName ? user.displayName : undefined,
-              user.photoURL ? user.photoURL : undefined,
+              user.displayName ? user.displayName : 'Robot',
+              user.photoURL ? user.photoURL : DEFAULT_AVATAR,
               false,
             );
             Toast.show({
@@ -67,8 +68,8 @@ const useAuth = () => {
             await updateUserObjOnAuth(
               user.uid,
               Platform.OS,
-              user.displayName ? user.displayName : undefined,
-              user.phoneNumber ? user.phoneNumber : undefined,
+              user.displayName ? user.displayName : 'Robot',
+              user.phoneNumber ? user.phoneNumber : DEFAULT_AVATAR,
               user.email ? user.email : 'example@gmail.com',
               user.photoURL ? user.photoURL : '',
             );
