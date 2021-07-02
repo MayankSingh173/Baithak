@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, View, ActivityIndicator, Clipboard} from 'react-native';
-import {Layout, Text, useTheme, Icon} from '@ui-kitten/components';
+import {StyleSheet, View, ActivityIndicator} from 'react-native';
+import {Layout, useTheme, Icon} from '@ui-kitten/components';
 import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/rootReducer';
@@ -15,8 +15,9 @@ import {
 } from 'react-native-gifted-chat';
 import {Baithak} from '../../models/Meeting/CreateMeeting/interface';
 import {onDeleteMessage} from '../../utils/Messages/onDeleteMessage';
+import Toast from 'react-native-toast-message';
+import Clipboard from '@react-native-clipboard/clipboard';
 import {RALEWAY_MEDIUM} from '../../constants/Fonts/Fonts';
-import {ToastAndroid} from 'react-native';
 
 interface props {
   message: IMessage[];
@@ -107,7 +108,11 @@ const onLongPress = (
           break;
         case 1:
           Clipboard.setString(message.text);
-          ToastAndroid.show('Copied!', ToastAndroid.SHORT);
+          Toast.show({
+            type: 'success',
+            text1: 'Copied!',
+            position: 'top',
+          });
           break;
       }
     },
@@ -145,7 +150,7 @@ const VideoChat = (props: props) => {
             props1,
             appTheme === 'dark'
               ? theme['color-basic-900']
-              : theme['color-basic-600'],
+              : theme['color-basic-300'],
           )
         }
         renderSend={(props2) =>
@@ -160,14 +165,13 @@ const VideoChat = (props: props) => {
         renderComposer={(props3) =>
           renderComposer(props3, appTheme === 'dark' ? 'white' : 'black')
         }
-        onPressAvatar={(item) => console.log('Press on avatar', item)}
         renderBubble={(props4) =>
           renderBubble(
             props4,
-            appTheme === 'dark'
-              ? theme['color-basic-700']
-              : theme['color-basic-400'],
             theme['color-primary-default'],
+            appTheme === 'dark'
+              ? theme['color-basic-200']
+              : theme['color-basic-600'],
           )
         }
         renderActions={(props5) => renderAction(props5)}

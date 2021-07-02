@@ -1,18 +1,24 @@
 import firestore, {
   FirebaseFirestoreTypes,
 } from '@react-native-firebase/firestore';
-import {useState, useEffect, useCallback} from 'react';
+import {useState, useEffect, useCallback, useRef} from 'react';
 import {IMessage} from 'react-native-gifted-chat';
 import {Baithak} from '../../../models/Meeting/CreateMeeting/interface';
 import {Message} from '../../../models/Messages/interface';
-import {getUser} from '../../../utils/Messages/Meeting/utils';
+import {getBaithakPartiFromUid} from '../../../utils/Messages/Meeting/utils';
 import {debounce} from 'lodash';
 import {getTime} from '../../../utils/Miscellaneous/utils';
+import Toast from 'react-native-toast-message';
+import Sound from 'react-native-sound';
+import {UserInterface} from '../../../models/User/User';
 
-const useGetMeetMssg = (Baithak: Baithak) => {
+const useGetMeetMssg = (Baithak: Baithak, firebaseUser: UserInterface) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [lastDoc, setLastDoc] = useState<FirebaseFirestoreTypes.DocumentData>();
   const [isMoreLoading, setIsMoreLoading] = useState<boolean>(false);
+  const [lastMessage, setLastMssg] = useState<Message>();
+
+  let sound = useRef<Sound | null>(null);
 
   useEffect(() => {
     try {
@@ -23,6 +29,11 @@ const useGetMeetMssg = (Baithak: Baithak) => {
         .orderBy('createdAt', 'desc')
         .limit(15)
         .onSnapshot((querySnapshot) => {
+          querySnapshot.docChanges().forEach((change) => {
+            if (change.type === 'added') {
+              change.doc.exists && setLastMssg(change.doc.data() as Message);
+            }
+          });
           const chats: IMessage[] = [];
           querySnapshot.forEach((doc) => {
             const local_message = doc.exists && (doc.data() as Message);
@@ -30,7 +41,7 @@ const useGetMeetMssg = (Baithak: Baithak) => {
               _id: local_message.messageId,
               text: local_message.text,
               createdAt: local_message.createdAt,
-              user: getUser(local_message.uid, Baithak),
+              user: getBaithakPartiFromUid(local_message.uid, Baithak),
               system: local_message.system,
             });
           });
@@ -66,7 +77,7 @@ const useGetMeetMssg = (Baithak: Baithak) => {
                   _id: local_message.messageId,
                   text: local_message.text,
                   createdAt: local_message.createdAt,
-                  user: getUser(local_message.uid, Baithak),
+                  user: getBaithakPartiFromUid(local_message.uid, Baithak),
                   system: local_message.system,
                 });
               });
@@ -84,6 +95,31 @@ const useGetMeetMssg = (Baithak: Baithak) => {
     }, 40),
     [lastDoc],
   );
+
+  useEffect(() => {
+    if (lastMessage) {
+      const lastMessgageUser = getBaithakPartiFromUid(lastMessage.uid, Baithak);
+
+      if (lastMessage.uid !== firebaseUser.uid) {
+        sound.current = new Sound('message.mp3', Sound.MAIN_BUNDLE, (error) => {
+          if (error) {
+            console.log('Error in playing message sound', error);
+          }
+          sound.current?.play(() => sound.current?.release());
+        });
+
+        sound.current?.play();
+
+        Toast.show({
+          type: 'success',
+          text1: lastMessgageUser.name ? lastMessgageUser.name : 'Someone',
+          text2: lastMessage.text,
+          position: 'bottom',
+          bottomOffset: 100,
+        });
+      }
+    }
+  }, [lastMessage]);
 
   const handleSend = async (mssgs: IMessage[]) => {
     try {

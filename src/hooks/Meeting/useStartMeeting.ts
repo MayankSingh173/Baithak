@@ -1,10 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 import RtcEngine from 'react-native-agora';
-import {
-  generalError,
-  generalErrorN,
-} from '../../components/Alerts/GeneralError';
-import {TITLE} from '../../constants/Alerts/GeneralError';
+import {generalErrorN} from '../../components/Alerts/GeneralError';
 import {MEET_HOME_SCREEN} from '../../constants/Navigation/Navigation';
 import {
   Baithak,
@@ -18,8 +14,12 @@ import {
 } from '../../utils/Meeting/Methods/onMemberJoinMeet';
 import {checkPermission} from '../../utils/Permissions/Permission';
 import firestore from '@react-native-firebase/firestore';
-import {Share, ToastAndroid} from 'react-native';
+import {Share} from 'react-native';
 import {getShareMessage} from '../../utils/Meeting/Methods/getShareMessage';
+import Toast from 'react-native-toast-message';
+import {getBaithakPartiFromAgoraId} from '../../utils/Messages/Meeting/utils';
+import Sound from 'react-native-sound';
+import {getRemoteUserByAgoraId} from '../../utils/User/Methods/getRemoteUser';
 
 interface props {
   appId: string;
@@ -43,33 +43,33 @@ const useStartMeeting = (
   const [showParticipants, toogleParticipants] = useState<boolean>(false);
   const [speakerOff, toogleSpeaker] = useState<boolean>(false);
   const [inVideoOff, toogleInVideoOff] = useState<boolean>(false);
+  const [flashOn, toggleFlash] = useState<boolean>(false);
 
   let engine = useRef<RtcEngine | null>(null);
+  let sound = useRef<Sound | null>(
+    new Sound('joined.mp3', Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+      sound.current?.play(() => sound.current?.release());
+    }),
+  );
 
   const startCall = async () => {
-    try {
-      await engine.current?.joinChannel(
-        meetConfig.token,
-        meetConfig.channelName,
-        null,
-        meetConfig.agoraId,
-      );
-    } catch (err) {
-      console.log('Error in start call', err);
-      toggleModal(false);
-      navigation.goBack();
-      generalError(() => toggleModal(false), {
-        title: TITLE,
-        textMessage: 'Please try again',
-        okText: 'Ok',
-      });
-    }
+    await engine.current?.joinChannel(
+      meetConfig.token,
+      meetConfig.channelName,
+      null,
+      meetConfig.agoraId,
+    );
   };
 
   const endCall = async () => {
     try {
-      console.log('end Call');
       await engine.current?.leaveChannel();
+
+      await engine.current?.destroy();
 
       //remove the user from the list
       await onMemberLeftMeet(meetConfig, firebaseUser);
@@ -83,8 +83,8 @@ const useStartMeeting = (
   };
 
   useEffect(() => {
-    try {
-      const intializeRTC = async () => {
+    const intializeRTC = async () => {
+      try {
         await checkPermission();
 
         engine.current = await RtcEngine.create(appId);
@@ -95,10 +95,33 @@ const useStartMeeting = (
         //Start the call
         await startCall();
 
+        //================ Event Listeners Start ====================================
+
+        // Listen for the UserJoined callback.
+        // This callback occurs when the remote user successfully joins the channel.
         engine.current?.addListener('UserJoined', (uid, elapsed) => {
-          console.log('UserJoined', uid, elapsed);
           if (peerIds.indexOf(uid) === -1) {
             setPeerIds((prev) => [...prev, uid]);
+            const userJoined = getBaithakPartiFromAgoraId(uid, baithak);
+            sound.current?.play();
+            Toast.show({
+              type: 'info',
+              text1: `${userJoined.name ? userJoined.name : 'Someone'} joined`,
+              position: 'top',
+            });
+          }
+        });
+
+        // Listen for the UserOffline callback.
+        // This callback occurs when the remote user gets cutt off the channel.
+        engine.current?.addListener('UserOffline', (uid, elapsed) => {
+          const user = getRemoteUserByAgoraId(uid);
+          if (user && user.name) {
+            Toast.show({
+              type: 'info',
+              text1: `${user.name} left the Baithak`,
+              position: 'top',
+            });
           }
         });
 
@@ -117,33 +140,44 @@ const useStartMeeting = (
           },
         );
 
-        engine.current?.addListener('Warning', (warn) => {
-          console.log('Warn', warn);
-        });
+        //Listen for the Warning callback.
+        //This callback occurs when there is some warning
+        // engine.current?.addListener('Warning', (warn) => {
+        //   console.log('Warn', warn);
+        // });
 
+        //Listen for the Warning callback.
+        //This callback occurs when there is some warning
         engine.current?.addListener('Error', (err) => {
           console.log('Error', err);
           toggleModal(false);
           navigation.goBack();
-          generalError(() => toggleModal(false), {
-            title: TITLE,
-            textMessage: 'Please try again',
-            okText: 'Ok',
+          Toast.show({
+            type: 'error',
+            text1: 'Oops!',
+            text2: 'Something went wrong. Please try again',
+            position: 'top',
           });
         });
-      };
+      } catch (err) {
+        engine.current?.destroy();
+        console.log('Error in initialize RTC', err);
+        toggleModal(false);
+        navigation.goBack();
+        Toast.show({
+          type: 'error',
+          text1: 'Oops!',
+          text2: 'Something went wrong. Please try again',
+          position: 'top',
+          visibilityTime: 300,
+        });
+      }
+    };
 
-      intializeRTC();
-    } catch (err) {
-      console.log('Error in initialize RTC', err);
-      toggleModal(false);
-      navigation.goBack();
-      generalError(() => toggleModal(false), {
-        title: TITLE,
-        textMessage: 'Please try again',
-        okText: 'Ok',
-      });
-    }
+    //================ Event Listeners Ends ====================================
+
+    //Call the initialize RTC method
+    intializeRTC();
   }, []);
 
   useEffect(() => {
@@ -174,7 +208,8 @@ const useStartMeeting = (
   //Make the camera to flash on
   const onCamerFlashOn = () => {
     if (engine.current) {
-      engine.current?.setCameraTorchOn(true);
+      engine.current?.setCameraTorchOn(!flashOn);
+      toggleFlash(!flashOn);
     }
   };
 
@@ -189,10 +224,12 @@ const useStartMeeting = (
   const onPressSpeaker = () => {
     if (engine.current) {
       toogleSpeaker(!speakerOff);
-      ToastAndroid.show(
-        `Incoming Audios are ${speakerOff ? 'On' : 'Off'}!`,
-        ToastAndroid.SHORT,
-      );
+      Toast.show({
+        type: 'info',
+        text1: `Incoming Audios are ${speakerOff ? 'Off' : 'On'}!`,
+        position: 'top',
+      });
+      if (menuOpen) setMenuOpen(!menuOpen);
       engine.current?.muteAllRemoteAudioStreams(speakerOff);
     }
   };
@@ -201,10 +238,12 @@ const useStartMeeting = (
   const onPressInVideo = () => {
     if (engine.current) {
       toogleInVideoOff(!inVideoOff);
-      ToastAndroid.show(
-        `Incoming Videos are ${inVideoOff ? 'On' : 'Off'}!`,
-        ToastAndroid.SHORT,
-      );
+      Toast.show({
+        type: 'info',
+        text1: `Incoming Videos are ${inVideoOff ? 'Off' : 'On'}!`,
+        position: 'top',
+      });
+      if (menuOpen) setMenuOpen(!menuOpen);
       engine.current?.muteAllRemoteVideoStreams(inVideoOff);
     }
   };
@@ -267,9 +306,13 @@ const useStartMeeting = (
   };
 
   const onShare = async () => {
-    if (menuOpen) setMenuOpen(!menuOpen);
-    if (meetInfo) toogleMeetInfo(!meetInfo);
-    const result = Share.share({message: getShareMessage(baithak)});
+    try {
+      if (menuOpen) setMenuOpen(!menuOpen);
+      if (meetInfo) toogleMeetInfo(!meetInfo);
+      await Share.share({message: getShareMessage(baithak)});
+    } catch (error) {
+      console.log('Error in sharing', error);
+    }
   };
 
   return {
@@ -299,6 +342,8 @@ const useStartMeeting = (
     onPressSpeaker,
     inVideoOff,
     onPressInVideo,
+    flashOn,
+    onCamerFlashOn,
   };
 };
 

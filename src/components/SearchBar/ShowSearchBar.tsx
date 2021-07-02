@@ -36,7 +36,7 @@ const ShowSearchBar = (props: props) => {
 
 const themedStyles = StyleSheet.create({
   main: {
-    borderRadius: 30,
+    borderRadius: 10,
     padding: 8,
     paddingLeft: 10,
     flexDirection: 'row',

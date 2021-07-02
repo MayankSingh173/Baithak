@@ -17,6 +17,10 @@ export const PhoneIcon = (style: any) => (
   <Icon {...style} name="phone-outline" />
 );
 
+export const SearchIcon = (style: any) => (
+  <Icon {...style} name="search-outline" />
+);
+
 export const PlusIcon = (style: any) => <Icon {...style} name="plus" />;
 
 export const PasswordIcon = (style: any) => (

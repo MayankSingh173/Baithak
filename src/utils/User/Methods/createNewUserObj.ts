@@ -4,18 +4,18 @@ export const createNewUserObj = (
   agoraId: number,
   uid: string,
   os: 'android' | 'ios' | 'macos' | 'windows' | 'web',
+  theme: 'light' | 'dark',
+  email: string,
   name?: string,
-  phone?: string,
-  email?: string,
   photoURL?: string,
 ): UserInterface => {
   return {
     agoraId: agoraId,
     uid: uid,
+    theme: theme,
+    email: email,
     ...(os ? {os: os} : {}),
     ...(name ? {name: name} : {}),
-    ...(phone ? {phone: phone} : {}),
-    ...(email ? {email: email} : {}),
     ...(photoURL ? {photoURL: photoURL} : {}),
   };
 };

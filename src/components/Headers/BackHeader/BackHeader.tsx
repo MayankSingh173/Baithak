@@ -11,6 +11,12 @@ interface props {
   rightIcon?: string;
   onRightPress?: () => void;
   centerText?: string;
+  centerTextColor?: string;
+  leftIconColor?: string;
+  rightIconColor?: string;
+  rightLeftIcon?: string;
+  rightLeftIconColor?: string;
+  onPressRightLeftIcon?: () => void;
 }
 
 const BackHeader = (props: props) => {
@@ -27,26 +33,43 @@ const BackHeader = (props: props) => {
           <Icon
             name={props.leftIcon}
             style={styles.icon}
-            fill={theme === 'dark' ? 'white' : 'black'}
+            fill={props.leftIconColor}
           />
         </TouchableOpacity>
       )}
       {props.centerText && (
         <View
           style={[styles.textView, {width: props.rightIcon ? '75%' : '85%'}]}>
-          <Text category="h5" style={[styles.centerText]}>
+          <Text
+            category="h5"
+            style={[styles.centerText, {color: props.centerTextColor}]}>
             {props.centerText}
           </Text>
         </View>
       )}
       {props.rightIcon && (
-        <TouchableOpacity onPress={props.onRightPress} style={styles.rightView}>
-          <Icon
-            name={props.rightIcon}
-            style={styles.rightIcon}
-            fill={theme === 'dark' ? 'white' : 'black'}
-          />
-        </TouchableOpacity>
+        <View style={{flexDirection: 'row'}}>
+          {props.rightLeftIcon && (
+            <TouchableOpacity
+              onPress={props.onPressRightLeftIcon}
+              style={[styles.rightView, {marginRight: 10}]}>
+              <Icon
+                name={props.rightLeftIcon}
+                style={styles.rightIcon}
+                fill={props.rightLeftIconColor}
+              />
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            onPress={props.onRightPress}
+            style={styles.rightView}>
+            <Icon
+              name={props.rightIcon}
+              style={styles.rightIcon}
+              fill={props.rightIconColor}
+            />
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );

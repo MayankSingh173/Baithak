@@ -73,15 +73,25 @@ const BottomTabBar: FC<props> = ({navigation, state}) => {
   );
 };
 
-const MainTabNavigator = () => (
-  <Navigator
-    tabBar={(props: any) => <BottomTabBar {...props} />}
-    initialRouteName="Home">
-    <Screen name={MEET_HOME_SCREEN} component={MeetScreen} />
-    <Screen name={CHAT_HOME_SCREEN} component={ChatHome} />
-    <Screen name={ACTIVITY_HOME_SCREEN} component={ActivityScreen} />
-    <Screen name={PROFILE_SCREEN} component={ProfileScreen} />
-  </Navigator>
-);
+const MainTabNavigator = (props: any) => {
+  const firebaseUser = useSelector(
+    (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
+  );
+
+  return (
+    <Navigator
+      tabBar={(props: any) => <BottomTabBar {...props} />}
+      initialRouteName="Home">
+      <Screen name={MEET_HOME_SCREEN} component={MeetScreen} />
+      <Screen name={CHAT_HOME_SCREEN} component={ChatHome} />
+      <Screen name={ACTIVITY_HOME_SCREEN} component={ActivityScreen} />
+      <Screen
+        name={PROFILE_SCREEN}
+        component={ProfileScreen}
+        initialParams={{myProfile: true, uid: firebaseUser.uid}}
+      />
+    </Navigator>
+  );
+};
 
 export default MainTabNavigator;

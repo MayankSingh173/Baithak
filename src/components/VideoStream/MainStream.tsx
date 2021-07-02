@@ -43,8 +43,6 @@ const MainStream = ({peerId, channelName}: props) => {
                 style={{
                   height: height,
                   width: width,
-                  borderWidth: 2,
-                  borderColor: 'white',
                 }}>
                 <RtcRemoteView.SurfaceView
                   style={{flex: 1}}
@@ -74,7 +72,7 @@ const MainStream = ({peerId, channelName}: props) => {
               />
             );
           }}
-          numColumns={1}
+          numColumns={2}
         />
       )}
     </View>

@@ -25,6 +25,8 @@ target 'Baithak' do
 
   pod 'RNAudioRecord', :path => '../node_modules/react-native-audio-record'
 
+  pod 'RNSound', :path => '../node_modules/react-native-sound'
+
   target 'BaithakTests' do
     inherit! :complete
     # Pods for testing

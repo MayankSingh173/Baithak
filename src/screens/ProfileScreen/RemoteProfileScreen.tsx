@@ -25,8 +25,9 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import Settings from '../../components/Modals/Settings/Settings';
 import {EDIT_PROFILE_SCREEN} from '../../constants/Navigation/Navigation';
 import useGetUserForProfile from '../../hooks/User/useGetUserForProfile';
+import BackHeader from '../../components/Headers/BackHeader/BackHeader';
 
-const ProfileScreen = (props: any) => {
+const RemoteProfileScreen = (props: any) => {
   const {myProfile, uid} = props.route.params;
 
   const {loading, user, onSignOut, settingOpen, onClickSettings} =
@@ -35,7 +36,6 @@ const ProfileScreen = (props: any) => {
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
-
   const appTheme = useTheme();
 
   return loading ? (
@@ -55,14 +55,14 @@ const ProfileScreen = (props: any) => {
         onBackDropPress={onClickSettings}
       />
       <ScrollView>
-        <View style={{flex: 1}}>
-          <ProfileHeader
-            myProfile={myProfile}
-            onPressEdit={() => props.navigation.navigate(EDIT_PROFILE_SCREEN)}
-            onPressSetting={onClickSettings}
+        <View style={{flex: 1, padding: 10}}>
+          <BackHeader
+            leftIcon="arrow-back-outline"
+            leftIconColor={theme === 'dark' ? 'white' : 'black'}
+            onLeftPress={() => props.navigation.goBack()}
           />
         </View>
-        <View style={[styles.imgView, {marginTop: !myProfile ? '17%' : 10}]}>
+        <View style={[styles.imgView, {marginTop: 10}]}>
           <FastImage
             source={{
               uri: user.photoURL ? user.photoURL : DEFAULT_AVATAR,
@@ -199,4 +199,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileScreen;
+export default RemoteProfileScreen;

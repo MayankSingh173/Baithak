@@ -6,17 +6,17 @@ export const getRemoteStreamDimensions = (length: number) => {
     case 1:
       return {
         height: screenHeight,
-        width: screenWidth - 5,
+        width: screenWidth,
       };
     case 2:
       return {
         height: screenHeight / 2,
-        width: screenWidth - 5,
+        width: screenWidth,
       };
     default:
       return {
         height: screenHeight / 2,
-        width: (screenWidth - 5) / 2,
+        width: screenWidth / 2,
       };
   }
 };

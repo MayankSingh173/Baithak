@@ -16,6 +16,8 @@ import {
 } from '../../../constants/Fonts/Fonts';
 import FullDivider from '../../Divider/FullDivider';
 import {VideoStreamParams} from '../../../models/Meeting/CreateMeeting/interface';
+import Clipboard from '@react-native-clipboard/clipboard';
+import Toast from 'react-native-toast-message';
 
 interface props {
   modalVisible: boolean;
@@ -31,9 +33,27 @@ const MeetInfo = (props: props) => {
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
 
-  const renderIcon = (props: any) => (
-    <TouchableWithoutFeedback onPress={() => console.log('Copied')}>
-      <Icon {...props} name="copy-outline" />
+  const onPressCopy = (text: string) => {
+    Clipboard.setString(text);
+    Toast.show({
+      type: 'success',
+      text1: 'Copied!',
+      position: 'top',
+      visibilityTime: 300,
+    });
+  };
+
+  const renderIdIcon = (iconProps: any) => (
+    <TouchableWithoutFeedback
+      onPress={() => onPressCopy(props.meetConfig.meetId)}>
+      <Icon {...iconProps} name="copy-outline" />
+    </TouchableWithoutFeedback>
+  );
+
+  const renderPassIcon = (iconProps: any) => (
+    <TouchableWithoutFeedback
+      onPress={() => onPressCopy(props.meetConfig.password)}>
+      <Icon {...iconProps} name="copy-outline" />
     </TouchableWithoutFeedback>
   );
 
@@ -78,7 +98,7 @@ const MeetInfo = (props: props) => {
           <Input
             label="Baithak Id"
             style={styles.input}
-            accessoryRight={renderIcon}
+            accessoryRight={renderIdIcon}
             disabled={true}
             placeholder={props.meetConfig.meetId}
             size="large"
@@ -86,7 +106,7 @@ const MeetInfo = (props: props) => {
           <Input
             label="Password"
             style={styles.input}
-            accessoryRight={renderIcon}
+            accessoryRight={renderPassIcon}
             disabled={true}
             placeholder={props.meetConfig.password}
             size="large"

@@ -20,6 +20,7 @@ interface props {
   onPressLeft: () => void;
   onPressRight?: () => void;
   rightIcon?: string;
+  onPressSearch: () => void;
 }
 const GeneralHeader: FC<props> = ({
   firebaseUser,
@@ -27,6 +28,7 @@ const GeneralHeader: FC<props> = ({
   rightIcon,
   onPressLeft,
   onPressRight,
+  onPressSearch,
 }) => {
   const theme = useTheme();
   const appTheme = useSelector(
@@ -76,7 +78,7 @@ const GeneralHeader: FC<props> = ({
         )}
       </View>
       <View style={styles.searchBarView}>
-        <ShowSearchBar theme={appTheme} onPress={() => console.log('Search')} />
+        <ShowSearchBar theme={appTheme} onPress={onPressSearch} />
       </View>
     </View>
   );
