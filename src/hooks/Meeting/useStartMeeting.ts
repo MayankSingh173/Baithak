@@ -1,10 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 import RtcEngine from 'react-native-agora';
-import {
-  generalError,
-  generalErrorN,
-} from '../../components/Alerts/GeneralError';
-import {TITLE} from '../../constants/Alerts/GeneralError';
+import {generalErrorN} from '../../components/Alerts/GeneralError';
 import {MEET_HOME_SCREEN} from '../../constants/Navigation/Navigation';
 import {
   Baithak,
@@ -18,9 +14,11 @@ import {
 } from '../../utils/Meeting/Methods/onMemberJoinMeet';
 import {checkPermission} from '../../utils/Permissions/Permission';
 import firestore from '@react-native-firebase/firestore';
-import {Share, ToastAndroid} from 'react-native';
+import {Share} from 'react-native';
 import {getShareMessage} from '../../utils/Meeting/Methods/getShareMessage';
 import Toast from 'react-native-toast-message';
+import {getBaithakPartiFromAgoraId} from '../../utils/Messages/Meeting/utils';
+import Sound from 'react-native-sound';
 
 interface props {
   appId: string;
@@ -46,6 +44,15 @@ const useStartMeeting = (
   const [inVideoOff, toogleInVideoOff] = useState<boolean>(false);
 
   let engine = useRef<RtcEngine | null>(null);
+  let sound = useRef<Sound | null>(
+    new Sound('joined.mp3', Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.log('failed to load the sound', error);
+        return;
+      }
+      sound.current?.play(() => sound.current?.release());
+    }),
+  );
 
   const startCall = async () => {
     try {
@@ -59,10 +66,12 @@ const useStartMeeting = (
       console.log('Error in start call', err);
       toggleModal(false);
       navigation.goBack();
-      generalError(() => toggleModal(false), {
-        title: TITLE,
-        textMessage: 'Please try again',
-        okText: 'Ok',
+      Toast.show({
+        type: 'error',
+        text1: 'Oops!',
+        text2: 'Something went wrong. Please try again',
+        position: 'top',
+        visibilityTime: 200,
       });
     }
   };
@@ -96,10 +105,20 @@ const useStartMeeting = (
         //Start the call
         await startCall();
 
+        //================ Event Listeners Start ====================================
+
+        // Listen for the UserJoined callback.
+        // This callback occurs when the remote user successfully joins the channel.
         engine.current?.addListener('UserJoined', (uid, elapsed) => {
-          console.log('UserJoined', uid, elapsed);
           if (peerIds.indexOf(uid) === -1) {
             setPeerIds((prev) => [...prev, uid]);
+            const userJoined = getBaithakPartiFromAgoraId(uid, baithak);
+            sound.current?.play();
+            Toast.show({
+              type: 'info',
+              text1: `${userJoined.name ? userJoined.name : 'Someone'} joined`,
+              position: 'top',
+            });
           }
         });
 
@@ -113,36 +132,48 @@ const useStartMeeting = (
             } else {
               await onMemberJoinMeet(meetConfig, firebaseUser);
             }
+            sound.current?.play();
+
             setJoinSucceed(true);
             toggleModal(false);
           },
         );
 
-        engine.current?.addListener('Warning', (warn) => {
-          console.log('Warn', warn);
-        });
+        //Listen for the Warning callback.
+        //This callback occurs when there is some warning
+        // engine.current?.addListener('Warning', (warn) => {
+        //   console.log('Warn', warn);
+        // });
 
+        //Listen for the Warning callback.
+        //This callback occurs when there is some warning
         engine.current?.addListener('Error', (err) => {
           console.log('Error', err);
           toggleModal(false);
           navigation.goBack();
-          generalError(() => toggleModal(false), {
-            title: TITLE,
-            textMessage: 'Please try again',
-            okText: 'Ok',
+          Toast.show({
+            type: 'error',
+            text1: 'Oops!',
+            text2: 'Something went wrong. Please try again',
+            position: 'top',
           });
         });
       };
 
+      //================ Event Listeners Ends ====================================
+
+      //Call the initialize RTC method
       intializeRTC();
     } catch (err) {
       console.log('Error in initialize RTC', err);
       toggleModal(false);
       navigation.goBack();
-      generalError(() => toggleModal(false), {
-        title: TITLE,
-        textMessage: 'Please try again',
-        okText: 'Ok',
+      Toast.show({
+        type: 'error',
+        text1: 'Oops!',
+        text2: 'Something went wrong. Please try again',
+        position: 'top',
+        visibilityTime: 300,
       });
     }
   }, []);

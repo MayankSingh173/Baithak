@@ -165,7 +165,6 @@ const VideoChat = (props: props) => {
         renderComposer={(props3) =>
           renderComposer(props3, appTheme === 'dark' ? 'white' : 'black')
         }
-        onPressAvatar={(item) => console.log('Press on avatar', item)}
         renderBubble={(props4) =>
           renderBubble(
             props4,

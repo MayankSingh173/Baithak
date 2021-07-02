@@ -1,20 +1,23 @@
 import firestore, {
   FirebaseFirestoreTypes,
 } from '@react-native-firebase/firestore';
-import {useState, useEffect, useCallback} from 'react';
+import {useState, useEffect, useCallback, useRef} from 'react';
 import {IMessage} from 'react-native-gifted-chat';
 import {Baithak} from '../../../models/Meeting/CreateMeeting/interface';
 import {Message} from '../../../models/Messages/interface';
-import {getUser} from '../../../utils/Messages/Meeting/utils';
+import {getBaithakPartiFromUid} from '../../../utils/Messages/Meeting/utils';
 import {debounce} from 'lodash';
 import {getTime} from '../../../utils/Miscellaneous/utils';
 import Toast from 'react-native-toast-message';
+import Sound from 'react-native-sound';
 
 const useGetMeetMssg = (Baithak: Baithak) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [lastDoc, setLastDoc] = useState<FirebaseFirestoreTypes.DocumentData>();
   const [isMoreLoading, setIsMoreLoading] = useState<boolean>(false);
   const [lastMessage, setLastMssg] = useState<Message>();
+
+  let sound = useRef<Sound | null>(null);
 
   useEffect(() => {
     try {
@@ -37,7 +40,7 @@ const useGetMeetMssg = (Baithak: Baithak) => {
               _id: local_message.messageId,
               text: local_message.text,
               createdAt: local_message.createdAt,
-              user: getUser(local_message.uid, Baithak),
+              user: getBaithakPartiFromUid(local_message.uid, Baithak),
               system: local_message.system,
             });
           });
@@ -73,7 +76,7 @@ const useGetMeetMssg = (Baithak: Baithak) => {
                   _id: local_message.messageId,
                   text: local_message.text,
                   createdAt: local_message.createdAt,
-                  user: getUser(local_message.uid, Baithak),
+                  user: getBaithakPartiFromUid(local_message.uid, Baithak),
                   system: local_message.system,
                 });
               });
@@ -94,8 +97,17 @@ const useGetMeetMssg = (Baithak: Baithak) => {
 
   useEffect(() => {
     if (lastMessage) {
-      const user = getUser(lastMessage.uid, Baithak);
+      const user = getBaithakPartiFromUid(lastMessage.uid, Baithak);
       if (lastMessage.uid !== user._id) {
+        sound.current = new Sound('message.mp3', Sound.MAIN_BUNDLE, (error) => {
+          if (error) {
+            console.log('Error in playing message sound', error);
+          }
+          sound.current?.play(() => sound.current?.release());
+        });
+
+        sound.current?.play();
+
         Toast.show({
           type: 'success',
           text1: user.name,
