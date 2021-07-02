@@ -69,9 +69,9 @@ const useAuth = () => {
               user.uid,
               Platform.OS,
               user.displayName ? user.displayName : 'Robot',
-              user.phoneNumber ? user.phoneNumber : DEFAULT_AVATAR,
+              user.phoneNumber ? user.phoneNumber : undefined,
               user.email ? user.email : 'example@gmail.com',
-              user.photoURL ? user.photoURL : '',
+              user.photoURL ? user.photoURL : DEFAULT_AVATAR,
             );
           }
 

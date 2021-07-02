@@ -7,6 +7,7 @@ import {
   CREATE_MEET_SCREEN,
   JOIN_MEET_SCREEN,
   PROFILE_SCREEN,
+  USER_SEARCH_SCREEN,
 } from '../../../constants/Navigation/Navigation';
 import {RootState} from '../../../store/rootReducer';
 import {RALEWAY_BOLD, RALEWAY_REGULAR} from '../../../constants/Fonts/Fonts';
@@ -44,6 +45,7 @@ const MeetScreen = (props: any) => {
         rightIcon="video-outline"
         onPressLeft={() => props.navigation.navigate(PROFILE_SCREEN)}
         onPressRight={() => props.navigation.navigate(CREATE_MEET_SCREEN)}
+        onPressSearch={() => props.navigation.navigate(USER_SEARCH_SCREEN)}
       />
       <View style={styles.container}>
         <View style={styles.imageView}>
