@@ -31,8 +31,6 @@ export const checkPermission = async () => {
     );
     if (!cameraPerm || !micPerm) {
       await requestCameraAndAudioPermission();
-    } else {
-      console.log('granted');
     }
   }
 };

@@ -11,11 +11,13 @@ import {
 } from '../../store/User/actionCreator/addFirebaseUser';
 import {FAIL, SUCCESS} from '../../constants/RemoteStates/remotestates';
 import {Platform, ToastAndroid} from 'react-native';
-import {UserInterface} from '../../models/User/User';
+import {defaultUser, UserInterface} from '../../models/User/User';
 import {addNewUserObj} from '../../utils/User/Methods/addNewUserObj';
 import {updateUserObjOnAuth} from '../../utils/User/Methods/updateUserObjOnAuth';
 import useFirestore from '../Firestore/useFirestore';
 import Toast from 'react-native-toast-message';
+import {updateTheme} from '../../store/theme/actionCreator/updateTheme';
+import {getRemoteTheme, getTheme} from '../../utils/User/Methods/getTheme';
 
 const useAuth = () => {
   const [firebaseUserRef, setFirebaseUserRef] = useState<
@@ -48,9 +50,9 @@ const useAuth = () => {
             await addNewUserObj(
               user.uid,
               Platform.OS,
+              getTheme(),
+              user.email ? user.email : 'example@gmail.com',
               user.displayName ? user.displayName : undefined,
-              user.phoneNumber ? user.phoneNumber : undefined,
-              user.email ? user.email : undefined,
               user.photoURL ? user.photoURL : undefined,
               false,
             );
@@ -67,7 +69,7 @@ const useAuth = () => {
               Platform.OS,
               user.displayName ? user.displayName : undefined,
               user.phoneNumber ? user.phoneNumber : undefined,
-              user.email ? user.email : undefined,
+              user.email ? user.email : 'example@gmail.com',
               user.photoURL ? user.photoURL : '',
             );
           }
@@ -80,6 +82,7 @@ const useAuth = () => {
         } else {
           //update the firebase user with success status 'FAIL' in redux
           storeDispatch(updateFirebaseUserStatus(FAIL));
+          storeDispatch(updateTheme(defaultUser.theme));
 
           // remove listener
           setFirebaseUserRef(undefined);
@@ -101,6 +104,10 @@ const useAuth = () => {
     (fetchedUser: UserInterface) => {
       if (fetchedUser) {
         const action = setFirebaseUser(fetchedUser, SUCCESS);
+        const themeAction = updateTheme(fetchedUser.theme);
+        if (themeAction) {
+          storeDispatch(themeAction);
+        }
         storeDispatch(action);
       }
     },

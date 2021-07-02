@@ -5,9 +5,9 @@ import {createNewUserObj} from './createNewUserObj';
 export const addNewUserObj = async (
   uid: string,
   os: 'android' | 'ios' | 'windows' | 'macos' | 'web',
+  theme: 'light' | 'dark',
+  email: string,
   name?: string,
-  phone?: string,
-  email?: string,
   photoURL?: string,
   mergeCondition?: boolean,
 ) => {
@@ -16,9 +16,9 @@ export const addNewUserObj = async (
     agora_ID,
     uid,
     os,
-    name,
-    phone,
+    theme,
     email,
+    name,
     photoURL,
   );
   await writeUserObj(newUser, mergeCondition ? true : false);

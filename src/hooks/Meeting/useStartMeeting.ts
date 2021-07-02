@@ -55,31 +55,19 @@ const useStartMeeting = (
   );
 
   const startCall = async () => {
-    try {
-      await engine.current?.joinChannel(
-        meetConfig.token,
-        meetConfig.channelName,
-        null,
-        meetConfig.agoraId,
-      );
-    } catch (err) {
-      console.log('Error in start call', err);
-      toggleModal(false);
-      navigation.goBack();
-      Toast.show({
-        type: 'error',
-        text1: 'Oops!',
-        text2: 'Something went wrong. Please try again',
-        position: 'top',
-        visibilityTime: 200,
-      });
-    }
+    await engine.current?.joinChannel(
+      meetConfig.token,
+      meetConfig.channelName,
+      null,
+      meetConfig.agoraId,
+    );
   };
 
   const endCall = async () => {
     try {
-      console.log('end Call');
       await engine.current?.leaveChannel();
+
+      await engine.current?.destroy();
 
       //remove the user from the list
       await onMemberLeftMeet(meetConfig, firebaseUser);
@@ -93,8 +81,8 @@ const useStartMeeting = (
   };
 
   useEffect(() => {
-    try {
-      const intializeRTC = async () => {
+    const intializeRTC = async () => {
+      try {
         await checkPermission();
 
         engine.current = await RtcEngine.create(appId);
@@ -132,6 +120,7 @@ const useStartMeeting = (
             } else {
               await onMemberJoinMeet(meetConfig, firebaseUser);
             }
+
             sound.current?.play();
 
             setJoinSucceed(true);
@@ -158,24 +147,24 @@ const useStartMeeting = (
             position: 'top',
           });
         });
-      };
+      } catch (err) {
+        console.log('Error in initialize RTC', err);
+        toggleModal(false);
+        navigation.goBack();
+        Toast.show({
+          type: 'error',
+          text1: 'Oops!',
+          text2: 'Something went wrong. Please try again',
+          position: 'top',
+          visibilityTime: 300,
+        });
+      }
+    };
 
-      //================ Event Listeners Ends ====================================
+    //================ Event Listeners Ends ====================================
 
-      //Call the initialize RTC method
-      intializeRTC();
-    } catch (err) {
-      console.log('Error in initialize RTC', err);
-      toggleModal(false);
-      navigation.goBack();
-      Toast.show({
-        type: 'error',
-        text1: 'Oops!',
-        text2: 'Something went wrong. Please try again',
-        position: 'top',
-        visibilityTime: 300,
-      });
-    }
+    //Call the initialize RTC method
+    intializeRTC();
   }, []);
 
   useEffect(() => {

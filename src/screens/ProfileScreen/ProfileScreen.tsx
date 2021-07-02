@@ -84,6 +84,8 @@ const ProfileScreen = (props: any) => {
   return (
     <Layout style={styles.main} level="1">
       <Settings
+        uid={firebaseUser.uid}
+        theme={firebaseUser.theme}
         modalVisible={settingOpen}
         onBackDropPress={() => toggleSetting(!settingOpen)}
       />

@@ -8,24 +8,27 @@ import {RALEWAY_BOLD, RALEWAY_MEDIUM} from '../../../constants/Fonts/Fonts';
 import {optionProp} from '../../../models/Meeting/CreateMeeting/interface';
 import {useState} from 'react';
 import FullDivider from '../../Divider/FullDivider';
-import {updateTheme} from '../../../store/theme/actionCreator/updateTheme';
+import {writeAsync} from '../../../utils/Firestore/write';
 
 interface props {
+  uid: string;
   modalVisible: boolean;
   onBackDropPress: () => void;
+  theme: 'light' | 'dark';
 }
 
 const Settings = (props: props) => {
   const styles = useStyleSheet(themedStyles);
+  const [theme, setThemeState] = useState<'light' | 'dark'>(props.theme);
 
-  const storeDispatch = useDispatch();
-
-  const theme = useSelector(
-    (reduxState: RootState) => reduxState.ThemeReducer.theme,
-  );
-
-  const changeTheme = () => {
-    storeDispatch(updateTheme(theme === 'dark' ? 'light' : 'dark'));
+  const changeTheme = async () => {
+    try {
+      const changedTheme = theme === 'dark' ? 'light' : 'dark';
+      setThemeState(changedTheme);
+      await writeAsync('users', props.uid, {theme: changedTheme}, true);
+    } catch (error) {
+      console.log('Error in updating theme', error);
+    }
   };
 
   return (

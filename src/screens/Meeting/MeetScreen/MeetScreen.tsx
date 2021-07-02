@@ -43,7 +43,7 @@ const MeetScreen = (props: any) => {
         heading="Baithak"
         rightIcon="video-outline"
         onPressLeft={() => props.navigation.navigate(PROFILE_SCREEN)}
-        onPressRight={() => setSelectMeet(!selectMeet)}
+        onPressRight={() => props.navigation.navigate(CREATE_MEET_SCREEN)}
       />
       <View style={styles.container}>
         <View style={styles.imageView}>
