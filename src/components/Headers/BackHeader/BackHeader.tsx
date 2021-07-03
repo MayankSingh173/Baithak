@@ -1,9 +1,7 @@
-import {useTheme, useStyleSheet, Text, Icon} from '@ui-kitten/components';
+import {useStyleSheet, Text, Icon} from '@ui-kitten/components';
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
-import {useSelector} from 'react-redux';
 import {RALEWAY_BOLD} from '../../../constants/Fonts/Fonts';
-import {RootState} from '../../../store/rootReducer';
 
 interface props {
   leftIcon?: string;
@@ -20,10 +18,6 @@ interface props {
 }
 
 const BackHeader = (props: props) => {
-  const theme = useSelector(
-    (reduxState: RootState) => reduxState.ThemeReducer.theme,
-  );
-  const appTheme = useTheme();
   const styles = useStyleSheet(themedStyles);
 
   return (
@@ -38,8 +32,7 @@ const BackHeader = (props: props) => {
         </TouchableOpacity>
       )}
       {props.centerText && (
-        <View
-          style={[styles.textView, {width: props.rightIcon ? '75%' : '85%'}]}>
+        <View style={[styles.textView, {flex: props.rightIcon ? 5 : 6}]}>
           <Text
             category="h5"
             style={[styles.centerText, {color: props.centerTextColor}]}>
@@ -48,11 +41,9 @@ const BackHeader = (props: props) => {
         </View>
       )}
       {props.rightIcon && (
-        <View style={{flexDirection: 'row'}}>
+        <View style={styles.rightIconView}>
           {props.rightLeftIcon && (
-            <TouchableOpacity
-              onPress={props.onPressRightLeftIcon}
-              style={[styles.rightView, {marginRight: 10}]}>
+            <TouchableOpacity onPress={props.onPressRightLeftIcon}>
               <Icon
                 name={props.rightLeftIcon}
                 style={styles.rightIcon}
@@ -60,9 +51,7 @@ const BackHeader = (props: props) => {
               />
             </TouchableOpacity>
           )}
-          <TouchableOpacity
-            onPress={props.onRightPress}
-            style={styles.rightView}>
+          <TouchableOpacity onPress={props.onRightPress}>
             <Icon
               name={props.rightIcon}
               style={styles.rightIcon}
@@ -82,10 +71,10 @@ const themedStyles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 10,
     alignItems: 'center',
-    position: 'relative',
   },
-  leftView: {},
-  rightView: {},
+  leftView: {
+    flex: 1,
+  },
   icon: {
     height: 30,
     width: 30,
@@ -95,13 +84,18 @@ const themedStyles = StyleSheet.create({
     fontFamily: RALEWAY_BOLD,
   },
   textView: {
-    width: '75%',
     alignItems: 'flex-start',
   },
   rightIcon: {
     height: 25,
     width: 25,
     marginTop: 10,
+  },
+  rightIconView: {
+    flexDirection: 'row',
+    flex: 1.5,
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
 

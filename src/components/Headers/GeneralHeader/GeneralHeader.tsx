@@ -56,8 +56,6 @@ const GeneralHeader: FC<props> = ({
           <Text category="h5" style={styles.heading}>
             {heading}
           </Text>
-        </View>
-        <View style={styles.dotView}>
           <View
             style={[
               styles.dot,
@@ -90,6 +88,7 @@ const themedStyles = StyleSheet.create({
     borderBottomWidth: 0.3,
     padding: 5,
     paddingBottom: 2,
+    width: '100%',
   },
   firstRow: {
     flexDirection: 'row',
@@ -101,14 +100,20 @@ const themedStyles = StyleSheet.create({
   avatarView: {
     width: '15%',
     marginLeft: 15,
+    flex: 1,
   },
   headingView: {
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    flex: 4,
+    alignItems: 'center',
   },
   iconView: {
     width: '30%',
     alignSelf: 'center',
     marginLeft: 5,
+    flex: 1,
+    marginTop: 8,
   },
   icon: {
     width: 25,
@@ -121,15 +126,10 @@ const themedStyles = StyleSheet.create({
   },
   dot: {
     height: 10,
-    marginHorizontal: 10,
     borderRadius: 30,
     width: 10,
     marginTop: 12,
-  },
-  dotView: {
-    justifyContent: 'center',
-    width: '45%',
-    alignItems: 'flex-start',
+    marginLeft: 8,
   },
 });
 

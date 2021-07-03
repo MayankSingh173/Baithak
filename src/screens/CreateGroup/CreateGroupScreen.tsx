@@ -1,52 +1,64 @@
+import {
+  Layout,
+  Text,
+  useTheme,
+  Input,
+  Button,
+  Icon,
+} from '@ui-kitten/components';
+import {Formik} from 'formik';
 import React from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import BackHeader from '../../../components/Headers/BackHeader/BackHeader';
+import {StyleSheet, View, ScrollView, TouchableOpacity} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import {useSelector} from 'react-redux';
+import BackHeader from '../../components/Headers/BackHeader/BackHeader';
+import {DescriptionIcon, NameIcon} from '../../components/Icons/Icons';
+import ModalActivityIndicator from '../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
+import SelectImage from '../../components/Modals/SelectImage/SelectImage';
 import {
   RALEWAY_BOLD,
   RALEWAY_EXTRA_BOLD,
   RALEWAY_MEDIUM,
   RALEWAY_REGULAR,
-} from '../../../constants/Fonts/Fonts';
-import {
-  useTheme,
-  useStyleSheet,
-  Layout,
-  Text,
-  Input,
-  Button,
-} from '@ui-kitten/components';
-import {Formik} from 'formik';
-import {DescriptionIcon, NameIcon} from '../../../components/Icons/Icons';
-import {createMeetingSchema} from '../../../utils/validators/meeting';
-import useOnCreateMeet from '../../../hooks/Meeting/useOnCreateMeet';
-import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../../store/rootReducer';
+} from '../../constants/Fonts/Fonts';
+import useOnCreateGroup from '../../hooks/Messages/Group/useOnCreateGroups';
+import {RootState} from '../../store/rootReducer';
+import {createGroupSchema} from '../../utils/validators/message';
 
-const CreateMeetScreen = (props: any) => {
-  const appTheme = useTheme();
-  const styles = useStyleSheet(themedStyles);
-
-  const firebaseUser = useSelector(
-    (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
-  );
-
+const CreateGroupScreen = (props: any) => {
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
 
-  const {initialFormState, handleSubmit, isLoading} = useOnCreateMeet(
-    props.navigation,
-    firebaseUser.agoraId,
+  const firebaseUser = useSelector(
+    (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
   );
+  const {
+    initialFormState,
+    handleSubmit,
+    loading,
+    imageURL,
+    selectImage,
+    onCloseSelectImage,
+    onCaptureImage,
+    onSelectFromLibrary,
+  } = useOnCreateGroup(props.route.params.selectedUsers, firebaseUser);
+
+  const appTheme = useTheme();
 
   return (
     <Layout level="1" style={styles.main}>
+      <SelectImage
+        modalVisible={selectImage}
+        onBackDropPress={onCloseSelectImage}
+        onCaptureImage={onCaptureImage}
+        onSelectFromGallery={onSelectFromLibrary}
+      />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <ModalActivityIndicator modalVisible={isLoading} />
+        <ModalActivityIndicator modalVisible={loading} />
         <BackHeader
-          leftIconColor={theme === 'dark' ? 'white' : 'black'}
           leftIcon="arrow-back-outline"
+          leftIconColor={theme === 'dark' ? 'white' : 'black'}
           onLeftPress={() => props.navigation.goBack()}
         />
         <Text category="h3" style={styles.heading}>
@@ -58,13 +70,28 @@ const CreateMeetScreen = (props: any) => {
               {color: appTheme['color-primary-default']},
             ]}>
             {' '}
-            Baithak
+            Group
           </Text>
         </Text>
+        <View style={styles.imageView}>
+          <FastImage source={{uri: imageURL}} style={styles.image} />
+          <TouchableOpacity
+            onPress={onCloseSelectImage}
+            style={[
+              styles.iconView,
+              {backgroundColor: theme === 'dark' ? 'white' : 'black'},
+            ]}>
+            <Icon
+              name="edit-outline"
+              style={styles.editIcon}
+              fill={appTheme['color-primary-default']}
+            />
+          </TouchableOpacity>
+        </View>
         <Formik
           initialValues={initialFormState}
           onSubmit={handleSubmit}
-          validationSchema={createMeetingSchema}
+          validationSchema={createGroupSchema}
           validateOnBlur>
           {(formikProps) => (
             <View style={styles.formContainer}>
@@ -72,16 +99,16 @@ const CreateMeetScreen = (props: any) => {
                 textStyle={{fontFamily: RALEWAY_MEDIUM}}
                 style={styles.nameInput}
                 status="basic"
-                placeholder="Baithak Name"
+                placeholder="Group Name"
                 onBlur={() => formikProps.setFieldTouched('name')}
                 keyboardType="email-address"
                 accessoryLeft={NameIcon}
-                value={formikProps.values.name}
-                onChangeText={formikProps.handleChange('name')}
+                value={formikProps.values.groupName}
+                onChangeText={formikProps.handleChange('groupName')}
                 size="large"
                 caption={
-                  formikProps.errors.name && formikProps.touched.name
-                    ? formikProps.errors.name
+                  formikProps.errors.groupName && formikProps.touched.groupName
+                    ? formikProps.errors.groupName
                     : ''
                 }
               />
@@ -101,21 +128,21 @@ const CreateMeetScreen = (props: any) => {
                 style={styles.createButton}
                 size="large"
                 onPress={formikProps.handleSubmit}>
-                Create Baithak
+                Create
               </Button>
               <View
                 style={{
-                  marginTop: '80%',
+                  marginTop: '10%',
                 }}>
                 <Text style={styles.worry}>
-                  Worry about{' '}
+                  Wanna chat with{' '}
                   <Text
                     category="h6"
                     style={[
                       styles.security,
                       {color: appTheme['color-primary-default']},
                     ]}>
-                    Security
+                    Friends
                   </Text>{' '}
                   ?
                 </Text>
@@ -124,7 +151,7 @@ const CreateMeetScreen = (props: any) => {
                     styles.tagLine,
                     {color: appTheme['color-basic-500']},
                   ]}>
-                  ID and Password will be auto-generated
+                  Head on to create a group
                 </Text>
               </View>
             </View>
@@ -135,7 +162,7 @@ const CreateMeetScreen = (props: any) => {
   );
 };
 
-const themedStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   main: {
     flex: 1,
     padding: 20,
@@ -176,6 +203,27 @@ const themedStyles = StyleSheet.create({
   security: {
     fontFamily: RALEWAY_EXTRA_BOLD,
   },
+  imageView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 30,
+  },
+  image: {
+    height: 100,
+    width: 100,
+    borderRadius: 50,
+  },
+  iconView: {
+    padding: 3,
+    borderRadius: 30,
+    marginLeft: 50,
+    marginTop: -30,
+  },
+  editIcon: {
+    height: 25,
+    width: 25,
+  },
 });
 
-export default CreateMeetScreen;
+export default CreateGroupScreen;

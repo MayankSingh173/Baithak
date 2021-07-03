@@ -20,6 +20,7 @@
     "@react-native-firebase/app": "^12.1.0",
     "@react-native-firebase/auth": "^12.1.0",
     "@react-native-firebase/firestore": "^12.1.0",
+    "@react-native-firebase/storage": "^12.1.0",
     "@react-native-google-signin/google-signin": "^6.0.1",
     "@react-navigation/bottom-tabs": "^5.11.11",
     "@react-navigation/native": "^5.9.4",
@@ -41,6 +42,7 @@
     "react-native-fbsdk-next": "^4.3.0",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-gifted-chat": "^0.16.3",
+    "react-native-image-picker": "^4.0.4",
     "react-native-modal": "^12.0.2",
     "react-native-paper": "^4.9.2",
     "react-native-reanimated": "^2.2.0",
@@ -53,6 +55,7 @@
     "react-native-vector-icons": "^8.1.0",
     "react-redux": "^7.2.4",
     "redux": "^4.1.0",
+    "yarn": "^1.22.10",
     "yup": "^0.32.9"
   },
   "devDependencies": {
@@ -62,6 +65,7 @@
     "@types/jest": "^26.0.23",
     "@types/react-native": "^0.64.5",
     "@types/react-native-dotenv": "^0.2.0",
+    "@types/react-native-vector-icons": "^6.4.7",
     "@types/react-native-webrtc": "^1.75.3",
     "@types/react-test-renderer": "^16.9.2",
     "babel-jest": "^26.6.3",

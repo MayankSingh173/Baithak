@@ -32,6 +32,10 @@ const JoinMeetScreen = (props: any) => {
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
   );
 
+  const theme = useSelector(
+    (reduxState: RootState) => reduxState.ThemeReducer.theme,
+  );
+
   const {
     initialFormState,
     passwordVisible,
@@ -51,6 +55,7 @@ const JoinMeetScreen = (props: any) => {
       <ModalActivityIndicator modalVisible={isLoading} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <BackHeader
+          leftIconColor={theme === 'dark' ? 'white' : 'black'}
           leftIcon="arrow-back-outline"
           onLeftPress={() => props.navigation.goBack()}
         />

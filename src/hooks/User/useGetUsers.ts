@@ -1,12 +1,16 @@
 import {useEffect, useState} from 'react';
 import {UserInterface} from '../../models/User/User';
 import firestore from '@react-native-firebase/firestore';
+import {CREATE_GROUP_SCREEN} from '../../constants/Navigation/Navigation';
 
-const useGetUsers = () => {
+const useGetUsers = (navigation?: any) => {
   const [users, setUsers] = useState<UserInterface[]>();
   const [filteredUsers, setFilteredUsers] = useState<UserInterface[]>();
   const [loading, setLoading] = useState<boolean>(true);
   const [query, setQuery] = useState<string>('');
+
+  //This is for userAddSearchScreen
+  const [selectedUsers, setSelectedUsers] = useState<UserInterface[]>([]);
 
   useEffect(() => {
     const subscriber = firestore()
@@ -34,11 +38,26 @@ const useGetUsers = () => {
     setQuery(text);
   };
 
+  const onPressNext = () => {
+    //Is selctedUsers length > 1 create a group and ask for group name, description and group photo.
+    //else create a dm
+
+    if (selectedUsers.length > 1) {
+      navigation.navigate(CREATE_GROUP_SCREEN, {selectedUsers: selectedUsers});
+    } else {
+      //Function to create a dm and move to chat screen
+    }
+    console.log('Next');
+  };
+
   return {
     filteredUsers,
     loading,
     query,
     handleQuery,
+    selectedUsers,
+    setSelectedUsers,
+    onPressNext,
   };
 };
 
