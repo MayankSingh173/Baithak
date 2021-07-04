@@ -135,6 +135,7 @@ const useStartMeeting = (
             } else {
               await onMemberJoinMeet(meetConfig, firebaseUser);
             }
+            onPressMeetInfo();
             setJoinSucceed(true);
             toggleModal(false);
           },

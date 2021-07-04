@@ -1,8 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {UserInterface} from '../../../models/User/User';
-import {Text} from '@ui-kitten/components';
-import FastImage from 'react-native-fast-image';
+import {Avatar, Text} from '@ui-kitten/components';
 import {DEFAULT_AVATAR} from '../../../constants/Images/Images';
 import {RALEWAY_BOLD, RALEWAY_REGULAR} from '../../../constants/Fonts/Fonts';
 
@@ -15,9 +14,9 @@ const UserSerchCard = ({user, onPress}: props) => {
   return (
     <TouchableOpacity style={styles.main} onPress={onPress}>
       <View style={styles.imgView}>
-        <FastImage
+        <Avatar
           source={{uri: user.photoURL ? user.photoURL : DEFAULT_AVATAR}}
-          style={{flex: 1, height: 50, width: 50, borderRadius: 30}}
+          size="giant"
         />
       </View>
       <View style={styles.content}>

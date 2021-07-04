@@ -2,11 +2,14 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import MainTabNavigator from '../MainTabNavigator/MainTabNavigator';
 import {
+  CREATE_GROUP_SCREEN,
   CREATE_MEET_SCREEN,
   EDIT_PROFILE_SCREEN,
+  GROUP_CHAT_SCREEN,
   JOIN_MEET_SCREEN,
   MAIN_TAB,
   REMOTE_USER_SEARCH_SCREEN,
+  USER_ADD_SEARCH_SCREEN,
   USER_SEARCH_SCREEN,
   VIDEO_STREAM,
 } from '../../constants/Navigation/Navigation';
@@ -15,8 +18,10 @@ import JoinMeetScreen from '../../screens/Meeting/JoinMeetScreen/JoinMeetScreen'
 import VideoStream from '../../screens/Meeting/VideoStream/VideoStream';
 import EditProfileScreen from '../../screens/ProfileScreen/EditProfileScreen';
 import UserSearchScreen from '../../screens/Search/UserSearch/UserSearchScreen';
-import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import RemoteProfileScreen from '../../screens/ProfileScreen/RemoteProfileScreen';
+import UserAddSearchScreen from '../../screens/Search/UserAddSearchScreen/UserAddSearchScreen';
+import CreateGroupScreen from '../../screens/CreateGroup/CreateGroupScreen';
+import GroupChatsScreen from '../../screens/Chats/GroupChatsScreen/GroupChatsScreen';
 
 const Stack = createStackNavigator();
 
@@ -33,6 +38,12 @@ const MainStackNavigator = () => {
         name={REMOTE_USER_SEARCH_SCREEN}
         component={RemoteProfileScreen}
       />
+      <Stack.Screen
+        name={USER_ADD_SEARCH_SCREEN}
+        component={UserAddSearchScreen}
+      />
+      <Stack.Screen name={CREATE_GROUP_SCREEN} component={CreateGroupScreen} />
+      <Stack.Screen name={GROUP_CHAT_SCREEN} component={GroupChatsScreen} />
     </Stack.Navigator>
   );
 };

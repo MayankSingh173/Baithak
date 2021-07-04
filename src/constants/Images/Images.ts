@@ -6,3 +6,6 @@ export const MEET_DARK =
 
 export const MEET_LIGHT =
   'https://firebasestorage.googleapis.com/v0/b/baithak-4a1fe.appspot.com/o/MeetImage-removebg-light.png?alt=media&token=57c582ff-01d6-4d00-bc9c-c6a6bf9e1c9e';
+
+export const DEFAULT_GROUP_IMAGE =
+  'https://firebasestorage.googleapis.com/v0/b/baithak-4a1fe.appspot.com/o/Default_group_image.jpg?alt=media&token=7c5858e2-61af-463c-b581-061007615c43';

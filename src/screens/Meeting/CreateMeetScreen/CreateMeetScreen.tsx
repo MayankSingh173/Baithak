@@ -31,6 +31,10 @@ const CreateMeetScreen = (props: any) => {
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
   );
 
+  const theme = useSelector(
+    (reduxState: RootState) => reduxState.ThemeReducer.theme,
+  );
+
   const {initialFormState, handleSubmit, isLoading} = useOnCreateMeet(
     props.navigation,
     firebaseUser.agoraId,
@@ -41,6 +45,7 @@ const CreateMeetScreen = (props: any) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <ModalActivityIndicator modalVisible={isLoading} />
         <BackHeader
+          leftIconColor={theme === 'dark' ? 'white' : 'black'}
           leftIcon="arrow-back-outline"
           onLeftPress={() => props.navigation.goBack()}
         />

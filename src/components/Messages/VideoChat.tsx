@@ -104,7 +104,7 @@ const onLongPress = (
     async (buttonIndex: number) => {
       switch (buttonIndex) {
         case 0:
-          await onDeleteMessage(message, baithakId, uid);
+          await onDeleteMessage(message, baithakId, uid, 'Baithak');
           break;
         case 1:
           Clipboard.setString(message.text);
@@ -143,6 +143,7 @@ const VideoChat = (props: props) => {
         isLoadingEarlier={props.isMoreLoading}
         onLoadEarlier={props.loadMore}
         bottomOffset={0}
+        renderChatFooter={() => <View style={{height: 20}} />}
         loadEarlier={props.lastDoc ? true : false}
         renderLoading={() => renderLoading(theme['color-primary-default'])}
         renderInputToolbar={(props1) =>
@@ -171,7 +172,7 @@ const VideoChat = (props: props) => {
             theme['color-primary-default'],
             appTheme === 'dark'
               ? theme['color-basic-200']
-              : theme['color-basic-600'],
+              : theme['color-basic-300'],
           )
         }
         renderActions={(props5) => renderAction(props5)}
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
   input: {
     padding: 5,
     paddingLeft: 15,
-    borderRadius: 5,
+    borderRadius: 10,
     marginHorizontal: 10,
   },
   inputStyles: {

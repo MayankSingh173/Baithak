@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {UserInterface} from '../../models/User/User';
 import firestore from '@react-native-firebase/firestore';
 
-const useGetUsers = () => {
+const useGetUsers = (uid: string) => {
   const [users, setUsers] = useState<UserInterface[]>();
   const [filteredUsers, setFilteredUsers] = useState<UserInterface[]>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -11,6 +11,7 @@ const useGetUsers = () => {
   useEffect(() => {
     const subscriber = firestore()
       .collection('users')
+      .where('uid', '!=', uid)
       .onSnapshot((querySnapshot) => {
         const localUsers: UserInterface[] = [];
         for (const doc of querySnapshot.docs) {
@@ -22,7 +23,7 @@ const useGetUsers = () => {
       });
 
     return () => subscriber();
-  }, []);
+  }, [uid]);
 
   const handleQuery = (text: string) => {
     const filterUsers = users?.filter((user) => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, Layout, useTheme, Icon} from '@ui-kitten/components';
+import {Text, Layout, useTheme, Icon, Button} from '@ui-kitten/components';
 import {
   ScrollView,
   StyleSheet,
@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import ProfileHeader from '../../components/Headers/ProfileHeader/ProfileHeader';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/rootReducer';
 import FastImage from 'react-native-fast-image';
@@ -23,15 +22,45 @@ import FullDivider from '../../components/Divider/FullDivider';
 import Toast from 'react-native-toast-message';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Settings from '../../components/Modals/Settings/Settings';
-import {EDIT_PROFILE_SCREEN} from '../../constants/Navigation/Navigation';
 import useGetUserForProfile from '../../hooks/User/useGetUserForProfile';
 import BackHeader from '../../components/Headers/BackHeader/BackHeader';
+import ModalActivityIndicator from '../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
+import {createDM} from '../../utils/Messages/Group/onCreateGroup';
+import {GROUP_CHAT_SCREEN} from '../../constants/Navigation/Navigation';
 
 const RemoteProfileScreen = (props: any) => {
   const {myProfile, uid} = props.route.params;
+  const firebaseUser = useSelector(
+    (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
+  );
 
-  const {loading, user, onSignOut, settingOpen, onClickSettings} =
-    useGetUserForProfile(uid);
+  const {
+    loading,
+    user,
+    onSignOut,
+    settingOpen,
+    onClickSettings,
+    goingToMessage,
+    setGoingToMessage,
+  } = useGetUserForProfile(uid);
+
+  const onMessagePress = async () => {
+    try {
+      setGoingToMessage(true);
+      const selectedMemeber = [firebaseUser, user];
+      const new_group = await createDM(selectedMemeber, firebaseUser);
+      props.navigation.navigate(GROUP_CHAT_SCREEN, {group: new_group});
+    } catch (error) {
+      console.log('Error in Pressing Message Button', error);
+      setGoingToMessage(false);
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Something went wrong 😔',
+        text2: 'Please try again!!',
+      });
+    }
+  };
 
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
@@ -49,6 +78,7 @@ const RemoteProfileScreen = (props: any) => {
     </Layout>
   ) : (
     <Layout style={styles.main} level="1">
+      <ModalActivityIndicator modalVisible={goingToMessage} />
       <Settings
         uid={user.uid}
         modalVisible={settingOpen}
@@ -137,6 +167,14 @@ const RemoteProfileScreen = (props: any) => {
               </Text>
             </TouchableOpacity>
           )}
+          {!myProfile && (
+            <Button
+              style={styles.button}
+              appearance="filled"
+              onPress={onMessagePress}>
+              Message
+            </Button>
+          )}
         </View>
       </ScrollView>
     </Layout>
@@ -196,6 +234,22 @@ const styles = StyleSheet.create({
     height: 20,
     width: 20,
     marginRight: 10,
+  },
+  // button: {
+  //   position: 'absolute',
+  //   bottom: 25,
+  //   right: 25,
+  //   padding: 15,
+  //   elevation: 5,
+  //   borderRadius: 30,
+  //   zIndex: 2,
+  // },
+  messageIcon: {
+    height: 25,
+    width: 25,
+  },
+  button: {
+    marginTop: 20,
   },
 });
 

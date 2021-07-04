@@ -7,9 +7,17 @@ import {RALEWAY_MEDIUM} from '../../../constants/Fonts/Fonts';
 import FullDivider from '../../../components/Divider/FullDivider';
 import UserSerchCard from '../../../components/Card/UserSearchCard/UserSerchCard';
 import {REMOTE_USER_SEARCH_SCREEN} from '../../../constants/Navigation/Navigation';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../../store/rootReducer';
 
 const UserSearchScreen = (props: any) => {
-  const {filteredUsers, loading, query, handleQuery} = useGetUsers();
+  const firebaseUser = useSelector(
+    (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
+  );
+
+  const {filteredUsers, loading, query, handleQuery} = useGetUsers(
+    firebaseUser.uid,
+  );
   const appTheme = useTheme();
 
   return (

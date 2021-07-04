@@ -3,16 +3,18 @@ import Toast from 'react-native-toast-message';
 import {FAIL} from '../../constants/RemoteStates/remotestates';
 import {defaultUser, UserInterface} from '../../models/User/User';
 import {updateFirebaseUserStatus} from '../../store/User/actionCreator/addFirebaseUser';
-import {getRemoteUser} from '../../utils/User/Methods/getRemoteUser';
 import auth from '@react-native-firebase/auth';
 import {useDispatch} from 'react-redux';
 import {generalErrorN} from '../../components/Alerts/GeneralError';
 import {readAsync} from '../../utils/Firestore/read';
+import {createDM} from '../../utils/Messages/Group/onCreateGroup';
+import {GROUP_CHAT_SCREEN} from '../../constants/Navigation/Navigation';
 
 const useGetUserForProfile = (uid: string) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<UserInterface>(defaultUser);
   const [settingOpen, toggleSetting] = useState<boolean>(false);
+  const [goingToMessage, setGoingToMessage] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -90,6 +92,8 @@ const useGetUserForProfile = (uid: string) => {
     onSignOut,
     settingOpen,
     onClickSettings,
+    goingToMessage,
+    setGoingToMessage,
   };
 };
 
