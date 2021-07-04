@@ -172,7 +172,7 @@ const VideoChat = (props: props) => {
             theme['color-primary-default'],
             appTheme === 'dark'
               ? theme['color-basic-200']
-              : theme['color-basic-600'],
+              : theme['color-basic-300'],
           )
         }
         renderActions={(props5) => renderAction(props5)}

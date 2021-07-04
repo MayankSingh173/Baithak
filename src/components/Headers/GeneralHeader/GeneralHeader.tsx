@@ -112,7 +112,7 @@ const themedStyles = StyleSheet.create({
     width: '30%',
     alignSelf: 'center',
     marginLeft: 5,
-    flex: 1,
+    flex: 0.7,
     marginTop: 8,
   },
   icon: {
