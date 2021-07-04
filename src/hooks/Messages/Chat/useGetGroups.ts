@@ -5,7 +5,7 @@ import firestore from '@react-native-firebase/firestore';
 
 const useGetGroups = (uid: string) => {
   const [newMembers, setNewMembers] = useState<MembersDetails>();
-  const [groups, setGroups] = useState<Group[]>();
+  const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectMeet, setSelectMeet] = useState<boolean>(false);
 

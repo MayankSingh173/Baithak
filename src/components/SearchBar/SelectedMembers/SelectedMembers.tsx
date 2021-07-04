@@ -7,16 +7,21 @@ import FullDivider from '../../Divider/FullDivider';
 
 interface props {
   members: UserInterface[];
+  myUid: string;
 }
 
 const SelectedMembers = (props: props) => {
-  if (props.members.length === 0) return null;
+  if (props.members.length === 1) return null;
+
+  const firebaseUserRemoved = props.members.filter(
+    (member) => member.uid !== props.myUid,
+  );
 
   return (
     <View style={styles.main}>
       <FlatList
         horizontal={true}
-        data={props.members}
+        data={firebaseUserRemoved}
         keyExtractor={(user) => user.uid}
         renderItem={({item}) => {
           return <SelectedMemberCard user={item} />;

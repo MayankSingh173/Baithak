@@ -13,11 +13,11 @@ import {
   Actions,
   IMessage,
 } from 'react-native-gifted-chat';
-import {Baithak} from '../../models/Meeting/CreateMeeting/interface';
 import {onDeleteMessage} from '../../utils/Messages/onDeleteMessage';
 import Toast from 'react-native-toast-message';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {RALEWAY_MEDIUM} from '../../constants/Fonts/Fonts';
+import {Group} from '../../models/Messages/interface';
 
 interface props {
   message: IMessage[];
@@ -25,7 +25,7 @@ interface props {
   isMoreLoading: boolean;
   loadMore: any;
   lastDoc: FirebaseFirestoreTypes.DocumentData | undefined;
-  baithak: Baithak;
+  group: Group;
 }
 
 const customtInputToolbar = (props: any, color: string) => {
@@ -91,7 +91,7 @@ const renderSend = (props: any, color: string, sendColor: string) => {
 const onLongPress = (
   context: any,
   message: IMessage,
-  baithakId: string,
+  groupId: string,
   uid: string,
 ) => {
   const options = ['Delete Message', 'Copy Text', 'Cancel'];
@@ -104,7 +104,7 @@ const onLongPress = (
     async (buttonIndex: number) => {
       switch (buttonIndex) {
         case 0:
-          await onDeleteMessage(message, baithakId, uid, 'Baithak');
+          await onDeleteMessage(message, groupId, uid, 'groups');
           break;
         case 1:
           Clipboard.setString(message.text);
@@ -119,7 +119,7 @@ const onLongPress = (
   );
 };
 
-const VideoChat = (props: props) => {
+const GroupChat = (props: props) => {
   const firebaseUser = useSelector(
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
   );
@@ -177,19 +177,14 @@ const VideoChat = (props: props) => {
         renderActions={(props5) => renderAction(props5)}
         onPressActionButton={() => console.log('Plus')}
         onLongPress={(context, message) =>
-          onLongPress(
-            context,
-            message,
-            `${props.baithak.meetId}${props.baithak.password}`,
-            firebaseUser.uid,
-          )
+          onLongPress(context, message, props.group.groupId, firebaseUser.uid)
         }
       />
     </Layout>
   );
 };
 
-export default VideoChat;
+export default GroupChat;
 
 const styles = StyleSheet.create({
   main: {
@@ -212,8 +207,8 @@ const styles = StyleSheet.create({
   input: {
     padding: 5,
     paddingLeft: 15,
-    borderRadius: 5,
     marginHorizontal: 10,
+    borderRadius: 10,
   },
   inputStyles: {
     alignSelf: 'center',

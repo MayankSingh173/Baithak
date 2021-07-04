@@ -5,6 +5,7 @@ import {
   CREATE_GROUP_SCREEN,
   CREATE_MEET_SCREEN,
   EDIT_PROFILE_SCREEN,
+  GROUP_CHAT_SCREEN,
   JOIN_MEET_SCREEN,
   MAIN_TAB,
   REMOTE_USER_SEARCH_SCREEN,
@@ -20,6 +21,7 @@ import UserSearchScreen from '../../screens/Search/UserSearch/UserSearchScreen';
 import RemoteProfileScreen from '../../screens/ProfileScreen/RemoteProfileScreen';
 import UserAddSearchScreen from '../../screens/Search/UserAddSearchScreen/UserAddSearchScreen';
 import CreateGroupScreen from '../../screens/CreateGroup/CreateGroupScreen';
+import GroupChatsScreen from '../../screens/Chats/GroupChatsScreen/GroupChatsScreen';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +43,7 @@ const MainStackNavigator = () => {
         component={UserAddSearchScreen}
       />
       <Stack.Screen name={CREATE_GROUP_SCREEN} component={CreateGroupScreen} />
+      <Stack.Screen name={GROUP_CHAT_SCREEN} component={GroupChatsScreen} />
     </Stack.Navigator>
   );
 };

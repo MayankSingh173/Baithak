@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     bottom: 30,
     right: 30,
     elevation: 5,
+    zIndex: 2,
   },
 });
 

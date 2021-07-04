@@ -29,12 +29,12 @@ import useGetUserForProfile from '../../hooks/User/useGetUserForProfile';
 const ProfileScreen = (props: any) => {
   const {myProfile, uid} = props.route.params;
 
-  const {loading, user, onSignOut, settingOpen, onClickSettings} =
-    useGetUserForProfile(uid);
-
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
+
+  const {loading, user, onSignOut, settingOpen, onClickSettings} =
+    useGetUserForProfile(uid);
 
   const appTheme = useTheme();
 

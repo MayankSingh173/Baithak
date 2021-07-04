@@ -14,7 +14,7 @@ import VideoOptions from '../../../components/Modals/VideoOptions/VideoOptions';
 import VideoMessage from '../../../components/Modals/VideoMessage/VideoMessage';
 import MeetInfo from '../../../components/Modals/MeetInfo/MeetInfo';
 import MeetParticpants from '../../../components/Modals/MeetParticipants/MeetParticipants';
-import {getRefinedTest} from '../../../utils/Miscellaneous/utils';
+import {getRefinedText} from '../../../utils/Miscellaneous/utils';
 
 const dimensions = {
   width: Dimensions.get('window').width,
@@ -104,7 +104,7 @@ const VideoStream = (props: any) => {
           onLeftPress={confirmEnd}
           rightIcon="sync-outline"
           onRightPress={onSwitchCamera}
-          centerText={getRefinedTest(meetConfig.channelName, 18)}
+          centerText={getRefinedText(meetConfig.channelName, 15)}
           leftIconColor="white"
           centerTextColor="white"
           rightIconColor="white"

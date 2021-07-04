@@ -42,7 +42,11 @@ const CreateGroupScreen = (props: any) => {
     onCloseSelectImage,
     onCaptureImage,
     onSelectFromLibrary,
-  } = useOnCreateGroup(props.route.params.selectedUsers, firebaseUser);
+  } = useOnCreateGroup(
+    props.route.params.selectedUsers,
+    firebaseUser,
+    props.navigation,
+  );
 
   const appTheme = useTheme();
 

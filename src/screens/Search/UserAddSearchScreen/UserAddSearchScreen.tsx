@@ -12,40 +12,33 @@ import UserSearchBar from '../../../components/SearchBar/UserSearchBar';
 import {RALEWAY_MEDIUM} from '../../../constants/Fonts/Fonts';
 import FullDivider from '../../../components/Divider/FullDivider';
 import UserSelectCard from '../../../components/Card/UserSelectCard/UserSelectCard';
-import {useState} from 'react';
-import {UserInterface} from '../../../models/User/User';
 import SelectedMembers from '../../../components/SearchBar/SelectedMembers/SelectedMembers';
 import BackHeader from '../../../components/Headers/BackHeader/BackHeader';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
+import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
+
+import useGetSelecteMembers from '../../../hooks/Search/useGetSelectedMembers';
 
 const UserAddSearchScreen = (props: any) => {
-  const {
-    filteredUsers,
-    loading,
-    query,
-    handleQuery,
-    selectedUsers,
-    setSelectedUsers,
-    onPressNext,
-  } = useGetUsers(props.navigation);
-  const appTheme = useTheme();
-
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
+  const firebaseUser = useSelector(
+    (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
+  );
 
-  const onSelectUser = (user: UserInterface, currCheck: boolean) => {
-    if (currCheck) {
-      setSelectedUsers((prev) => [...prev, user]);
-    } else {
-      const updatedUser = selectedUsers.filter((u) => u.uid !== user.uid);
-      setSelectedUsers(updatedUser);
-    }
-  };
+  const appTheme = useTheme();
+
+  const {filteredUsers, loading, query, handleQuery} = useGetUsers(
+    firebaseUser.uid,
+  );
+  const {selectedUsers, onSelectUser, onPressNext, newGroupForming} =
+    useGetSelecteMembers(firebaseUser, props.navigation);
 
   return (
     <Layout style={styles.main}>
+      <ModalActivityIndicator modalVisible={newGroupForming} />
       <BackHeader
         leftIcon="arrow-back-outline"
         onLeftPress={() => props.navigation.goBack()}
@@ -60,7 +53,7 @@ const UserAddSearchScreen = (props: any) => {
         style={{borderRadius: 10, margin: 10, marginTop: 20}}
         autoFocus={false}
       />
-      {selectedUsers.length > 0 && (
+      {selectedUsers.length > 1 && (
         <TouchableOpacity
           onPress={onPressNext}
           style={[
@@ -108,7 +101,10 @@ const UserAddSearchScreen = (props: any) => {
               <FullDivider style={styles.divider} />
             )}
             ListHeaderComponent={() => (
-              <SelectedMembers members={selectedUsers} />
+              <SelectedMembers
+                members={selectedUsers}
+                myUid={firebaseUser.uid}
+              />
             )}
             showsVerticalScrollIndicator={false}
           />

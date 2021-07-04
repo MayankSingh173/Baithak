@@ -3,7 +3,7 @@ export const getTime = (date: Date | number) => {
   else return date.getTime();
 };
 
-export const getRefinedTest = (text: string, n: number) => {
+export const getRefinedText = (text: string, n: number) => {
   if (text.length <= n) return text;
   else {
     return `${text.slice(0, n - 3)}...`;
