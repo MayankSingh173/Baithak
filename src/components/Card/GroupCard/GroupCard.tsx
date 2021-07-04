@@ -9,6 +9,7 @@ import {
 } from '../../../constants/Fonts/Fonts';
 import {Group} from '../../../models/Messages/interface';
 import {getGroupDetails} from '../../../utils/Messages/Group/getGroupDetails';
+import {getRefinedText} from '../../../utils/Miscellaneous/utils';
 
 interface props {
   groupDetails: Group;
@@ -28,10 +29,10 @@ const GroupCard = ({groupDetails, onPress, myUid}: props) => {
         <Avatar source={{uri: groupImage}} size="giant" />
       </View>
       <View style={styles.content}>
-        <Text style={styles.name}>{groupName}</Text>
+        <Text style={styles.name}>{getRefinedText(groupName, 25)}</Text>
         {lastMessage && (
           <Text category="s2" style={styles.lastMessage}>
-            {lastMessage.text}
+            {getRefinedText(lastMessage.text, 25)}
           </Text>
         )}
         {lastMessage ? (
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   lastMessage: {
-    fontFamily: RALEWAY_MEDIUM,
+    fontFamily: RALEWAY_REGULAR,
   },
 });
 

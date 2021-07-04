@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {Group} from '../../../models/Messages/interface';
-import {Text, Icon, Avatar} from '@ui-kitten/components';
+import {Text, Icon, Avatar, Layout} from '@ui-kitten/components';
 import {getGroupDetails} from '../../../utils/Messages/Group/getGroupDetails';
 import {RALEWAY_BOLD} from '../../../constants/Fonts/Fonts';
 import {getMembersName} from '../../../utils/Messages/Group/getMembersName';
@@ -20,7 +20,7 @@ const GroupChatHeader = (props: props) => {
     props.myUid,
   );
   return (
-    <View style={styles.main}>
+    <Layout level="2" style={styles.main}>
       <TouchableOpacity onPress={props.onPressLeft}>
         <Icon
           name="arrow-back-outline"
@@ -45,7 +45,7 @@ const GroupChatHeader = (props: props) => {
       </TouchableOpacity>
       {/* Video Call Icon */}
       <TouchableOpacity style={styles.rightIconView}></TouchableOpacity>
-    </View>
+    </Layout>
   );
 };
 

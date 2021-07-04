@@ -1,8 +1,7 @@
 import {Layout} from '@ui-kitten/components';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useSelector} from 'react-redux';
-import BackHeader from '../../../components/Headers/BackHeader/BackHeader';
 import GroupChatHeader from '../../../components/Headers/GroupChatHeader/GroupChatHeader';
 import GroupChat from '../../../components/Messages/GroupChat';
 import {CHAT_HOME_SCREEN} from '../../../constants/Navigation/Navigation';
@@ -20,6 +19,19 @@ const GroupChatsScreen = (props: any) => {
 
   const {messages, handleSend, isMoreLoading, lastDoc, loadMore} =
     useGetMessages(props.route.params.group);
+
+  //On user back button move to chat home screen
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener(
+      'beforeRemove',
+      (e: any) => {
+        e.preventDefault();
+        unsubscribe();
+        props.navigation.navigate(CHAT_HOME_SCREEN); //Navigate to Chat home screen
+      },
+    );
+  }, []);
+
   return (
     <Layout level="1" style={styles.main}>
       <View style={styles.header}>
@@ -54,7 +66,6 @@ const styles = StyleSheet.create({
     top: 0,
     zIndex: 2,
     width: '100%',
-    paddingTop: 5,
   },
 });
 

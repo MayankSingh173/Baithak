@@ -143,6 +143,7 @@ const VideoChat = (props: props) => {
         isLoadingEarlier={props.isMoreLoading}
         onLoadEarlier={props.loadMore}
         bottomOffset={0}
+        renderChatFooter={() => <View style={{height: 20}} />}
         loadEarlier={props.lastDoc ? true : false}
         renderLoading={() => renderLoading(theme['color-primary-default'])}
         renderInputToolbar={(props1) =>
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
   input: {
     padding: 5,
     paddingLeft: 15,
-    borderRadius: 5,
+    borderRadius: 10,
     marginHorizontal: 10,
   },
   inputStyles: {

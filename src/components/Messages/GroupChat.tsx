@@ -140,9 +140,9 @@ const GroupChat = (props: props) => {
         scrollToBottom
         alwaysShowSend
         infiniteScroll
+        renderChatFooter={() => <View style={{height: 20}} />}
         isLoadingEarlier={props.isMoreLoading}
         onLoadEarlier={props.loadMore}
-        bottomOffset={0}
         loadEarlier={props.lastDoc ? true : false}
         renderLoading={() => renderLoading(theme['color-primary-default'])}
         renderInputToolbar={(props1) =>
