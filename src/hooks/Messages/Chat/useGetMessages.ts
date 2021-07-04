@@ -7,6 +7,7 @@ import {Group, Message} from '../../../models/Messages/interface';
 import {debounce} from 'lodash';
 import {getTime} from '../../../utils/Miscellaneous/utils';
 import {getMemberDetailsFromUid} from '../../../utils/Messages/Group/getMemberDetailsFromUid';
+import {handleUnread} from '../../../utils/Messages/Group/handleUnread';
 
 const useGetMessages = (group: Group) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
@@ -111,6 +112,8 @@ const useGetMessages = (group: Group) => {
           uid: m.user._id,
           ...(m.system && {system: m.system}),
         });
+
+        await handleUnread(group);
       });
     } catch (err) {
       console.log('Error in adding message', err);

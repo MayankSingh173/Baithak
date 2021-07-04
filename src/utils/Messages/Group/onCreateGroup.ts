@@ -23,6 +23,7 @@ export const onCreateGroup = async (
         imageUrl: member.photoURL,
         name: member.name,
         agoraId: member.agoraId,
+        unread: 0,
       });
     });
 
@@ -70,6 +71,7 @@ export const createDM = async (
         imageUrl: member.photoURL,
         name: member.name,
         agoraId: member.agoraId,
+        unread: 0,
       });
     });
 

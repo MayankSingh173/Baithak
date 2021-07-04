@@ -3,6 +3,7 @@ import {
   DEFAULT_GROUP_IMAGE,
 } from '../../../constants/Images/Images';
 import {Group, Message} from '../../../models/Messages/interface';
+import {getUnread} from './handleUnread';
 
 //This function will return the appropriate group details according to whether it is dm or not
 export const getGroupDetails = (

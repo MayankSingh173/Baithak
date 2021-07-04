@@ -11,6 +11,7 @@ export interface UserInterface {
   tagLine?: string;
   agoraId: number;
   theme: 'dark' | 'light';
+  activeOnGroup?: string;
 }
 
 export const defaultUser: UserInterface = {

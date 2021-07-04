@@ -44,6 +44,7 @@ export const createBaithak = (
         name: firebaseUser.name,
         agoraId: meetConfig.agoraId,
         imageUrl: firebaseUser.photoURL,
+        unread: 0,
       },
     ],
   };

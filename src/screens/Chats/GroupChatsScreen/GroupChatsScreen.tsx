@@ -7,6 +7,8 @@ import GroupChat from '../../../components/Messages/GroupChat';
 import {CHAT_HOME_SCREEN} from '../../../constants/Navigation/Navigation';
 import useGetMessages from '../../../hooks/Messages/Chat/useGetMessages';
 import {RootState} from '../../../store/rootReducer';
+import {changeGroupActivity} from '../../../utils/Messages/Group/changeGroupActivity';
+import {removeUnread} from '../../../utils/Messages/Group/handleUnread';
 
 const GroupChatsScreen = (props: any) => {
   const theme = useSelector(
@@ -30,6 +32,17 @@ const GroupChatsScreen = (props: any) => {
         props.navigation.navigate(CHAT_HOME_SCREEN); //Navigate to Chat home screen
       },
     );
+
+    //Making user active on this group
+    changeGroupActivity(firebaseUser.uid, props.route.params.group.groupId);
+
+    //Remove unread
+    removeUnread(props.route.params.group, firebaseUser.uid);
+
+    return () => {
+      //Making user inactive on this group
+      changeGroupActivity(firebaseUser.uid);
+    };
   }, []);
 
   return (

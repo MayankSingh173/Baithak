@@ -20,6 +20,7 @@ export interface MembersDetails {
   name?: string;
   agoraId: number;
   imageUrl?: string;
+  unread: number;
 }
 export interface VideoStreamParams {
   token: string;
