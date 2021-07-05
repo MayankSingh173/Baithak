@@ -19,8 +19,8 @@ const NoChatsHome = () => {
       <Text category="h6" style={styles.chatHeading}>
         Chat with your friends
       </Text>
-      <Text category="s1" style={styles.noMessg}>
-        No messages as of Now
+      <Text category="s1" appearance="hint" style={styles.noMessg}>
+        No messages as of now!😊
       </Text>
     </View>
   );
