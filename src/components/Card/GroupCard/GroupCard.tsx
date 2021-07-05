@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   card: {
-    borderRadius: 70,
+    borderRadius: 10,
     padding: 10,
   },
   imgView: {

@@ -11,3 +11,9 @@ export const DEFAULT_GROUP_IMAGE =
 
 export const DEFAULT_GROUP_MEETING_IMAGE =
   'https://firebasestorage.googleapis.com/v0/b/baithak-4a1fe.appspot.com/o/Default_group_meeting.jpg?alt=media&token=fa20fcfb-edf3-4bab-a1d0-e9bf0653599e';
+
+export const FACEBOOK_LOGO =
+  'https://firebasestorage.googleapis.com/v0/b/baithak-4a1fe.appspot.com/o/facebookButton.png?alt=media&token=9f6c37fb-632c-43db-a53f-0fdac76953e5';
+
+export const GOOGLE_LOGO =
+  'https://firebasestorage.googleapis.com/v0/b/baithak-4a1fe.appspot.com/o/googleButton.png?alt=media&token=b2e498a6-54e5-4dff-83bd-41ffced27e23';

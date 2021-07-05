@@ -27,6 +27,7 @@ import {
 import LogoButton from '../../../components/Buttons/LogoButton/LogoButton';
 import Divider from '../../../components/Divider/Divider';
 import useOnLogin from '../../../hooks/auth/useOnLogin';
+import {FACEBOOK_LOGO, GOOGLE_LOGO} from '../../../constants/Images/Images';
 
 interface props {
   navigation: any;
@@ -137,14 +138,14 @@ const SignIn = (props: props) => {
                   buttonType="google"
                   title="Sign in with Google"
                   style={styles.buttonHolder}
-                  src={require('../../../assets/Logos/googleButton.png')}
+                  src={{uri: GOOGLE_LOGO}}
                 />
                 <LogoButton
                   onPress={onFacebookAuth}
                   buttonType="facebook"
                   title="Sign in with Facebook"
                   style={styles.buttonHolder}
-                  src={require('../../../assets/Logos/facebookButton.png')}
+                  src={{uri: FACEBOOK_LOGO}}
                 />
               </View>
             )}

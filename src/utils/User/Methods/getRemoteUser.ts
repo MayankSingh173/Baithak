@@ -13,23 +13,18 @@ export const getRemoteUser = async (uid: string) => {
   }
 };
 
-export const getRemoteUserByAgoraId = (uid: number) => {
+export const getRemoteUserByAgoraId = async (uid: number) => {
   try {
     let data: UserInterface | undefined;
-    firestore()
+    const userRef = await firestore()
       .collection('users')
       .where('agoraId', '==', uid)
-      .onSnapshot(
-        (snapshot) => {
-          if (snapshot.docs.length !== 0) {
-            data =
-              snapshot.docs[0].exists &&
-              (snapshot.docs[0].data() as UserInterface);
-          }
-        },
-        (err) => console.log('Error in getting remote userBy agora Id', err),
-      );
+      .get();
 
+    //Will contain only one doc if uid is correct
+    for (const doc of userRef.docs) {
+      if (doc.exists) data = doc.data() as UserInterface;
+    }
     return data;
   } catch (error) {
     console.log('Error if fetching remote user by agora Id', error);

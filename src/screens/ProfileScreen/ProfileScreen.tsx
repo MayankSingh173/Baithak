@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   imgView: {
-    width: '100%',
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -159,13 +159,15 @@ const styles = StyleSheet.create({
     borderRadius: 70,
   },
   nameView: {
+    marginTop: 20,
+    paddingHorizontal: 14,
     width: '100%',
     alignItems: 'center',
-    marginTop: 20,
-    paddingHorizontal: 10,
   },
   name: {
     fontFamily: RALEWAY_BOLD,
+    alignSelf: 'center',
+    flex: 1,
   },
   tagLine: {
     fontFamily: RALEWAY_MEDIUM,

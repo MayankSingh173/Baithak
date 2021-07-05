@@ -1,9 +1,10 @@
 import React from 'react';
-import {StyleSheet, View, Image, TouchableOpacity} from 'react-native';
-import {useTheme, Text, Icon} from '@ui-kitten/components';
+import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import {Text} from '@ui-kitten/components';
 import {RALEWAY_BOLD} from '../../../constants/Fonts/Fonts';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
+import FastImage from 'react-native-fast-image';
 
 const LogoButton = (props: any) => {
   const theme = useSelector(
@@ -18,7 +19,7 @@ const LogoButton = (props: any) => {
         ]}
         onPress={props.onPress}>
         <View style={styles.left}>
-          <Image
+          <FastImage
             style={{
               width: props.buttonType == 'facebook' ? 30 : 25,
               height: props.buttonType == 'facebook' ? 30 : 25,

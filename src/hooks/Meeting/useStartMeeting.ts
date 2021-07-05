@@ -44,6 +44,7 @@ const useStartMeeting = (
   const [speakerOff, toogleSpeaker] = useState<boolean>(false);
   const [inVideoOff, toogleInVideoOff] = useState<boolean>(false);
   const [flashOn, toggleFlash] = useState<boolean>(false);
+  const [active, setActive] = useState<number>();
 
   let engine = useRef<RtcEngine | null>(null);
   let sound = useRef<Sound | null>(
@@ -82,87 +83,79 @@ const useStartMeeting = (
     }
   };
 
-  useEffect(() => {
-    const intializeRTC = async () => {
-      try {
-        await checkPermission();
+  const intializeRTC = async () => {
+    try {
+      await checkPermission();
 
-        engine.current = await RtcEngine.create(appId);
+      engine.current = await RtcEngine.create(appId);
 
-        // Enable the video module.
-        await engine.current?.enableVideo();
+      // Enable the video module.
+      await engine.current?.enableVideo();
 
-        //Start the call
-        await startCall();
+      //Start the call
+      await startCall();
 
-        //================ Event Listeners Start ====================================
+      //================ Event Listeners Start ====================================
 
-        // Listen for the UserJoined callback.
-        // This callback occurs when the remote user successfully joins the channel.
-        engine.current?.addListener('UserJoined', (uid, elapsed) => {
-          if (peerIds.indexOf(uid) === -1) {
-            setPeerIds((prev) => [...prev, uid]);
-            const userJoined = getBaithakPartiFromAgoraId(uid, baithak);
-            sound.current?.play();
+      // Listen for the UserJoined callback.
+      // This callback occurs when the remote user successfully joins the channel.
+      engine.current?.addListener('UserJoined', async (uid, elapsed) => {
+        if (peerIds.indexOf(uid) === -1) {
+          setPeerIds((prev) => [...prev, uid]);
+          const userJoined = await getRemoteUserByAgoraId(uid);
+          sound.current?.play();
+
+          if (userJoined && userJoined.name) {
             Toast.show({
               type: 'info',
-              text1: `${userJoined.name ? userJoined.name : 'Someone'} joined`,
+              text1: `${userJoined.name} joined`,
               position: 'top',
             });
           }
-        });
+        }
+      });
 
-        // Listen for the UserOffline callback.
-        // This callback occurs when the remote user gets cutt off the channel.
-        engine.current?.addListener('UserOffline', (uid, elapsed) => {
-          const user = getRemoteUserByAgoraId(uid);
-          if (user && user.name) {
-            Toast.show({
-              type: 'info',
-              text1: `${user.name} left the Baithak`,
-              position: 'top',
-            });
-          }
-        });
-
-        // Listen for the JoinChannelSuccess callback.
-        // This callback occurs when the local user successfully joins the channel.
-        engine.current?.addListener(
-          'JoinChannelSuccess',
-          async (channel, uid, elapsed) => {
-            if (meetConfig.creater === 'Host') {
-              await onHostJoinMeet(meetConfig, firebaseUser);
-            } else {
-              await onMemberJoinMeet(meetConfig, firebaseUser);
-            }
-            onPressMeetInfo();
-            setJoinSucceed(true);
-            toggleModal(false);
-          },
-        );
-
-        //Listen for the Warning callback.
-        //This callback occurs when there is some warning
-        // engine.current?.addListener('Warning', (warn) => {
-        //   console.log('Warn', warn);
-        // });
-
-        //Listen for the Warning callback.
-        //This callback occurs when there is some warning
-        engine.current?.addListener('Error', (err) => {
-          console.log('Error', err);
-          toggleModal(false);
-          navigation.goBack();
+      // Listen for the UserOffline callback.
+      // This callback occurs when the remote user gets cutt off the channel.
+      engine.current?.addListener('UserOffline', async (uid, elapsed) => {
+        const user = await getRemoteUserByAgoraId(uid);
+        // Remove peer ID from state array
+        setPeerIds((prev) => prev.filter((id) => id !== uid));
+        if (user && user.name) {
           Toast.show({
-            type: 'error',
-            text1: 'Oops!',
-            text2: 'Something went wrong. Please try again',
+            type: 'info',
+            text1: `${user.name} left the Baithak`,
             position: 'top',
           });
-        });
-      } catch (err) {
-        engine.current?.destroy();
-        console.log('Error in initialize RTC', err);
+        }
+      });
+
+      // Listen for the JoinChannelSuccess callback.
+      // This callback occurs when the local user successfully joins the channel.
+      engine.current?.addListener(
+        'JoinChannelSuccess',
+        async (channel, uid, elapsed) => {
+          if (meetConfig.creater === 'Host') {
+            await onHostJoinMeet(meetConfig, firebaseUser);
+          } else {
+            await onMemberJoinMeet(meetConfig, firebaseUser);
+          }
+          onPressMeetInfo();
+          setJoinSucceed(true);
+          toggleModal(false);
+        },
+      );
+
+      //Listen for the Warning callback.
+      //This callback occurs when there is some warning
+      // engine.current?.addListener('Warning', (warn) => {
+      //   console.log('Warn', warn);
+      // });
+
+      //Listen for the Warning callback.
+      //This callback occurs when there is some warning
+      engine.current?.addListener('Error', (err) => {
+        console.log('Error', err);
         toggleModal(false);
         navigation.goBack();
         Toast.show({
@@ -170,13 +163,25 @@ const useStartMeeting = (
           text1: 'Oops!',
           text2: 'Something went wrong. Please try again',
           position: 'top',
-          visibilityTime: 300,
         });
-      }
-    };
+      });
+      //================ Event Listeners Ends ====================================
+    } catch (err) {
+      engine.current?.destroy();
+      console.log('Error in initialize RTC', err);
+      toggleModal(false);
+      navigation.goBack();
+      Toast.show({
+        type: 'error',
+        text1: 'Oops!',
+        text2: 'Something went wrong. Please try again',
+        position: 'top',
+        visibilityTime: 300,
+      });
+    }
+  };
 
-    //================ Event Listeners Ends ====================================
-
+  useEffect(() => {
     //Call the initialize RTC method
     intializeRTC();
   }, []);
@@ -345,6 +350,7 @@ const useStartMeeting = (
     onPressInVideo,
     flashOn,
     onCamerFlashOn,
+    active,
   };
 };
 
