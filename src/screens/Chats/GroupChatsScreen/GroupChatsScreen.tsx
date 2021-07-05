@@ -4,6 +4,7 @@ import {StyleSheet, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import GroupChatHeader from '../../../components/Headers/GroupChatHeader/GroupChatHeader';
 import GroupChat from '../../../components/Messages/GroupChat';
+import GroupInfoModal from '../../../components/Modals/GroupInfo/GroupInfoModal';
 import {CHAT_HOME_SCREEN} from '../../../constants/Navigation/Navigation';
 import useGetMessages from '../../../hooks/Messages/Chat/useGetMessages';
 import {RootState} from '../../../store/rootReducer';
@@ -19,41 +20,31 @@ const GroupChatsScreen = (props: any) => {
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
   );
 
-  const {messages, handleSend, isMoreLoading, lastDoc, loadMore} =
-    useGetMessages(props.route.params.group);
-
-  //On user back button move to chat home screen
-  useEffect(() => {
-    const unsubscribe = props.navigation.addListener(
-      'beforeRemove',
-      (e: any) => {
-        e.preventDefault();
-        unsubscribe();
-        props.navigation.navigate(CHAT_HOME_SCREEN); //Navigate to Chat home screen
-      },
-    );
-
-    //Making user active on this group
-    changeGroupActivity(firebaseUser.uid, props.route.params.group.groupId);
-
-    //Remove unread
-    removeUnread(props.route.params.group, firebaseUser.uid);
-
-    return () => {
-      //Making user inactive on this group
-      changeGroupActivity(firebaseUser.uid);
-    };
-  }, []);
+  const {
+    messages,
+    handleSend,
+    isMoreLoading,
+    lastDoc,
+    loadMore,
+    groupInfo,
+    toggleGroupInfoModal,
+  } = useGetMessages(props.route.params.group, props.navigation, firebaseUser);
 
   return (
     <Layout level="1" style={styles.main}>
+      <GroupInfoModal
+        modalVisible={groupInfo}
+        onBackDropPress={toggleGroupInfoModal}
+        group={props.route.params.group}
+      />
       <View style={styles.header}>
         <GroupChatHeader
           groupDetails={props.route.params.group}
           onPressLeft={() => props.navigation.navigate(CHAT_HOME_SCREEN)}
-          onPressHeader={() => console.log('Open Details')}
           myUid={firebaseUser.uid}
           theme={theme}
+          navigation={props.navigation}
+          onPressHeader={toggleGroupInfoModal}
         />
       </View>
       <GroupChat
@@ -63,6 +54,7 @@ const GroupChatsScreen = (props: any) => {
         lastDoc={lastDoc}
         loadMore={loadMore}
         group={props.group}
+        navigation={props.navigation}
       />
     </Layout>
   );

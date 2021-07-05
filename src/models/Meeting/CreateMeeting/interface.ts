@@ -1,4 +1,4 @@
-import {UserInterface} from '../../User/User';
+import {Message} from '../../Messages/interface';
 
 export interface Baithak {
   channelName: string;
@@ -8,6 +8,8 @@ export interface Baithak {
   host: Host;
   members: MembersDetails[];
   description?: string;
+  lastMessage?: Message;
+  groupId: string;
 }
 
 export interface Host {
@@ -30,6 +32,7 @@ export interface VideoStreamParams {
   agoraId: number;
   creater: 'Host' | 'Member';
   description?: string;
+  groupId?: string;
 }
 
 export interface CreateMeetForm {

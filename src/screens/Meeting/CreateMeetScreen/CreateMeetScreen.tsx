@@ -27,6 +27,8 @@ const CreateMeetScreen = (props: any) => {
   const appTheme = useTheme();
   const styles = useStyleSheet(themedStyles);
 
+  const groupId = props.route.params && props.route.params.groupId;
+
   const firebaseUser = useSelector(
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
   );
@@ -38,6 +40,8 @@ const CreateMeetScreen = (props: any) => {
   const {initialFormState, handleSubmit, isLoading} = useOnCreateMeet(
     props.navigation,
     firebaseUser.agoraId,
+    firebaseUser,
+    groupId,
   );
 
   return (

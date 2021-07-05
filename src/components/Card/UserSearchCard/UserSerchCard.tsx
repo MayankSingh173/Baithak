@@ -4,6 +4,7 @@ import {UserInterface} from '../../../models/User/User';
 import {Avatar, Text} from '@ui-kitten/components';
 import {DEFAULT_AVATAR} from '../../../constants/Images/Images';
 import {RALEWAY_BOLD, RALEWAY_REGULAR} from '../../../constants/Fonts/Fonts';
+import FastImage from 'react-native-fast-image';
 
 interface props {
   user: UserInterface;
@@ -14,9 +15,9 @@ const UserSerchCard = ({user, onPress}: props) => {
   return (
     <TouchableOpacity style={styles.main} onPress={onPress}>
       <View style={styles.imgView}>
-        <Avatar
+        <FastImage
           source={{uri: user.photoURL ? user.photoURL : DEFAULT_AVATAR}}
-          size="giant"
+          style={styles.image}
         />
       </View>
       <View style={styles.content}>
@@ -53,6 +54,11 @@ const styles = StyleSheet.create({
   tagLine: {
     fontFamily: RALEWAY_REGULAR,
     color: 'grey',
+  },
+  image: {
+    height: 50,
+    width: 50,
+    borderRadius: 50,
   },
 });
 

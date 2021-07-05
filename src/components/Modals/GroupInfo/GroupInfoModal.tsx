@@ -5,18 +5,18 @@ import Modal from 'react-native-modal';
 import {Baithak} from '../../../models/Meeting/CreateMeeting/interface';
 import BackHeader from '../../Headers/BackHeader/BackHeader';
 import useGetMeetMssg from '../../../hooks/Messages/Meeting/useGetMeetMssg';
-import VideoChat from '../../Messages/VideoChat';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
+import {Group} from '../../../models/Messages/interface';
 
 interface props {
-  baithak: Baithak | undefined;
+  group: Group;
   onBackDropPress: () => void;
   modalVisible: boolean;
 }
 
-const VideoMessage = (props: props) => {
-  if (!props.baithak) return null;
+const GroupInfoModal = (props: props) => {
+  if (!props.group) return null;
 
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
@@ -25,9 +25,6 @@ const VideoMessage = (props: props) => {
   const firebaseUser = useSelector(
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
   );
-
-  const {messages, handleSend, isMoreLoading, loadMore, lastDoc} =
-    useGetMeetMssg(props.baithak, firebaseUser);
 
   const styles = useStyleSheet(themedStyles);
   return (
@@ -51,14 +48,6 @@ const VideoMessage = (props: props) => {
             centerTextColor={theme === 'dark' ? 'white' : 'black'}
           />
         </View>
-        <VideoChat
-          message={messages}
-          handleSend={handleSend}
-          isMoreLoading={isMoreLoading}
-          lastDoc={lastDoc}
-          loadMore={loadMore}
-          baithak={props.baithak}
-        />
       </Layout>
     </Modal>
   );
@@ -72,12 +61,7 @@ const themedStyles = StyleSheet.create({
     flex: 1,
     margin: 0,
   },
-  header: {
-    paddingHorizontal: 20,
-    paddingBottom: 15,
-    borderBottomWidth: 0.3,
-    borderColor: 'grey',
-  },
+  header: {},
 });
 
-export default VideoMessage;
+export default GroupInfoModal;

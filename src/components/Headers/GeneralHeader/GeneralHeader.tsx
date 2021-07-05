@@ -98,9 +98,8 @@ const themedStyles = StyleSheet.create({
     fontFamily: RALEWAY_BOLD,
   },
   avatarView: {
-    width: '15%',
     marginLeft: 15,
-    flex: 1,
+    flex: 0.9,
   },
   headingView: {
     justifyContent: 'flex-start',

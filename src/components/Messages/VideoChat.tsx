@@ -91,7 +91,7 @@ const renderSend = (props: any, color: string, sendColor: string) => {
 const onLongPress = (
   context: any,
   message: IMessage,
-  baithakId: string,
+  groupId: string,
   uid: string,
 ) => {
   const options = ['Delete Message', 'Copy Text', 'Cancel'];
@@ -104,7 +104,7 @@ const onLongPress = (
     async (buttonIndex: number) => {
       switch (buttonIndex) {
         case 0:
-          await onDeleteMessage(message, baithakId, uid, 'Baithak');
+          await onDeleteMessage(message, groupId, uid, 'groups');
           break;
         case 1:
           Clipboard.setString(message.text);
@@ -178,12 +178,7 @@ const VideoChat = (props: props) => {
         renderActions={(props5) => renderAction(props5)}
         onPressActionButton={() => console.log('Plus')}
         onLongPress={(context, message) =>
-          onLongPress(
-            context,
-            message,
-            `${props.baithak.meetId}${props.baithak.password}`,
-            firebaseUser.uid,
-          )
+          onLongPress(context, message, props.baithak.groupId, firebaseUser.uid)
         }
       />
     </Layout>

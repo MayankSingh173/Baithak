@@ -4,11 +4,7 @@ import {StyleSheet, View, ActivityIndicator} from 'react-native';
 import {useSelector} from 'react-redux';
 import GeneralHeader from '../../../components/Headers/GeneralHeader/GeneralHeader';
 import SelectMeet from '../../../components/Modals/SelectMeet/SelectMeet';
-import {
-  RALEWAY_BOLD,
-  RALEWAY_MEDIUM,
-  RALEWAY_REGULAR,
-} from '../../../constants/Fonts/Fonts';
+import {RALEWAY_BOLD, RALEWAY_REGULAR} from '../../../constants/Fonts/Fonts';
 import {
   CREATE_MEET_SCREEN,
   GROUP_CHAT_SCREEN,
@@ -18,21 +14,21 @@ import {
   USER_SEARCH_SCREEN,
 } from '../../../constants/Navigation/Navigation';
 import {RootState} from '../../../store/rootReducer';
-import LottieView from 'lottie-react-native';
-import {screenHeight} from '../../../constants/screen/screenInfo';
 import CreateGroupButton from '../../../components/Buttons/CreateGroupButton/CreateGroupButton';
 import useGetGroups from '../../../hooks/Messages/Chat/useGetGroups';
 import NoChatsHome from '../../../components/UI/Chats/NoChatsHome';
 import UserGroupCardView from '../../../components/UI/Group/UserGroupCardView';
 import {Group} from '../../../models/Messages/interface';
+import {useState} from 'react';
 
 const ChatHome = (props: any) => {
   const firebaseUser = useSelector(
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
   );
 
-  const {selectMeet, setSelectMeet, loading, groups, setNewMembers} =
-    useGetGroups(firebaseUser.uid);
+  const {selectMeet, setSelectMeet, loading, groups} = useGetGroups(
+    firebaseUser.uid,
+  );
 
   const appTheme = useTheme();
 

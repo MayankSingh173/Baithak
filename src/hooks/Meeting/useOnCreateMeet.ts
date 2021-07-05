@@ -6,11 +6,17 @@ import {
   CreateMeetForm,
   VideoStreamParams,
 } from '../../models/Meeting/CreateMeeting/interface';
+import {UserInterface} from '../../models/User/User';
 import {onCreateMeet} from '../../utils/Meeting/Methods/createMeeting';
 
-const useOnCreateMeet = (navigation: any, agoraId: number) => {
+const useOnCreateMeet = (
+  navigation: any,
+  agoraId: number,
+  firebaseUser: UserInterface,
+  groudId?: string,
+) => {
   const initialFormState: CreateMeetForm = {
-    name: '',
+    name: firebaseUser.name ? `Baithak with ${firebaseUser.name}` : '',
     description: '',
   };
 
@@ -28,6 +34,7 @@ const useOnCreateMeet = (navigation: any, agoraId: number) => {
         channelName: meetDetails.name,
         agoraId: agoraId,
         creater: 'Host',
+        groupId: groudId,
       } as VideoStreamParams);
       toggleModal(false);
     } else {

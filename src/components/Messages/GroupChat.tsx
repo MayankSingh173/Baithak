@@ -18,6 +18,7 @@ import Toast from 'react-native-toast-message';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {RALEWAY_MEDIUM} from '../../constants/Fonts/Fonts';
 import {Group} from '../../models/Messages/interface';
+import {REMOTE_USER_PROFILE_SCREEN} from '../../constants/Navigation/Navigation';
 
 interface props {
   message: IMessage[];
@@ -26,6 +27,7 @@ interface props {
   loadMore: any;
   lastDoc: FirebaseFirestoreTypes.DocumentData | undefined;
   group: Group;
+  navigation: any;
 }
 
 const customtInputToolbar = (props: any, color: string) => {
@@ -152,6 +154,12 @@ const GroupChat = (props: props) => {
               ? theme['color-basic-900']
               : theme['color-basic-300'],
           )
+        }
+        onPressAvatar={(user) =>
+          props.navigation.navigate(REMOTE_USER_PROFILE_SCREEN, {
+            uid: user._id,
+            myProfile: false,
+          })
         }
         renderSend={(props2) =>
           renderSend(

@@ -1,16 +1,13 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
-import {Avatar, Layout, Text, useTheme} from '@ui-kitten/components';
+import {Layout, Text, useTheme} from '@ui-kitten/components';
 import moment from 'moment';
-import {
-  RALEWAY_BOLD,
-  RALEWAY_MEDIUM,
-  RALEWAY_REGULAR,
-} from '../../../constants/Fonts/Fonts';
+import {RALEWAY_BOLD, RALEWAY_REGULAR} from '../../../constants/Fonts/Fonts';
 import {Group} from '../../../models/Messages/interface';
 import {getGroupDetails} from '../../../utils/Messages/Group/getGroupDetails';
 import {getRefinedText} from '../../../utils/Miscellaneous/utils';
 import {getUnread} from '../../../utils/Messages/Group/handleUnread';
+import FastImage from 'react-native-fast-image';
 
 interface props {
   groupDetails: Group;
@@ -29,11 +26,11 @@ const GroupCard = ({groupDetails, onPress, myUid}: props) => {
   const unread = getUnread(groupDetails.membersDetails, myUid);
   return (
     <Layout level={unread > 0 ? '2' : '1'} style={styles.card}>
-      <TouchableOpacity style={styles.main} onPress={onPress}>
+      <View style={styles.main}>
         <View style={styles.imgView}>
-          <Avatar source={{uri: groupImage}} size="giant" />
+          <FastImage source={{uri: groupImage}} style={styles.image} />
         </View>
-        <View style={styles.content}>
+        <TouchableOpacity style={styles.content} onPress={onPress}>
           <Text style={styles.name}>{getRefinedText(groupName, 25)}</Text>
           {lastMessage && (
             <Text category="s2" style={styles.lastMessage}>
@@ -49,7 +46,7 @@ const GroupCard = ({groupDetails, onPress, myUid}: props) => {
               {moment(groupDetails.createdAt).format('h:mm A, DD/MM/YY')}
             </Text>
           )}
-        </View>
+        </TouchableOpacity>
         <View style={styles.unreadView}>
           {unread > 0 && (
             <View
@@ -63,7 +60,7 @@ const GroupCard = ({groupDetails, onPress, myUid}: props) => {
             </View>
           )}
         </View>
-      </TouchableOpacity>
+      </View>
     </Layout>
   );
 };
@@ -74,7 +71,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   card: {
-    borderRadius: 10,
+    borderRadius: 70,
     padding: 10,
   },
   imgView: {
@@ -89,7 +86,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontFamily: RALEWAY_BOLD,
-    fontSize: 17,
+    fontSize: 16,
   },
   time: {
     fontFamily: RALEWAY_REGULAR,
@@ -108,6 +105,12 @@ const styles = StyleSheet.create({
   unreadView: {
     flex: 0.6,
     justifyContent: 'center',
+  },
+  image: {
+    height: 55,
+    width: 55,
+    borderRadius: 20,
+    elevation: 7,
   },
 });
 

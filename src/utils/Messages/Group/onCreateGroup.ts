@@ -3,6 +3,7 @@ import firestore from '@react-native-firebase/firestore';
 import {Group} from '../../../models/Messages/interface';
 import {MembersDetails} from '../../../models/Meeting/CreateMeeting/interface';
 import {checkDMExist} from './checkDMExists';
+import {DEFAULT_AVATAR} from '../../../constants/Images/Images';
 
 export const onCreateGroup = async (
   name: string,
@@ -20,8 +21,8 @@ export const onCreateGroup = async (
       membersID.push(member.uid);
       membersDetails.push({
         uid: member.uid,
-        imageUrl: member.photoURL,
-        name: member.name,
+        imageUrl: member.photoURL ? member.photoURL : DEFAULT_AVATAR,
+        name: member.name ? member.name : 'Robot',
         agoraId: member.agoraId,
         unread: 0,
       });
@@ -37,8 +38,8 @@ export const onCreateGroup = async (
       isDM: false,
       createdAt: +new Date(),
     } as Group;
-    await groupRef.set(group);
 
+    await groupRef.set(group);
     return group;
   } catch (error) {
     console.log('Error in creating group', error);
@@ -68,8 +69,8 @@ export const createDM = async (
       membersID.push(member.uid);
       membersDetails.push({
         uid: member.uid,
-        imageUrl: member.photoURL,
-        name: member.name,
+        imageUrl: member.photoURL ? member.photoURL : DEFAULT_AVATAR,
+        name: member.name ? member.name : 'Robot',
         agoraId: member.agoraId,
         unread: 0,
       });

@@ -44,8 +44,8 @@ const MeetParticpants = (props: props) => {
       hasBackdrop={true}
       onBackdropPress={props.onBackDropPress}
       style={styles.modal}
-      animationIn="zoomIn"
-      animationOut="zoomOut"
+      animationIn="slideInUp"
+      animationOut="slideOutDown"
       coverScreen={true}
       useNativeDriver
       onBackButtonPress={props.onBackDropPress}>

@@ -12,15 +12,20 @@ const useGetUsers = (uid: string) => {
     const subscriber = firestore()
       .collection('users')
       .where('uid', '!=', uid)
-      .onSnapshot((querySnapshot) => {
-        const localUsers: UserInterface[] = [];
-        for (const doc of querySnapshot.docs) {
-          doc.exists && localUsers.push(doc.data() as UserInterface);
-        }
-        setUsers(localUsers);
-        setFilteredUsers(localUsers);
-        setLoading(false);
-      });
+      .onSnapshot(
+        (querySnapshot) => {
+          const localUsers: UserInterface[] = [];
+          for (const doc of querySnapshot.docs) {
+            doc.exists && localUsers.push(doc.data() as UserInterface);
+          }
+          setUsers(localUsers);
+          setFilteredUsers(localUsers);
+          setLoading(false);
+        },
+        (err) => {
+          console.log(err);
+        },
+      );
 
     return () => subscriber();
   }, [uid]);

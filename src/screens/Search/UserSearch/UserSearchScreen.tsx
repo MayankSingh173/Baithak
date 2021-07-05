@@ -6,7 +6,7 @@ import UserSearchBar from '../../../components/SearchBar/UserSearchBar';
 import {RALEWAY_MEDIUM} from '../../../constants/Fonts/Fonts';
 import FullDivider from '../../../components/Divider/FullDivider';
 import UserSerchCard from '../../../components/Card/UserSearchCard/UserSerchCard';
-import {REMOTE_USER_SEARCH_SCREEN} from '../../../constants/Navigation/Navigation';
+import {REMOTE_USER_PROFILE_SCREEN} from '../../../constants/Navigation/Navigation';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
 
@@ -60,7 +60,7 @@ const UserSearchScreen = (props: any) => {
                 <UserSerchCard
                   user={item}
                   onPress={() =>
-                    props.navigation.navigate(REMOTE_USER_SEARCH_SCREEN, {
+                    props.navigation.navigate(REMOTE_USER_PROFILE_SCREEN, {
                       myProfile: false,
                       uid: item.uid,
                     })

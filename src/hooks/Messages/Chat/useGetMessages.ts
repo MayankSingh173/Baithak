@@ -7,12 +7,24 @@ import {Group, Message} from '../../../models/Messages/interface';
 import {debounce} from 'lodash';
 import {getTime} from '../../../utils/Miscellaneous/utils';
 import {getMemberDetailsFromUid} from '../../../utils/Messages/Group/getMemberDetailsFromUid';
-import {handleUnread} from '../../../utils/Messages/Group/handleUnread';
+import {
+  handleUnread,
+  removeUnread,
+} from '../../../utils/Messages/Group/handleUnread';
+import {CHAT_HOME_SCREEN} from '../../../constants/Navigation/Navigation';
+import {changeGroupActivity} from '../../../utils/Messages/Group/changeGroupActivity';
+import {UserInterface} from '../../../models/User/User';
+import {writeAsync} from '../../../utils/Firestore/write';
 
-const useGetMessages = (group: Group) => {
+const useGetMessages = (
+  group: Group,
+  navigation: any,
+  firebaseUser: UserInterface,
+) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [lastDoc, setLastDoc] = useState<FirebaseFirestoreTypes.DocumentData>();
   const [isMoreLoading, setIsMoreLoading] = useState<boolean>(false);
+  const [groupInfo, toggleGroupInfo] = useState<boolean>(false);
 
   useEffect(() => {
     try {
@@ -89,16 +101,18 @@ const useGetMessages = (group: Group) => {
     try {
       mssgs.map(async (m) => {
         //Update lastMessage
-        await firestore()
-          .collection('groups')
-          .doc(group.groupId)
-          .update({
+        await writeAsync(
+          'groups',
+          group.groupId,
+          {
             lastMessage: {
               text: mssgs[0].text,
               sendBy: mssgs[0].user._id,
               sendAt: getTime(mssgs[0].createdAt),
             },
-          });
+          },
+          true,
+        );
 
         const ref = firestore()
           .collection('groups')
@@ -120,7 +134,39 @@ const useGetMessages = (group: Group) => {
     }
   };
 
-  return {messages, handleSend, isMoreLoading, loadMore, lastDoc};
+  //On user back button move to chat home screen
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
+      e.preventDefault();
+      unsubscribe();
+      navigation.navigate(CHAT_HOME_SCREEN); //Navigate to Chat home screen
+    });
+
+    //Making user active on this group
+    changeGroupActivity(firebaseUser.uid, group.groupId);
+
+    //Remove unread
+    removeUnread(group, firebaseUser.uid);
+
+    return () => {
+      //Making user inactive on this group
+      changeGroupActivity(firebaseUser.uid);
+    };
+  }, []);
+
+  const toggleGroupInfoModal = () => {
+    toggleGroupInfo(!groupInfo);
+  };
+
+  return {
+    messages,
+    handleSend,
+    isMoreLoading,
+    loadMore,
+    lastDoc,
+    groupInfo,
+    toggleGroupInfoModal,
+  };
 };
 
 export default useGetMessages;

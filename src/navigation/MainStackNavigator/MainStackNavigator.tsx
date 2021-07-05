@@ -8,7 +8,7 @@ import {
   GROUP_CHAT_SCREEN,
   JOIN_MEET_SCREEN,
   MAIN_TAB,
-  REMOTE_USER_SEARCH_SCREEN,
+  REMOTE_USER_PROFILE_SCREEN,
   USER_ADD_SEARCH_SCREEN,
   USER_SEARCH_SCREEN,
   VIDEO_STREAM,
@@ -35,7 +35,7 @@ const MainStackNavigator = () => {
       <Stack.Screen name={EDIT_PROFILE_SCREEN} component={EditProfileScreen} />
       <Stack.Screen name={USER_SEARCH_SCREEN} component={UserSearchScreen} />
       <Stack.Screen
-        name={REMOTE_USER_SEARCH_SCREEN}
+        name={REMOTE_USER_PROFILE_SCREEN}
         component={RemoteProfileScreen}
       />
       <Stack.Screen

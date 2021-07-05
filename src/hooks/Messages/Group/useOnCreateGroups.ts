@@ -110,7 +110,15 @@ const useOnCreateGroup = (
       );
 
       //Move to chat Screen
-      navigation.navigate(GROUP_CHAT_SCREEN, {group: newGroup});
+      if (newGroup) navigation.navigate(GROUP_CHAT_SCREEN, {group: newGroup});
+      else {
+        Toast.show({
+          type: 'error',
+          text1: 'Try Again!!',
+          text2: 'Something went wrong',
+          position: 'top',
+        });
+      }
       setLoading(false);
     } catch (error) {
       setLoading(false);

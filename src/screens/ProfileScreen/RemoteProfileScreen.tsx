@@ -235,15 +235,6 @@ const styles = StyleSheet.create({
     width: 20,
     marginRight: 10,
   },
-  // button: {
-  //   position: 'absolute',
-  //   bottom: 25,
-  //   right: 25,
-  //   padding: 15,
-  //   elevation: 5,
-  //   borderRadius: 30,
-  //   zIndex: 2,
-  // },
   messageIcon: {
     height: 25,
     width: 25,

@@ -11,29 +11,24 @@ import {getTime} from '../../../utils/Miscellaneous/utils';
 import Toast from 'react-native-toast-message';
 import Sound from 'react-native-sound';
 import {UserInterface} from '../../../models/User/User';
+import {writeAsync} from '../../../utils/Firestore/write';
 
 const useGetMeetMssg = (Baithak: Baithak, firebaseUser: UserInterface) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [lastDoc, setLastDoc] = useState<FirebaseFirestoreTypes.DocumentData>();
   const [isMoreLoading, setIsMoreLoading] = useState<boolean>(false);
-  const [lastMessage, setLastMssg] = useState<Message>();
 
   let sound = useRef<Sound | null>(null);
 
   useEffect(() => {
     try {
       const unsubscribe = firestore()
-        .collection('Baithak')
-        .doc(`${Baithak.meetId}${Baithak.password}`)
+        .collection('groups')
+        .doc(Baithak.groupId)
         .collection('messages')
         .orderBy('createdAt', 'desc')
         .limit(15)
         .onSnapshot((querySnapshot) => {
-          querySnapshot.docChanges().forEach((change) => {
-            if (change.type === 'added') {
-              change.doc.exists && setLastMssg(change.doc.data() as Message);
-            }
-          });
           const chats: IMessage[] = [];
           querySnapshot.forEach((doc) => {
             const local_message = doc.exists && (doc.data() as Message);
@@ -64,7 +59,7 @@ const useGetMeetMssg = (Baithak: Baithak, firebaseUser: UserInterface) => {
           setIsMoreLoading(true);
           const nextDocuments = firestore()
             .collection('groups')
-            .doc(`${Baithak.meetId}${Baithak.password}`)
+            .doc(Baithak.groupId)
             .collection('messages')
             .orderBy('createdAt', 'desc')
             .startAfter(lastDoc)
@@ -97,36 +92,73 @@ const useGetMeetMssg = (Baithak: Baithak, firebaseUser: UserInterface) => {
   );
 
   useEffect(() => {
-    if (lastMessage) {
-      const lastMessgageUser = getBaithakPartiFromUid(lastMessage.uid, Baithak);
+    try {
+      const subscriber = firestore()
+        .collection('groups')
+        .doc(Baithak.groupId)
+        .collection('messages')
+        .onSnapshot((querySnapshot) => {
+          querySnapshot.docChanges().forEach((change) => {
+            if (change.type === 'added' && change.doc.exists) {
+              const lastMessage = change.doc.data();
+              const lastMessgageUser = getBaithakPartiFromUid(
+                lastMessage.uid,
+                Baithak,
+              );
+              if (lastMessage.uid !== firebaseUser.uid) {
+                sound.current = new Sound(
+                  'message.mp3',
+                  Sound.MAIN_BUNDLE,
+                  (error) => {
+                    if (error) {
+                      console.log('Error in playing message sound', error);
+                    }
+                    sound.current?.play(() => sound.current?.release());
+                  },
+                );
 
-      if (lastMessage.uid !== firebaseUser.uid) {
-        sound.current = new Sound('message.mp3', Sound.MAIN_BUNDLE, (error) => {
-          if (error) {
-            console.log('Error in playing message sound', error);
-          }
-          sound.current?.play(() => sound.current?.release());
+                sound.current?.play();
+
+                Toast.show({
+                  type: 'success',
+                  text1: lastMessgageUser.name
+                    ? lastMessgageUser.name
+                    : 'Someone',
+                  text2: lastMessage.text,
+                  position: 'bottom',
+                  bottomOffset: 100,
+                });
+              }
+            }
+          });
         });
 
-        sound.current?.play();
-
-        Toast.show({
-          type: 'success',
-          text1: lastMessgageUser.name ? lastMessgageUser.name : 'Someone',
-          text2: lastMessage.text,
-          position: 'bottom',
-          bottomOffset: 100,
-        });
-      }
+      return () => subscriber();
+    } catch (error) {
+      console.log('Error in listinening to doc changes', error);
     }
-  }, [lastMessage]);
+  }, [Baithak]);
 
   const handleSend = async (mssgs: IMessage[]) => {
     try {
-      mssgs.map((m) => {
+      mssgs.map(async (m) => {
+        //Update lastMessage
+        await writeAsync(
+          'groups',
+          Baithak.groupId,
+          {
+            lastMessage: {
+              text: mssgs[0].text,
+              sendBy: mssgs[0].user._id,
+              sendAt: getTime(mssgs[0].createdAt),
+            },
+          },
+          true,
+        );
+
         const ref = firestore()
-          .collection('Baithak')
-          .doc(`${Baithak.meetId}${Baithak.password}`)
+          .collection('groups')
+          .doc(Baithak.groupId)
           .collection('messages')
           .doc();
         ref.set({

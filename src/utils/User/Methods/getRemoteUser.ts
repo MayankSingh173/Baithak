@@ -19,13 +19,16 @@ export const getRemoteUserByAgoraId = (uid: number) => {
     firestore()
       .collection('users')
       .where('agoraId', '==', uid)
-      .onSnapshot((snapshot) => {
-        if (snapshot.docs.length !== 0) {
-          data =
-            snapshot.docs[0].exists &&
-            (snapshot.docs[0].data() as UserInterface);
-        }
-      });
+      .onSnapshot(
+        (snapshot) => {
+          if (snapshot.docs.length !== 0) {
+            data =
+              snapshot.docs[0].exists &&
+              (snapshot.docs[0].data() as UserInterface);
+          }
+        },
+        (err) => console.log('Error in getting remote userBy agora Id', err),
+      );
 
     return data;
   } catch (error) {
