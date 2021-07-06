@@ -63,17 +63,19 @@ const useAuth = () => {
               text2: 'You have successfully login into the app',
               position: 'top',
             });
-          } else {
-            //Update the User
-            await updateUserObjOnAuth(
-              user.uid,
-              Platform.OS,
-              user.displayName ? user.displayName : 'Robot',
-              user.phoneNumber ? user.phoneNumber : undefined,
-              user.email ? user.email : 'example@gmail.com',
-              user.photoURL ? user.photoURL : DEFAULT_AVATAR,
-            );
           }
+
+          // else {
+          //   //Update the User
+          //   await updateUserObjOnAuth(
+          //     user.uid,
+          //     Platform.OS,
+          //     user.displayName ? user.displayName : 'Robot',
+          //     user.phoneNumber ? user.phoneNumber : undefined,
+          //     user.email ? user.email : 'example@gmail.com',
+          //     user.photoURL ? user.photoURL : DEFAULT_AVATAR,
+          //   );
+          // }
 
           //update the firebase user with success status 'SUCCESS' in redux
           storeDispatch(updateFirebaseUserStatus(SUCCESS));

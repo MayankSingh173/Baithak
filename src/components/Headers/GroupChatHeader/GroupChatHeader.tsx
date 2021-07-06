@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {Group} from '../../../models/Messages/interface';
-import {Text, Icon, Avatar, Layout} from '@ui-kitten/components';
+import {Text, Icon, Layout} from '@ui-kitten/components';
 import {getGroupDetails} from '../../../utils/Messages/Group/getGroupDetails';
 import {RALEWAY_BOLD} from '../../../constants/Fonts/Fonts';
 import {getMembersName} from '../../../utils/Messages/Group/getMembersName';
@@ -112,8 +112,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    height: 50,
-    width: 50,
+    height: 45,
+    width: 45,
     borderRadius: 50,
     elevation: 10,
   },

@@ -5,13 +5,16 @@ import {useSelector} from 'react-redux';
 import GroupChatHeader from '../../../components/Headers/GroupChatHeader/GroupChatHeader';
 import GroupChat from '../../../components/Messages/GroupChat';
 import GroupInfoModal from '../../../components/Modals/GroupInfo/GroupInfoModal';
+import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
 import {CHAT_HOME_SCREEN} from '../../../constants/Navigation/Navigation';
 import useGetMessages from '../../../hooks/Messages/Chat/useGetMessages';
 import {RootState} from '../../../store/rootReducer';
-import {changeGroupActivity} from '../../../utils/Messages/Group/changeGroupActivity';
-import {removeUnread} from '../../../utils/Messages/Group/handleUnread';
 
 const GroupChatsScreen = (props: any) => {
+  if (!props.route.params.group) {
+    return <ModalActivityIndicator modalVisible={true} />;
+  }
+
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
@@ -53,7 +56,7 @@ const GroupChatsScreen = (props: any) => {
         isMoreLoading={isMoreLoading}
         lastDoc={lastDoc}
         loadMore={loadMore}
-        group={props.group}
+        group={props.route.params.group}
         navigation={props.navigation}
       />
     </Layout>

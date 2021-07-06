@@ -22,10 +22,13 @@ import RemoteProfileScreen from '../../screens/ProfileScreen/RemoteProfileScreen
 import UserAddSearchScreen from '../../screens/Search/UserAddSearchScreen/UserAddSearchScreen';
 import CreateGroupScreen from '../../screens/CreateGroup/CreateGroupScreen';
 import GroupChatsScreen from '../../screens/Chats/GroupChatsScreen/GroupChatsScreen';
+import useGetMessagePerm from '../../hooks/Notifications/useGetMessagePerm';
 
 const Stack = createStackNavigator();
 
 const MainStackNavigator = () => {
+  //Hook for saving tokens to firebase user
+  useGetMessagePerm();
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name={MAIN_TAB} component={MainTabNavigator} />

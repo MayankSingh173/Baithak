@@ -1,4 +1,5 @@
 import {PermissionsAndroid, Platform} from 'react-native';
+import messaging from '@react-native-firebase/messaging';
 
 export const requestCameraAndAudioPermission = async () => {
   try {
@@ -33,4 +34,18 @@ export const checkPermission = async () => {
       await requestCameraAndAudioPermission();
     }
   }
+};
+
+export const checkMessagePermission = async () => {
+  const enabled = await messaging().hasPermission();
+  if (enabled === messaging.AuthorizationStatus.NOT_DETERMINED)
+    requestUserPermission();
+};
+
+export const requestUserPermission = async () => {
+  const authStatus = await messaging().requestPermission();
+  const enabled =
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  console.log('Notification Permission ', enabled);
 };
