@@ -10,7 +10,7 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 
@@ -19,7 +19,11 @@ app.use(express.json());
 const {nocache} = require('./src/controllers/Cache/index');
 const {generateAccessToken} = require('./src/controllers/Agora/index');
 const {sendNotification} = require('./src/controllers/Notifications/index');
-const {ACCESS_TOKEN, NOTIFICATION} = require('./src/Api/apiEndPoints');
+const {ACCESS_TOKEN, NOTIFICATION, HOME} = require('./src/Api/apiEndPoints');
+
+app.get(HOME, (req, res) => {
+  res.json({message: 'Server is running'});
+});
 
 app.get(ACCESS_TOKEN, nocache, generateAccessToken);
 
