@@ -10,6 +10,11 @@ const sendNotification = async (req, res) => {
         imageUrl: payload.imageUrl,
       },
       tokens: payload.tokens,
+      android: {
+        notification: {
+          color: '#45F1DE',
+        },
+      },
     };
 
     await admin.messaging().sendMulticast(message);
