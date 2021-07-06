@@ -21,6 +21,7 @@
 		"agora-access-token": "^2.0.4",
 		"dotenv": "^10.0.0",
 		"express": "^4.17.1",
+		"firebase-admin": "^9.10.0",
 		"nodemon": "^2.0.8"
 	}
 }
