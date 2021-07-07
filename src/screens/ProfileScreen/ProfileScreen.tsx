@@ -35,6 +35,7 @@ import SocialProfile from '../../components/UI/SocialProfile/SocialProfile';
 import {createDM} from '../../utils/Messages/Group/onCreateGroup';
 import Toast from 'react-native-toast-message';
 import BackHeader from '../../components/Headers/BackHeader/BackHeader';
+import SelectImage from '../../components/Modals/SelectImage/SelectImage';
 
 const ProfileScreen = (props: any) => {
   const {myProfile, uid} = props.route.params;
@@ -54,6 +55,10 @@ const ProfileScreen = (props: any) => {
     settingOpen,
     onClickSettings,
     setGoingToMessage,
+    selectImage,
+    onCloseSelectImage,
+    onCaptureImage,
+    onSelectFromLibrary,
   } = useGetUserForProfile(uid);
 
   const appTheme = useTheme();
@@ -87,6 +92,12 @@ const ProfileScreen = (props: any) => {
     </Layout>
   ) : (
     <Layout style={styles.main} level="1">
+      <SelectImage
+        modalVisible={selectImage}
+        onBackDropPress={onCloseSelectImage}
+        onCaptureImage={onCaptureImage}
+        onSelectFromGallery={onSelectFromLibrary}
+      />
       <Settings modalVisible={settingOpen} onBackDropPress={onClickSettings} />
       <ScrollView showsVerticalScrollIndicator={false}>
         {myProfile ? (
@@ -113,9 +124,20 @@ const ProfileScreen = (props: any) => {
             }}
             style={[
               styles.image,
-              {borderColor: theme === 'dark' ? 'white' : 'grey'},
+              {borderColor: theme === 'dark' ? 'white' : 'black'},
             ]}
           />
+          {myProfile && (
+            <TouchableOpacity
+              onPress={onCloseSelectImage}
+              style={[styles.iconView, {backgroundColor: 'white'}]}>
+              <Icon
+                name="camera-outline"
+                style={styles.editIcon}
+                fill={appTheme['color-primary-default']}
+              />
+            </TouchableOpacity>
+          )}
           <View style={styles.nameView}>
             <Text category="h6" style={styles.name}>
               Hi, I'm{' '}
@@ -254,6 +276,16 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
+  },
+  iconView: {
+    padding: 3,
+    borderRadius: 30,
+    marginLeft: 50,
+    marginTop: -25,
+  },
+  editIcon: {
+    height: 25,
+    width: 25,
   },
 });
 

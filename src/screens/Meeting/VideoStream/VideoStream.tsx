@@ -54,7 +54,8 @@ const VideoStream = (props: any) => {
     onPressInVideo,
     flashOn,
     onCamerFlashOn,
-    active,
+    autoFocus,
+    enableAutoCameraFocus,
   } = useStartMeeting(
     {
       appId: APP_ID,
@@ -82,6 +83,8 @@ const VideoStream = (props: any) => {
         speakerOff={speakerOff}
         inVideoOff={inVideoOff}
         onPressInVideo={onPressInVideo}
+        autoFocus={autoFocus}
+        onPressFocus={enableAutoCameraFocus}
       />
       <VideoMessage
         modalVisible={messageOpen}
@@ -105,7 +108,7 @@ const VideoStream = (props: any) => {
           onLeftPress={confirmEnd}
           rightIcon="sync-outline"
           onRightPress={onSwitchCamera}
-          centerText={getRefinedText(meetConfig.channelName, 18)}
+          centerText={getRefinedText(meetConfig.channelName, 20)}
           leftIconColor="white"
           centerTextColor="white"
           rightIconColor="white"

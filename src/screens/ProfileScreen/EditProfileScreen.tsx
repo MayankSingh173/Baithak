@@ -157,7 +157,9 @@ const EditProfileScreen = (props: any) => {
                 onBlur={() => formikProps.setFieldTouched('instagram')}
                 keyboardType="default"
                 accessoryLeft={() => (
-                  <InstaIcon style={{marginHorizontal: 8}} size={24} />
+                  <InstaIcon
+                    style={{marginHorizontal: 8, height: 24, width: 24}}
+                  />
                 )}
                 value={formikProps.values.instagram}
                 onChangeText={formikProps.handleChange('instagram')}
@@ -197,7 +199,9 @@ const EditProfileScreen = (props: any) => {
                 label="GitHub"
                 onBlur={() => formikProps.setFieldTouched('github')}
                 keyboardType="default"
-                accessoryLeft={GithubIcon}
+                accessoryLeft={(style) =>
+                  GithubIcon(style, theme === 'light' ? 'black' : '#fafafa')
+                }
                 value={formikProps.values.github}
                 onChangeText={formikProps.handleChange('github')}
                 size="large"

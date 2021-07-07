@@ -13,6 +13,7 @@ import {DEFAULT_AVATAR} from '../../../constants/Images/Images';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
 import ShowSearchBar from '../../SearchBar/ShowSearchBar';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface props {
   firebaseUser: UserInterface;
@@ -67,11 +68,19 @@ const GeneralHeader: FC<props> = ({
         </View>
         {rightIcon && (
           <TouchableOpacity style={styles.iconView} onPress={onPressRight}>
-            <Icon
-              name={rightIcon}
-              style={styles.icon}
-              fill={appTheme === 'dark' ? 'white' : 'black'}
-            />
+            {rightIcon === 'video-outline' ? (
+              <Ionicons
+                name="videocam-outline"
+                size={25}
+                color={appTheme === 'dark' ? 'white' : 'black'}
+              />
+            ) : (
+              <Icon
+                name={rightIcon}
+                style={styles.icon}
+                fill={appTheme === 'dark' ? 'white' : 'black'}
+              />
+            )}
           </TouchableOpacity>
         )}
       </View>

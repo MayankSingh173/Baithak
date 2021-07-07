@@ -2,6 +2,7 @@ import {useStyleSheet, Text, Icon} from '@ui-kitten/components';
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {RALEWAY_BOLD} from '../../../constants/Fonts/Fonts';
+import Ionicon from 'react-native-vector-icons/Ionicons';
 
 interface props {
   leftIcon?: string;
@@ -34,7 +35,7 @@ const BackHeader = (props: props) => {
       {props.centerText && (
         <View style={[styles.textView, {flex: props.rightIcon ? 5 : 6}]}>
           <Text
-            category="h5"
+            category="h6"
             style={[styles.centerText, {color: props.centerTextColor}]}>
             {props.centerText}
           </Text>
@@ -52,11 +53,20 @@ const BackHeader = (props: props) => {
             </TouchableOpacity>
           )}
           <TouchableOpacity onPress={props.onRightPress}>
-            <Icon
-              name={props.rightIcon}
-              style={styles.rightIcon}
-              fill={props.rightIconColor}
-            />
+            {props.rightIcon === 'sync-outline' ? (
+              <Ionicon
+                name="ios-camera-reverse-outline"
+                size={25}
+                style={{marginTop: 10}}
+                color="white"
+              />
+            ) : (
+              <Icon
+                name={props.rightIcon}
+                style={styles.rightIcon}
+                fill={props.rightIconColor}
+              />
+            )}
           </TouchableOpacity>
         </View>
       )}
@@ -76,8 +86,8 @@ const themedStyles = StyleSheet.create({
     flex: 1,
   },
   icon: {
-    height: 30,
-    width: 30,
+    height: 25,
+    width: 25,
     marginTop: 2,
   },
   centerText: {

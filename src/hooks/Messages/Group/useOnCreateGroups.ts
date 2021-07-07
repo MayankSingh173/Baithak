@@ -13,11 +13,7 @@ import {onCreateGroup} from '../../../utils/Messages/Group/onCreateGroup';
 import {groupForm} from '../../../models/Messages/interface';
 import {GROUP_CHAT_SCREEN} from '../../../constants/Navigation/Navigation';
 
-const useOnCreateGroup = (
-  selectedUsers: UserInterface[],
-  firebaseUser: UserInterface,
-  navigation: any,
-) => {
+const useOnCreateGroup = (selectedUsers: UserInterface[], navigation: any) => {
   const [initialFormState, setInitialFormState] = useState<groupForm>({
     groupName: '',
     description: '',

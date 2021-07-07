@@ -1,6 +1,8 @@
 import React from 'react';
 import {Icon} from '@ui-kitten/components';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import FastImage from 'react-native-fast-image';
+import {INSTA_LOGO} from '../../constants/Images/Images';
 
 export const EmailIcon = (style: any) => (
   <Icon {...style} name="email-outline" />
@@ -76,8 +78,8 @@ export const FacebookIcon = (style: any) => (
   <Icon {...style} name="facebook" fill="#4267B2" />
 );
 
-export const GithubIcon = (style: any) => (
-  <Icon {...style} name="github" fill="#fafafa" />
+export const GithubIcon = (style: any, color?: string) => (
+  <Icon {...style} name="github" fill={color ? color : '#fafafa'} />
 );
 
 export const LinkedInIcon = (style: any) => (
@@ -89,12 +91,5 @@ export const TwitterIcon = (style: any) => (
 );
 
 export const InstaIcon = (props: any) => {
-  return (
-    <AntIcon
-      style={props.style}
-      name="instagram"
-      size={props.size}
-      color="#8a3ab9"
-    />
-  );
+  return <FastImage source={{uri: INSTA_LOGO}} style={props.style} />;
 };

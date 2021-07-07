@@ -17,3 +17,9 @@ export const FACEBOOK_LOGO =
 
 export const GOOGLE_LOGO =
   'https://firebasestorage.googleapis.com/v0/b/baithak-4a1fe.appspot.com/o/googleButton.png?alt=media&token=b2e498a6-54e5-4dff-83bd-41ffced27e23';
+
+export const INSTA_LOGO =
+  'https://firebasestorage.googleapis.com/v0/b/baithak-4a1fe.appspot.com/o/imageIcon.png?alt=media&token=15759de9-ec3d-44b9-b1d1-7a1ad3307a63';
+
+export const BAITHAK_ICON =
+  'https://firebasestorage.googleapis.com/v0/b/baithak-4a1fe.appspot.com/o/ic_launcher.png?alt=media&token=e86442a0-7691-41cb-97ec-66bc8e2f88fd';

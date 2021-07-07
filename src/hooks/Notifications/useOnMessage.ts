@@ -12,7 +12,6 @@ const useOnMessage = () => {
 
   useEffect(() => {
     const subscriber = messaging().onMessage((remoteMessage) => {
-      console.log(remoteMessage);
       if (remoteMessage && remoteMessage.notification) {
         setNotification({
           title: remoteMessage.notification.title,
@@ -25,12 +24,12 @@ const useOnMessage = () => {
     messaging()
       .getInitialNotification()
       .then((remoteMessage) => {
-        console.log(remoteMessage);
+        // console.log(remoteMessage);
       })
       .catch((err) => console.log(err));
 
     messaging().onNotificationOpenedApp((remoteMessage) => {
-      console.log(remoteMessage);
+      // console.log(remoteMessage);
     });
 
     return () => subscriber();

@@ -1,10 +1,13 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity, Linking} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import {useSelector} from 'react-redux';
+import {INSTA_LOGO} from '../../../constants/Images/Images';
 import {UserInterface} from '../../../models/User/User';
+import {RootState} from '../../../store/rootReducer';
 import {
   FacebookIcon,
   GithubIcon,
-  InstaIcon,
   LinkedInIcon,
   TwitterIcon,
 } from '../../Icons/Icons';
@@ -42,45 +45,47 @@ const SocialProfile = (props: props) => {
     },
   ];
 
+  const theme = useSelector(
+    (reduxState: RootState) => reduxState.ThemeReducer.theme,
+  );
+
   return (
     <View style={styles.main}>
       {data.map((data, index) => {
         return data.link ? (
-          <View>
+          <View key={index}>
             {data.type === 'instagram' ? (
               <TouchableOpacity
-                key={index}
                 style={styles.iconView}
                 onPress={() => Linking.openURL(data.link ? data.link : '')}>
-                <InstaIcon size={30} />
+                <FastImage source={{uri: INSTA_LOGO}} style={styles.icon} />
               </TouchableOpacity>
             ) : data.type === 'facebook' ? (
               <TouchableOpacity
-                key={index}
                 style={styles.iconView}
                 onPress={() => Linking.openURL(data.link ? data.link : '')}>
                 {FacebookIcon(styles.icon)}
               </TouchableOpacity>
             ) : data.type === 'linkedIn' ? (
               <TouchableOpacity
-                key={index}
                 style={styles.iconView}
                 onPress={() => Linking.openURL(data.link ? data.link : '')}>
                 {LinkedInIcon(styles.icon)}
               </TouchableOpacity>
             ) : data.type === 'twitter' ? (
               <TouchableOpacity
-                key={index}
                 style={styles.iconView}
                 onPress={() => Linking.openURL(data.link ? data.link : '')}>
                 {TwitterIcon(styles.icon)}
               </TouchableOpacity>
             ) : data.type === 'github' ? (
               <TouchableOpacity
-                key={index}
                 style={styles.iconView}
                 onPress={() => Linking.openURL(data.link ? data.link : '')}>
-                {GithubIcon(styles.icon)}
+                {GithubIcon(
+                  styles.icon,
+                  theme === 'light' ? 'black' : '#fafafa',
+                )}
               </TouchableOpacity>
             ) : null}
           </View>
