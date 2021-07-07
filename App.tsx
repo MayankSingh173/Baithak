@@ -32,7 +32,7 @@ const App = () => {
   AppState.addEventListener('change', async (state) => {
     if (state === 'background' || state === 'inactive') {
       //Remove activeOnGroup so that we can send notifications if there's any
-      await removeActivityFromUser(firebaseUser.uid);
+      await removeActivityFromUser(firebaseUser);
     }
   });
 

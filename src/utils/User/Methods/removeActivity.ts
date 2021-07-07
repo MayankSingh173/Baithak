@@ -1,12 +1,13 @@
 import firestore from '@react-native-firebase/firestore';
+import {UserInterface} from '../../../models/User/User';
 import {writeAsync} from '../../Firestore/write';
 
-export const removeActivityFromUser = async (uid: string) => {
+export const removeActivityFromUser = async (firebaseUser: UserInterface) => {
   try {
-    if (uid !== '') {
+    if (firebaseUser.activeOnGroup) {
       await writeAsync(
         'users',
-        uid,
+        firebaseUser.uid,
         {activeOnGroup: firestore.FieldValue.delete()},
         true,
       );
