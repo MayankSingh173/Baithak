@@ -56,7 +56,11 @@ export const getMemberTokens = async (groupId: string, hostUid: string) => {
             member,
           )) as UserInterface;
 
-          if (membersDetails && membersDetails.tokens) {
+          if (
+            membersDetails &&
+            membersDetails.tokens &&
+            membersDetails.notifications
+          ) {
             tokens = tokens.concat(membersDetails.tokens);
           }
         }

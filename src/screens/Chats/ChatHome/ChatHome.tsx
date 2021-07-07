@@ -26,9 +26,15 @@ const ChatHome = (props: any) => {
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
   );
 
-  const {selectMeet, setSelectMeet, loading, groups} = useGetGroups(
-    firebaseUser.uid,
-  );
+  const {
+    selectMeet,
+    setSelectMeet,
+    fetched,
+    groups,
+    lastDoc,
+    isMoreLoading,
+    nextPage,
+  } = useGetGroups(firebaseUser.uid);
 
   const appTheme = useTheme();
 
@@ -61,7 +67,7 @@ const ChatHome = (props: any) => {
       <CreateGroupButton
         onPress={() => props.navigation.navigate(USER_ADD_SEARCH_SCREEN)}
       />
-      {loading ? (
+      {!fetched ? (
         <Layout style={[styles.main, styles.center]}>
           <ActivityIndicator
             size="large"
@@ -77,6 +83,9 @@ const ChatHome = (props: any) => {
               userGroups={groups}
               myUid={firebaseUser.uid}
               onPressChat={onPressChat}
+              lastDoc={lastDoc}
+              isMoreLoading={isMoreLoading}
+              nextPage={nextPage}
             />
           )}
         </View>

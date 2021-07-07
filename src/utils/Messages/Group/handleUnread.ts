@@ -27,11 +27,15 @@ export const handleUnread = async (
           memberData.activeOnGroup !== group.groupId)
       ) {
         member.unread++;
-        tokensObject.push({
-          uid: member.uid,
-          tokens: memberData.tokens,
-          name: memberData.name,
-        });
+
+        //check is the user has turned off his notification or not
+        if (!memberData.notifications) {
+          tokensObject.push({
+            uid: member.uid,
+            tokens: memberData.tokens,
+            name: memberData.name,
+          });
+        }
       }
     }
 

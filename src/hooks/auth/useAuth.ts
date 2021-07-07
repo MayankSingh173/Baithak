@@ -19,6 +19,7 @@ import Toast from 'react-native-toast-message';
 import {updateTheme} from '../../store/theme/actionCreator/updateTheme';
 import {getRemoteTheme, getTheme} from '../../utils/User/Methods/getTheme';
 import {DEFAULT_AVATAR} from '../../constants/Images/Images';
+import {DEFAULT_USER_NAME} from '../../constants/User/User';
 
 const useAuth = () => {
   const [firebaseUserRef, setFirebaseUserRef] = useState<
@@ -53,7 +54,7 @@ const useAuth = () => {
               Platform.OS,
               getTheme(),
               user.email ? user.email : 'example@gmail.com',
-              user.displayName ? user.displayName : 'Robot',
+              user.displayName ? user.displayName : DEFAULT_USER_NAME,
               user.photoURL ? user.photoURL : DEFAULT_AVATAR,
               false,
             );

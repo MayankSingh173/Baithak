@@ -7,9 +7,12 @@ import {RootState} from '../../../store/rootReducer';
 import {RALEWAY_BOLD, RALEWAY_MEDIUM} from '../../../constants/Fonts/Fonts';
 import FullDivider from '../../Divider/FullDivider';
 import {updateThemeRemotely} from '../../../store/theme/actionCreator/updateTheme';
+import {updateUser} from '../../../utils/User/Methods/updateUser';
+import {updateFirebaseUser} from '../../../store/User/actionCreator/addFirebaseUser';
+import {SUCCESS} from '../../../constants/RemoteStates/remotestates';
+import Toast from 'react-native-toast-message';
 
 interface props {
-  uid: string;
   modalVisible: boolean;
   onBackDropPress: () => void;
 }
@@ -19,14 +22,40 @@ const Settings = (props: props) => {
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
+
+  const firebaseUser = useSelector(
+    (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
+  );
+
+  const [notifications, setNotifications] = React.useState<boolean | undefined>(
+    firebaseUser.notifications,
+  );
+
   const storeDispatch = useDispatch();
 
   const changeTheme = () => {
     const themeAction = updateThemeRemotely(
       theme === 'dark' ? 'light' : 'dark',
-      props.uid,
+      firebaseUser.uid,
     );
     storeDispatch(themeAction);
+  };
+
+  const toggleNotification = async () => {
+    try {
+      setNotifications(!notifications);
+      await updateUser('users', firebaseUser.uid, {
+        notifications: !firebaseUser.notifications,
+      });
+    } catch (error) {
+      setNotifications(!notifications);
+      Toast.show({
+        type: 'error',
+        text1: 'Something went wrong🤔',
+        text2: 'Please try Again',
+        position: 'top',
+      });
+    }
   };
 
   return (
@@ -54,6 +83,12 @@ const Settings = (props: props) => {
               Dark Mode
             </Text>
             <Toggle checked={theme === 'dark'} onChange={changeTheme} />
+          </View>
+          <View style={styles.modeView}>
+            <Text category="h6" style={styles.dark}>
+              Notifications
+            </Text>
+            <Toggle checked={notifications} onChange={toggleNotification} />
           </View>
           <TouchableOpacity
             style={styles.option}

@@ -9,6 +9,7 @@ import {generalErrorN} from '../../components/Alerts/GeneralError';
 import {readAsync} from '../../utils/Firestore/read';
 import {createDM} from '../../utils/Messages/Group/onCreateGroup';
 import {GROUP_CHAT_SCREEN} from '../../constants/Navigation/Navigation';
+import firestore from '@react-native-firebase/firestore';
 
 const useGetUserForProfile = (uid: string) => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -20,9 +21,15 @@ const useGetUserForProfile = (uid: string) => {
     const fetchUser = async () => {
       try {
         setLoading(true);
-        const localUser = await readAsync('users', uid);
-        localUser && setUser(localUser as UserInterface);
+        const subscriber = firestore()
+          .collection('users')
+          .doc(uid)
+          .onSnapshot((doc) => {
+            doc.exists && setUser(doc.data() as UserInterface);
+          });
         setLoading(false);
+
+        return () => subscriber();
       } catch (error) {
         console.log('Eror in profile fecthing', error);
         setLoading(false);

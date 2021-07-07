@@ -105,7 +105,7 @@ const VideoStream = (props: any) => {
           onLeftPress={confirmEnd}
           rightIcon="sync-outline"
           onRightPress={onSwitchCamera}
-          centerText={getRefinedText(meetConfig.channelName, 20)}
+          centerText={getRefinedText(meetConfig.channelName, 18)}
           leftIconColor="white"
           centerTextColor="white"
           rightIconColor="white"

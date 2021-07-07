@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
+  Linking,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/rootReducer';
@@ -27,6 +28,7 @@ import BackHeader from '../../components/Headers/BackHeader/BackHeader';
 import ModalActivityIndicator from '../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
 import {createDM} from '../../utils/Messages/Group/onCreateGroup';
 import {GROUP_CHAT_SCREEN} from '../../constants/Navigation/Navigation';
+import SocialProfile from '../../components/UI/SocialProfile/SocialProfile';
 
 const RemoteProfileScreen = (props: any) => {
   const {myProfile, uid} = props.route.params;
@@ -79,11 +81,6 @@ const RemoteProfileScreen = (props: any) => {
   ) : (
     <Layout style={styles.main} level="1">
       <ModalActivityIndicator modalVisible={goingToMessage} />
-      <Settings
-        uid={user.uid}
-        modalVisible={settingOpen}
-        onBackDropPress={onClickSettings}
-      />
       <ScrollView>
         <View style={{flex: 1, padding: 10}}>
           <BackHeader
@@ -116,6 +113,7 @@ const RemoteProfileScreen = (props: any) => {
             </Text>
           </View>
         </View>
+        <SocialProfile firebaseUser={user} />
         <View style={styles.bioView}>
           <Text category="h5" style={styles.bioHeading}>
             Bio
@@ -127,15 +125,7 @@ const RemoteProfileScreen = (props: any) => {
           </Text>
           <Text
             style={[styles.bio, {color: appTheme['color-info-400']}]}
-            onPress={() => {
-              Clipboard.setString(user.email);
-              Toast.show({
-                type: 'success',
-                position: 'top',
-                text1: 'Copied!',
-                text2: `${user.email}`,
-              });
-            }}>
+            onPress={() => Linking.openURL(`mailto:${user.email}`)}>
             {user.email}
           </Text>
           {myProfile && <FullDivider style={{marginVertical: 15}} />}
