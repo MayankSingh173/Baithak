@@ -17,7 +17,6 @@ import firestore from '@react-native-firebase/firestore';
 import {Share} from 'react-native';
 import {getShareMessage} from '../../utils/Meeting/Methods/getShareMessage';
 import Toast from 'react-native-toast-message';
-import {getBaithakPartiFromAgoraId} from '../../utils/Messages/Meeting/utils';
 import Sound from 'react-native-sound';
 import {getRemoteUserByAgoraId} from '../../utils/User/Methods/getRemoteUser';
 
@@ -44,7 +43,7 @@ const useStartMeeting = (
   const [speakerOff, toogleSpeaker] = useState<boolean>(false);
   const [inVideoOff, toogleInVideoOff] = useState<boolean>(false);
   const [flashOn, toggleFlash] = useState<boolean>(false);
-  const [active, setActive] = useState<number>();
+  const [autoFocus, toggleAutoFocus] = useState<boolean>(false);
 
   let engine = useRef<RtcEngine | null>(null);
   let sound = useRef<Sound | null>(
@@ -222,35 +221,42 @@ const useStartMeeting = (
   //Enables auto focus camera
   const enableAutoCameraFocus = () => {
     if (engine.current) {
-      engine.current?.setCameraAutoFocusFaceModeEnabled;
+      Toast.show({
+        type: 'info',
+        text1: `Camera auto-focus mode ${!autoFocus ? 'enabled' : 'disabled'}!`,
+        position: 'top',
+      });
+      if (menuOpen) setMenuOpen(!menuOpen);
+      engine.current?.setCameraAutoFocusFaceModeEnabled(!autoFocus);
+      toggleAutoFocus(!autoFocus);
     }
   };
 
   //On speakeroff, incoming audio will be muted
   const onPressSpeaker = () => {
     if (engine.current) {
-      toogleSpeaker(!speakerOff);
       Toast.show({
         type: 'info',
-        text1: `Incoming Audios are ${speakerOff ? 'Off' : 'On'}!`,
+        text1: `Incoming Audios are ${!speakerOff ? 'Off' : 'On'}!`,
         position: 'top',
       });
       if (menuOpen) setMenuOpen(!menuOpen);
-      engine.current?.muteAllRemoteAudioStreams(speakerOff);
+      engine.current?.muteAllRemoteAudioStreams(!speakerOff);
+      toogleSpeaker(!speakerOff);
     }
   };
 
   //It will turn Off all incoming videos
   const onPressInVideo = () => {
     if (engine.current) {
-      toogleInVideoOff(!inVideoOff);
       Toast.show({
         type: 'info',
-        text1: `Incoming Videos are ${inVideoOff ? 'Off' : 'On'}!`,
+        text1: `Incoming Videos are ${!inVideoOff ? 'Off' : 'On'}!`,
         position: 'top',
       });
       if (menuOpen) setMenuOpen(!menuOpen);
-      engine.current?.muteAllRemoteVideoStreams(inVideoOff);
+      engine.current?.muteAllRemoteVideoStreams(!inVideoOff);
+      toogleInVideoOff(!inVideoOff);
     }
   };
 
@@ -350,7 +356,8 @@ const useStartMeeting = (
     onPressInVideo,
     flashOn,
     onCamerFlashOn,
-    active,
+    autoFocus,
+    enableAutoCameraFocus,
   };
 };
 

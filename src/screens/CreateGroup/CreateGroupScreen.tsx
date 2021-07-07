@@ -42,11 +42,7 @@ const CreateGroupScreen = (props: any) => {
     onCloseSelectImage,
     onCaptureImage,
     onSelectFromLibrary,
-  } = useOnCreateGroup(
-    props.route.params.selectedUsers,
-    firebaseUser,
-    props.navigation,
-  );
+  } = useOnCreateGroup(props.route.params.selectedUsers, props.navigation);
 
   const appTheme = useTheme();
 
@@ -81,12 +77,9 @@ const CreateGroupScreen = (props: any) => {
           <FastImage source={{uri: imageURL}} style={styles.image} />
           <TouchableOpacity
             onPress={onCloseSelectImage}
-            style={[
-              styles.iconView,
-              {backgroundColor: theme === 'dark' ? 'white' : 'black'},
-            ]}>
+            style={[styles.iconView, {backgroundColor: 'white'}]}>
             <Icon
-              name="edit-outline"
+              name="camera-outline"
               style={styles.editIcon}
               fill={appTheme['color-primary-default']}
             />

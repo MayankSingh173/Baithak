@@ -4,7 +4,6 @@ export interface UserInterface {
   uid: string;
   name?: string;
   email: string;
-  gender?: string;
   os?: 'android' | 'ios' | 'macos' | 'windows' | 'web';
   photoURL?: string;
   bio?: string;
@@ -12,6 +11,13 @@ export interface UserInterface {
   agoraId: number;
   theme: 'dark' | 'light';
   activeOnGroup?: string;
+  tokens?: string[];
+  notifications?: boolean;
+  instagram?: string;
+  facebook?: string;
+  github?: string;
+  linkedIn?: string;
+  twitter?: string;
 }
 
 export const defaultUser: UserInterface = {
@@ -22,3 +28,15 @@ export const defaultUser: UserInterface = {
 };
 
 export type userStatusType = 'PENDING' | 'FAIL' | 'SUCCESS' | 'FETCHING';
+
+export interface userFormState {
+  name?: string;
+  tagLine?: string;
+  bio?: string;
+  email: string;
+  instagram?: string;
+  facebook?: string;
+  github?: string;
+  linkedIn?: string;
+  twitter?: string;
+}

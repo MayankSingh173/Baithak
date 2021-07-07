@@ -119,15 +119,19 @@ const useGetMessages = (
           .doc(`${group.groupId}`)
           .collection('messages')
           .doc();
-        ref.set({
+
+        const newMess: Message = {
           messageId: ref.id,
           text: m.text,
           createdAt: getTime(m.createdAt),
-          uid: m.user._id,
+          uid: typeof m.user._id === 'string' ? m.user._id : '',
           ...(m.system && {system: m.system}),
-        });
+        };
 
-        await handleUnread(group);
+        await ref.set(newMess);
+
+        //This wiil change the unread for offline users in the group
+        await handleUnread(group, newMess, firebaseUser);
       });
     } catch (err) {
       console.log('Error in adding message', err);

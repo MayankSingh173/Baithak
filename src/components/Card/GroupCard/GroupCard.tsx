@@ -31,7 +31,7 @@ const GroupCard = ({groupDetails, onPress, myUid}: props) => {
           <FastImage source={{uri: groupImage}} style={styles.image} />
         </View>
         <TouchableOpacity style={styles.content} onPress={onPress}>
-          <Text style={styles.name}>{getRefinedText(groupName, 25)}</Text>
+          <Text style={styles.name}>{getRefinedText(groupName, 24)}</Text>
           {lastMessage && (
             <Text category="s2" style={styles.lastMessage}>
               {getRefinedText(lastMessage.text, 25)}
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   card: {
-    borderRadius: 10,
+    borderRadius: 15,
     padding: 10,
   },
   imgView: {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {Group} from '../../../models/Messages/interface';
-import {Text, Icon, Avatar, Layout} from '@ui-kitten/components';
+import {Text, Icon, Layout} from '@ui-kitten/components';
 import {getGroupDetails} from '../../../utils/Messages/Group/getGroupDetails';
 import {RALEWAY_BOLD} from '../../../constants/Fonts/Fonts';
 import {getMembersName} from '../../../utils/Messages/Group/getMembersName';
@@ -36,7 +36,12 @@ const GroupChatHeader = (props: props) => {
   };
 
   return (
-    <Layout level="2" style={styles.main}>
+    <Layout
+      level="2"
+      style={[
+        styles.main,
+        {paddingVertical: props.groupDetails.isDM ? 10 : 5},
+      ]}>
       <TouchableOpacity onPress={props.onPressLeft}>
         <Icon
           name="arrow-back-outline"
@@ -44,22 +49,19 @@ const GroupChatHeader = (props: props) => {
           fill={props.theme === 'dark' ? 'white' : 'black'}
         />
       </TouchableOpacity>
+      <View style={styles.imgView}>
+        <FastImage source={{uri: groupImage}} style={styles.image} />
+      </View>
       <TouchableOpacity style={styles.content} onPress={onPressHeader}>
-        <View style={styles.imgView}>
-          <FastImage source={{uri: groupImage}} style={styles.image} />
-        </View>
         <View style={styles.heading}>
-          <Text category="h6" style={styles.name}>
-            {getRefinedText(groupName, 20)}
-          </Text>
+          <Text style={styles.name}>{getRefinedText(groupName, 24)}</Text>
           {!props.groupDetails.isDM && (
-            <Text appearance="hint" category="s2" style={styles.name}>
+            <Text appearance="hint" category="p2" style={styles.name}>
               {getMembersName(props.groupDetails.membersDetails, 30)}
             </Text>
           )}
         </View>
       </TouchableOpacity>
-      {/* Video Call Icon */}
       <TouchableOpacity
         style={styles.rightIconView}
         onPress={() =>
@@ -92,12 +94,12 @@ const styles = StyleSheet.create({
   imgView: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: 10,
   },
   content: {
     flexDirection: 'row',
     paddingVertical: 10,
     flex: 5,
-    marginLeft: 5,
   },
   heading: {
     alignItems: 'flex-start',
@@ -112,8 +114,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    height: 50,
-    width: 50,
+    height: 45,
+    width: 45,
     borderRadius: 50,
     elevation: 10,
   },

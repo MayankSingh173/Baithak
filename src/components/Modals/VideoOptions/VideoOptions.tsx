@@ -6,7 +6,6 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
 import {RALEWAY_BOLD, RALEWAY_MEDIUM} from '../../../constants/Fonts/Fonts';
 import {optionProp} from '../../../models/Meeting/CreateMeeting/interface';
-import {useState} from 'react';
 
 interface props {
   modalVisible: boolean;
@@ -18,6 +17,8 @@ interface props {
   speakerOff: boolean;
   inVideoOff: boolean;
   onPressInVideo: () => void;
+  autoFocus: boolean;
+  onPressFocus: () => void;
 }
 
 const VideoOptions = (props: props) => {
@@ -43,6 +44,11 @@ const VideoOptions = (props: props) => {
       icon: props.inVideoOff ? 'video-outline' : 'video-off-outline',
       onPress: props.onPressInVideo,
       text: `Turn ${props.inVideoOff ? 'on' : 'off'} incoming video`,
+    },
+    {
+      icon: 'radio-button-on-outline',
+      onPress: props.onPressFocus,
+      text: `${props.autoFocus ? 'Disable' : 'Enable'} camer auto-focus`,
     },
     {icon: 'share-outline', onPress: props.onShare, text: 'Share'},
   ];

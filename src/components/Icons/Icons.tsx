@@ -1,5 +1,8 @@
 import React from 'react';
 import {Icon} from '@ui-kitten/components';
+import AntIcon from 'react-native-vector-icons/AntDesign';
+import FastImage from 'react-native-fast-image';
+import {INSTA_LOGO} from '../../constants/Images/Images';
 
 export const EmailIcon = (style: any) => (
   <Icon {...style} name="email-outline" />
@@ -16,6 +19,8 @@ export const ProfileIcon = (style: any) => (
 export const PhoneIcon = (style: any) => (
   <Icon {...style} name="phone-outline" />
 );
+
+export const TagIcon = (style: any) => <Icon {...style} name="hash-outline" />;
 
 export const SearchIcon = (style: any) => (
   <Icon {...style} name="search-outline" />
@@ -68,3 +73,23 @@ export const NameIcon = (style: any) => (
 export const DescriptionIcon = (style: any) => (
   <Icon {...style} name="menu-outline" />
 );
+
+export const FacebookIcon = (style: any) => (
+  <Icon {...style} name="facebook" fill="#4267B2" />
+);
+
+export const GithubIcon = (style: any, color?: string) => (
+  <Icon {...style} name="github" fill={color ? color : '#fafafa'} />
+);
+
+export const LinkedInIcon = (style: any) => (
+  <Icon {...style} name="linkedin" fill="#0077b5" />
+);
+
+export const TwitterIcon = (style: any) => (
+  <Icon {...style} name="twitter" fill="#00acee" />
+);
+
+export const InstaIcon = (props: any) => {
+  return <FastImage source={{uri: INSTA_LOGO}} style={props.style} />;
+};

@@ -10,15 +10,17 @@ import {
   setFirebaseUser,
 } from '../../store/User/actionCreator/addFirebaseUser';
 import {FAIL, SUCCESS} from '../../constants/RemoteStates/remotestates';
-import {Platform, ToastAndroid} from 'react-native';
+import {Platform} from 'react-native';
 import {defaultUser, UserInterface} from '../../models/User/User';
 import {addNewUserObj} from '../../utils/User/Methods/addNewUserObj';
-import {updateUserObjOnAuth} from '../../utils/User/Methods/updateUserObjOnAuth';
 import useFirestore from '../Firestore/useFirestore';
 import Toast from 'react-native-toast-message';
 import {updateTheme} from '../../store/theme/actionCreator/updateTheme';
-import {getRemoteTheme, getTheme} from '../../utils/User/Methods/getTheme';
+import {getTheme} from '../../utils/User/Methods/getTheme';
 import {DEFAULT_AVATAR} from '../../constants/Images/Images';
+import {DEFAULT_USER_NAME} from '../../constants/User/User';
+import {debounce} from 'lodash';
+import {showWelcomeNotifi} from '../../utils/User/Methods/showWelcomeNotifi';
 
 const useAuth = () => {
   const [firebaseUserRef, setFirebaseUserRef] = useState<
@@ -53,27 +55,27 @@ const useAuth = () => {
               Platform.OS,
               getTheme(),
               user.email ? user.email : 'example@gmail.com',
-              user.displayName ? user.displayName : 'Robot',
+              user.displayName ? user.displayName : DEFAULT_USER_NAME,
               user.photoURL ? user.photoURL : DEFAULT_AVATAR,
               false,
             );
-            Toast.show({
-              type: 'success',
-              text1: 'Great Success👍',
-              text2: 'You have successfully login into the app',
-              position: 'top',
-            });
-          } else {
-            //Update the User
-            await updateUserObjOnAuth(
-              user.uid,
-              Platform.OS,
-              user.displayName ? user.displayName : 'Robot',
-              user.phoneNumber ? user.phoneNumber : undefined,
-              user.email ? user.email : 'example@gmail.com',
-              user.photoURL ? user.photoURL : DEFAULT_AVATAR,
-            );
+
+            debounce(async () => {
+              await showWelcomeNotifi(user.uid, user.displayName);
+            }, 2000);
           }
+
+          // else {
+          //   //Update the User
+          //   await updateUserObjOnAuth(
+          //     user.uid,
+          //     Platform.OS,
+          //     user.displayName ? user.displayName : 'Robot',
+          //     user.phoneNumber ? user.phoneNumber : undefined,
+          //     user.email ? user.email : 'example@gmail.com',
+          //     user.photoURL ? user.photoURL : DEFAULT_AVATAR,
+          //   );
+          // }
 
           //update the firebase user with success status 'SUCCESS' in redux
           storeDispatch(updateFirebaseUserStatus(SUCCESS));

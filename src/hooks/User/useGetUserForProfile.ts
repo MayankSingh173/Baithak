@@ -6,23 +6,39 @@ import {updateFirebaseUserStatus} from '../../store/User/actionCreator/addFireba
 import auth from '@react-native-firebase/auth';
 import {useDispatch} from 'react-redux';
 import {generalErrorN} from '../../components/Alerts/GeneralError';
-import {readAsync} from '../../utils/Firestore/read';
-import {createDM} from '../../utils/Messages/Group/onCreateGroup';
-import {GROUP_CHAT_SCREEN} from '../../constants/Navigation/Navigation';
+import {
+  CameraOptions,
+  launchCamera,
+  launchImageLibrary,
+  ImageLibraryOptions,
+} from 'react-native-image-picker';
+import firestore from '@react-native-firebase/firestore';
+import {uploadToStorage} from '../../utils/Storage/uploadToStorage';
+import {writeAsync} from '../../utils/Firestore/write';
+import {showLogOutNotifi} from '../../utils/User/Methods/showWelcomeNotifi';
 
 const useGetUserForProfile = (uid: string) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<UserInterface>(defaultUser);
   const [settingOpen, toggleSetting] = useState<boolean>(false);
   const [goingToMessage, setGoingToMessage] = useState<boolean>(false);
+  const [selectImage, toggleSelectImage] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         setLoading(true);
-        const localUser = await readAsync('users', uid);
-        localUser && setUser(localUser as UserInterface);
+        const subscriber = firestore()
+          .collection('users')
+          .doc(uid)
+          .onSnapshot((doc) => {
+            if (doc) {
+              doc.exists && setUser(doc.data() as UserInterface);
+            }
+          });
         setLoading(false);
+
+        return () => subscriber();
       } catch (error) {
         console.log('Eror in profile fecthing', error);
         setLoading(false);
@@ -43,12 +59,7 @@ const useGetUserForProfile = (uid: string) => {
   const signOut = async () => {
     try {
       await auth().signOut();
-      Toast.show({
-        type: 'success',
-        position: 'top',
-        text1: 'Great Success✌',
-        text2: 'You have successfully logout ',
-      });
+      await showLogOutNotifi(user.tokens, user.name);
       storeDispatch(updateFirebaseUserStatus(FAIL));
     } catch (err) {
       Toast.show({
@@ -86,6 +97,79 @@ const useGetUserForProfile = (uid: string) => {
     toggleSetting(!settingOpen);
   };
 
+  const onCloseSelectImage = () => {
+    toggleSelectImage(!selectImage);
+  };
+
+  const onCaptureImage = () => {
+    onCloseSelectImage();
+    const options: CameraOptions = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+
+    launchCamera(options, async (response) => {
+      if (response.errorMessage || response.errorCode) {
+        Toast.show({
+          type: 'error',
+          text1: 'Try Again!!',
+          text2: 'Something went wrong',
+          position: 'top',
+        });
+      } else if (response.assets) {
+        await onSetGroupImage(response.assets[0].uri);
+      }
+    });
+  };
+
+  const onSelectFromLibrary = () => {
+    onCloseSelectImage();
+    const options: ImageLibraryOptions = {
+      selectionLimit: 0,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+
+    launchImageLibrary(options, async (response) => {
+      if (response.errorCode || response.errorMessage) {
+        Toast.show({
+          type: 'error',
+          text1: 'Try Again!!',
+          text2: 'Something went wrong',
+          position: 'top',
+        });
+      } else if (response.assets) {
+        await onSetGroupImage(response.assets[0].uri);
+      }
+    });
+  };
+
+  const onSetGroupImage = async (uri?: string) => {
+    try {
+      setLoading(true);
+      if (uri) {
+        const downloadUrl = await uploadToStorage(
+          `images/users/${uid}/${uri.substring(uri.lastIndexOf('/') + 1)}`,
+          uri,
+        );
+        if (downloadUrl) {
+          await writeAsync('users', uid, {photoURL: downloadUrl}, true);
+        }
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log('Error in setting a groupImage', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Try Again!!',
+        text2: 'Something went wrong',
+        position: 'top',
+      });
+    }
+  };
+
   return {
     loading,
     user,
@@ -94,6 +178,10 @@ const useGetUserForProfile = (uid: string) => {
     onClickSettings,
     goingToMessage,
     setGoingToMessage,
+    selectImage,
+    onCloseSelectImage,
+    onCaptureImage,
+    onSelectFromLibrary,
   };
 };
 

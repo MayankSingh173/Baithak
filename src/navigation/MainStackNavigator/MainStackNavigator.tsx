@@ -18,14 +18,17 @@ import JoinMeetScreen from '../../screens/Meeting/JoinMeetScreen/JoinMeetScreen'
 import VideoStream from '../../screens/Meeting/VideoStream/VideoStream';
 import EditProfileScreen from '../../screens/ProfileScreen/EditProfileScreen';
 import UserSearchScreen from '../../screens/Search/UserSearch/UserSearchScreen';
-import RemoteProfileScreen from '../../screens/ProfileScreen/RemoteProfileScreen';
 import UserAddSearchScreen from '../../screens/Search/UserAddSearchScreen/UserAddSearchScreen';
 import CreateGroupScreen from '../../screens/CreateGroup/CreateGroupScreen';
 import GroupChatsScreen from '../../screens/Chats/GroupChatsScreen/GroupChatsScreen';
+import useGetMessagePerm from '../../hooks/Notifications/useGetMessagePerm';
+import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 
 const Stack = createStackNavigator();
 
 const MainStackNavigator = () => {
+  //Hook for saving tokens to firebase user
+  useGetMessagePerm();
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name={MAIN_TAB} component={MainTabNavigator} />
@@ -36,7 +39,7 @@ const MainStackNavigator = () => {
       <Stack.Screen name={USER_SEARCH_SCREEN} component={UserSearchScreen} />
       <Stack.Screen
         name={REMOTE_USER_PROFILE_SCREEN}
-        component={RemoteProfileScreen}
+        component={ProfileScreen}
       />
       <Stack.Screen
         name={USER_ADD_SEARCH_SCREEN}

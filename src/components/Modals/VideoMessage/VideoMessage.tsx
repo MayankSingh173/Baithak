@@ -36,8 +36,8 @@ const VideoMessage = (props: props) => {
       hasBackdrop={true}
       onBackdropPress={props.onBackDropPress}
       style={styles.modal}
-      animationIn="slideInDown"
-      animationOut="slideOutUp"
+      animationIn="slideInRight"
+      animationOut="slideOutRight"
       coverScreen={true}
       useNativeDriver
       onBackButtonPress={props.onBackDropPress}>

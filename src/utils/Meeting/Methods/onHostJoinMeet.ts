@@ -6,6 +6,7 @@ import {UserInterface} from '../../../models/User/User';
 import {Group} from '../../../models/Messages/interface';
 import {writeAsync} from '../../Firestore/write';
 import {DEFAULT_GROUP_MEETING_IMAGE} from '../../../constants/Images/Images';
+import {onSendNotifToMembersOnMeeting} from '../../Notifications/Meeting/GroupMeeting/onSendNotifToMembersOnMeeting';
 
 //On host joining the meet we are create a doc of baithak in db
 export const onHostJoinMeet = async (
@@ -43,6 +44,9 @@ export const onHostJoinMeet = async (
         baithak,
         false,
       );
+
+      //send notification to all others members in the group
+      onSendNotifToMembersOnMeeting(baithak);
     }
   } catch (err) {
     console.log('Error in creating Baithak at onHostJoinMeet', err);

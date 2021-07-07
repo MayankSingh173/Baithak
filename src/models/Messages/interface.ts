@@ -5,7 +5,7 @@ export interface Message {
   text: string;
   createdAt: number;
   uid: string;
-  system: boolean;
+  system?: boolean;
 }
 
 export interface Group {

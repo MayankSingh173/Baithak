@@ -7,3 +7,11 @@ export const getRequest = async (url: string) => {
     .catch((err: any) => ({error: err}));
   return data;
 };
+
+export const postRequest = async (url: string, payload: any) => {
+  const data = await axios
+    .post(url, payload)
+    .then((resp) => resp.data)
+    .catch((err) => ({error: err}));
+  return data;
+};
