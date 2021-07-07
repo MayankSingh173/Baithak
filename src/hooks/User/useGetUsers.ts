@@ -14,13 +14,17 @@ const useGetUsers = (uid: string) => {
       .where('uid', '!=', uid)
       .onSnapshot(
         (querySnapshot) => {
-          const localUsers: UserInterface[] = [];
-          for (const doc of querySnapshot.docs) {
-            doc.exists && localUsers.push(doc.data() as UserInterface);
+          if (querySnapshot) {
+            const localUsers: UserInterface[] = [];
+            for (const doc of querySnapshot.docs) {
+              doc.exists && localUsers.push(doc.data() as UserInterface);
+            }
+            setUsers(localUsers);
+            setFilteredUsers(localUsers);
+            setLoading(false);
+          } else {
+            setLoading(false);
           }
-          setUsers(localUsers);
-          setFilteredUsers(localUsers);
-          setLoading(false);
         },
         (err) => {
           console.log(err);

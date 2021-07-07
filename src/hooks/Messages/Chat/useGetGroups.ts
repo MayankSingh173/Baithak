@@ -20,15 +20,19 @@ const useGetGroups = (uid: string) => {
       .limit(10)
       .onSnapshot(
         (querySnapshot) => {
-          const localGroups: Group[] = [];
+          if (querySnapshot) {
+            const localGroups: Group[] = [];
 
-          for (const doc of querySnapshot.docs) {
-            doc.exists && localGroups.push(doc.data() as Group);
+            for (const doc of querySnapshot.docs) {
+              doc.exists && localGroups.push(doc.data() as Group);
+            }
+
+            setGroups(localGroups);
+            setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
+            setFetched(true);
+          } else {
+            setFetched(true);
           }
-
-          setGroups(localGroups);
-          setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
-          setFetched(true);
         },
         (error) => {
           console.log(error);
@@ -51,15 +55,19 @@ const useGetGroups = (uid: string) => {
             .startAfter(lastDoc)
             .limit(3)
             .onSnapshot((querySnapshot) => {
-              const localGroups: Group[] = [];
+              if (querySnapshot) {
+                const localGroups: Group[] = [];
 
-              for (const doc of querySnapshot.docs) {
-                doc.exists && localGroups.push(doc.data() as Group);
+                for (const doc of querySnapshot.docs) {
+                  doc.exists && localGroups.push(doc.data() as Group);
+                }
+
+                setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
+                setGroups((prev) => [...prev, ...localGroups]);
+                setIsMoreLoading(false);
+              } else {
+                setIsMoreLoading(false);
               }
-
-              setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
-              setGroups((prev) => [...prev, ...localGroups]);
-              setIsMoreLoading(false);
             });
 
           return () => nextDocuments();

@@ -29,20 +29,22 @@ const useGetMeetMssg = (Baithak: Baithak, firebaseUser: UserInterface) => {
         .orderBy('createdAt', 'desc')
         .limit(15)
         .onSnapshot((querySnapshot) => {
-          const chats: IMessage[] = [];
-          querySnapshot.forEach((doc) => {
-            const local_message = doc.exists && (doc.data() as Message);
-            chats.push({
-              _id: local_message.messageId,
-              text: local_message.text,
-              createdAt: local_message.createdAt,
-              user: getBaithakPartiFromUid(local_message.uid, Baithak),
-              system: local_message.system,
+          if (querySnapshot) {
+            const chats: IMessage[] = [];
+            querySnapshot.forEach((doc) => {
+              const local_message = doc.exists && (doc.data() as Message);
+              chats.push({
+                _id: local_message.messageId,
+                text: local_message.text,
+                createdAt: local_message.createdAt,
+                user: getBaithakPartiFromUid(local_message.uid, Baithak),
+                system: local_message.system,
+              });
             });
-          });
 
-          setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
-          setMessages(chats);
+            setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
+            setMessages(chats);
+          }
         });
       return () => {
         unsubscribe();
@@ -65,21 +67,25 @@ const useGetMeetMssg = (Baithak: Baithak, firebaseUser: UserInterface) => {
             .startAfter(lastDoc)
             .limit(10)
             .onSnapshot((querySnapshot) => {
-              const chats: IMessage[] = [];
-              querySnapshot.forEach((doc) => {
-                const local_message = doc.exists && (doc.data() as Message);
-                chats.push({
-                  _id: local_message.messageId,
-                  text: local_message.text,
-                  createdAt: local_message.createdAt,
-                  user: getBaithakPartiFromUid(local_message.uid, Baithak),
-                  system: local_message.system,
+              if (querySnapshot) {
+                const chats: IMessage[] = [];
+                querySnapshot.forEach((doc) => {
+                  const local_message = doc.exists && (doc.data() as Message);
+                  chats.push({
+                    _id: local_message.messageId,
+                    text: local_message.text,
+                    createdAt: local_message.createdAt,
+                    user: getBaithakPartiFromUid(local_message.uid, Baithak),
+                    system: local_message.system,
+                  });
                 });
-              });
 
-              setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
-              setMessages((prev) => [...prev, ...chats]);
-              setIsMoreLoading(false);
+                setLastDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
+                setMessages((prev) => [...prev, ...chats]);
+                setIsMoreLoading(false);
+              } else {
+                setIsMoreLoading(false);
+              }
             });
           return () => nextDocuments();
         }
