@@ -54,15 +54,12 @@ const useAuth = () => {
               user.uid,
               Platform.OS,
               getTheme(),
+              new Date(user.metadata.creationTime).getTime(),
               user.email ? user.email : 'example@gmail.com',
               user.displayName ? user.displayName : DEFAULT_USER_NAME,
               user.photoURL ? user.photoURL : DEFAULT_AVATAR,
               false,
             );
-
-            debounce(async () => {
-              await showWelcomeNotifi(user.uid, user.displayName);
-            }, 2000);
           }
 
           // else {

@@ -59,9 +59,6 @@ const styles = StyleSheet.create({
     flex: 4,
     justifyContent: 'center',
     paddingHorizontal: 10,
-    //  borderBottomWidth: 0.3,
-    //  borderColor: 'grey',
-    //  paddingBottom: 15,
   },
   name: {
     fontFamily: RALEWAY_BOLD,

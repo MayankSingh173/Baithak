@@ -27,6 +27,7 @@ import {
   MEET_HOME_SCREEN,
   PROFILE_SCREEN,
 } from '../../constants/Navigation/Navigation';
+import {showWelcomeNotifi} from '../../utils/User/Methods/showWelcomeNotifi';
 
 interface props {
   navigation: any;
@@ -77,6 +78,15 @@ const MainTabNavigator = (props: any) => {
   const firebaseUser = useSelector(
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
   );
+
+  if (
+    //If new user
+    firebaseUser.joinedOn &&
+    new Date().getTime() - new Date(firebaseUser.joinedOn).getTime() <= 10000 &&
+    firebaseUser.tokens
+  ) {
+    showWelcomeNotifi(firebaseUser.tokens, firebaseUser.name);
+  }
 
   return (
     <Navigator

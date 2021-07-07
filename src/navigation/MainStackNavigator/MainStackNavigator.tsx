@@ -29,6 +29,7 @@ const Stack = createStackNavigator();
 const MainStackNavigator = () => {
   //Hook for saving tokens to firebase user
   useGetMessagePerm();
+
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name={MAIN_TAB} component={MainTabNavigator} />

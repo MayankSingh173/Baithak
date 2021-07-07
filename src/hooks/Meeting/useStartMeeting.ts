@@ -291,7 +291,7 @@ const useStartMeeting = (
     generalErrorN(
       {
         title: 'End Baithak',
-        textMessage: 'Are you sure you want to end the baitha',
+        textMessage: 'Are you sure you want to end the baithak',
         okText: 'Yes',
       },
       [

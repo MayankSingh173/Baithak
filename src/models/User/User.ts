@@ -18,6 +18,7 @@ export interface UserInterface {
   github?: string;
   linkedIn?: string;
   twitter?: string;
+  joinedOn?: number;
 }
 
 export const defaultUser: UserInterface = {

@@ -39,6 +39,7 @@ const GroupChatsScreen = (props: any) => {
         modalVisible={groupInfo}
         onBackDropPress={toggleGroupInfoModal}
         group={props.route.params.group}
+        navigation={props.navigation}
       />
       <View style={styles.header}>
         <GroupChatHeader

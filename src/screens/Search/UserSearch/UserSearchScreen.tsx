@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
   },
   listView: {
     padding: 10,
+    flex: 1,
   },
   divider: {
     width: '80%',

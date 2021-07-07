@@ -6,6 +6,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
 import {RALEWAY_BOLD, RALEWAY_MEDIUM} from '../../../constants/Fonts/Fonts';
 import {optionProp} from '../../../models/Meeting/CreateMeeting/interface';
+import FullDivider from '../../Divider/FullDivider';
 
 interface props {
   modalVisible: boolean;
@@ -50,7 +51,7 @@ const SelectMeet = (props: props) => {
         </View>
         <View style={styles.container}>
           <Text category="h6" style={styles.heading}>
-            Want a start Baithak ?
+            Want to start Baithak ?
           </Text>
           {options.map((option, index) => {
             return (

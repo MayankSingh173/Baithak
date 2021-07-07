@@ -1,7 +1,6 @@
 import {useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/rootReducer';
-import {checkMessagePermission} from '../../utils/Permissions/Permission';
 import messaging from '@react-native-firebase/messaging';
 import {saveTokenToDatabase} from '../../utils/User/Methods/saveTokenToDatabase';
 
