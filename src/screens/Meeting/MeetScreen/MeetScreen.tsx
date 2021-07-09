@@ -25,6 +25,8 @@ const MeetScreen = (props: any) => {
 
   const appTheme = useTheme();
 
+  const sendNotification = () => {};
+
   return (
     <Layout level="1" style={styles.main}>
       <SelectMeet

@@ -15,6 +15,8 @@ import Toast from 'react-native-toast-message';
 import useOnMessage from './src/hooks/Notifications/useOnMessage';
 import TopBarNotification from './src/components/UI/TopBarNotification/TopBarNotification';
 import {removeActivityFromUser} from './src/utils/User/Methods/removeActivity';
+import PushNotification from 'react-native-push-notification';
+import {DEFAULT_USER_NAME} from './src/constants/User/User';
 
 LogBox.ignoreAllLogs();
 
@@ -35,6 +37,18 @@ const App = () => {
       await removeActivityFromUser(firebaseUser);
     }
   });
+
+  PushNotification.createChannel(
+    {
+      channelId: firebaseUser.uid, // (required)
+      channelName: firebaseUser.name ? firebaseUser.name : DEFAULT_USER_NAME, // (required)
+      channelDescription: 'A default channel', // (optional) default: undefined.
+      soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
+      vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+    },
+    (created) =>
+      console.log(`createChannel 'default-channel-id' returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+  );
 
   return (
     <React.Fragment>

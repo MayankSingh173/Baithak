@@ -95,7 +95,6 @@ const CreateMeetScreen = (props: any) => {
                 status="basic"
                 placeholder="Description (optional)"
                 onBlur={() => formikProps.setFieldTouched('description')}
-                accessoryLeft={DescriptionIcon}
                 value={formikProps.values.description}
                 onChangeText={formikProps.handleChange('description')}
                 size="large"

@@ -19,7 +19,6 @@ import useGetGroups from '../../../hooks/Messages/Chat/useGetGroups';
 import NoChatsHome from '../../../components/UI/Chats/NoChatsHome';
 import UserGroupCardView from '../../../components/UI/Group/UserGroupCardView';
 import {Group} from '../../../models/Messages/interface';
-import {useState} from 'react';
 
 const ChatHome = (props: any) => {
   const firebaseUser = useSelector(
@@ -60,7 +59,12 @@ const ChatHome = (props: any) => {
         firebaseUser={firebaseUser}
         heading="Chat"
         rightIcon="video-outline"
-        onPressLeft={() => props.navigation.navigate(PROFILE_SCREEN)}
+        onPressLeft={() =>
+          props.navigation.navigate(PROFILE_SCREEN, {
+            myProfile: true,
+            uid: firebaseUser.uid,
+          })
+        }
         onPressRight={() => props.navigation.navigate(CREATE_MEET_SCREEN)}
         onPressSearch={() => props.navigation.navigate(USER_SEARCH_SCREEN)}
       />

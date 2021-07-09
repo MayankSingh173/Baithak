@@ -58,6 +58,14 @@ export const ChatIcon = (style: any) => (
   <Icon {...style} name="message-circle-outline" />
 );
 
+export const CalendarIcon = (style: any) => (
+  <Icon {...style} name="calendar-outline" />
+);
+
+export const CalendarIconFill = (style: any) => (
+  <Icon {...style} name="calendar" />
+);
+
 export const ChatIconFill = (style: any) => (
   <Icon {...style} name="message-circle" />
 );

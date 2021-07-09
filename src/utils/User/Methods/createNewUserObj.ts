@@ -16,6 +16,7 @@ export const createNewUserObj = (
     theme: theme,
     email: email,
     joinedOn: joinedOn,
+    notifications: true,
     ...(os ? {os: os} : {}),
     ...(name ? {name: name} : {}),
     ...(photoURL ? {photoURL: photoURL} : {}),
