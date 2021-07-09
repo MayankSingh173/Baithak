@@ -8,8 +8,6 @@ import {RALEWAY_BOLD, RALEWAY_MEDIUM} from '../../../constants/Fonts/Fonts';
 import FullDivider from '../../Divider/FullDivider';
 import {updateThemeRemotely} from '../../../store/theme/actionCreator/updateTheme';
 import {updateUser} from '../../../utils/User/Methods/updateUser';
-import {updateFirebaseUser} from '../../../store/User/actionCreator/addFirebaseUser';
-import {SUCCESS} from '../../../constants/RemoteStates/remotestates';
 import Toast from 'react-native-toast-message';
 
 interface props {

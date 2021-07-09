@@ -195,9 +195,7 @@ const useStartMeeting = (
             setBaithak(snapshot.data() as Baithak);
           }
         });
-      return () => {
-        unsubscribe();
-      };
+      return () => unsubscribe();
     } catch (err) {
       console.log(err);
     }

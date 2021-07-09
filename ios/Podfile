@@ -27,6 +27,8 @@ target 'Baithak' do
 
   pod 'RNSound', :path => '../node_modules/react-native-sound'
 
+  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
+
   target 'BaithakTests' do
     inherit! :complete
     # Pods for testing

@@ -2,6 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import MainTabNavigator from '../MainTabNavigator/MainTabNavigator';
 import {
+  ADD_TASK_SCREEN,
   CREATE_GROUP_SCREEN,
   CREATE_MEET_SCREEN,
   EDIT_PROFILE_SCREEN,
@@ -23,6 +24,7 @@ import CreateGroupScreen from '../../screens/CreateGroup/CreateGroupScreen';
 import GroupChatsScreen from '../../screens/Chats/GroupChatsScreen/GroupChatsScreen';
 import useGetMessagePerm from '../../hooks/Notifications/useGetMessagePerm';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
+import AddTaskScreen from '../../screens/AddTaskScreen/AddTaskScreen';
 
 const Stack = createStackNavigator();
 
@@ -48,6 +50,7 @@ const MainStackNavigator = () => {
       />
       <Stack.Screen name={CREATE_GROUP_SCREEN} component={CreateGroupScreen} />
       <Stack.Screen name={GROUP_CHAT_SCREEN} component={GroupChatsScreen} />
+      <Stack.Screen name={ADD_TASK_SCREEN} component={AddTaskScreen} />
     </Stack.Navigator>
   );
 };

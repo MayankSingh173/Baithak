@@ -12,6 +12,8 @@ import MeetScreen from '../../screens/Meeting/MeetScreen/MeetScreen';
 import {
   BellIcon,
   BellIconFill,
+  CalendarIcon,
+  CalendarIconFill,
   ChatIcon,
   ChatIconFill,
   MeetIcon,
@@ -63,8 +65,8 @@ const BottomTabBar: FC<props> = ({navigation, state}) => {
         title="Chat"
       />
       <BottomNavigationTab
-        icon={state.index === 2 ? BellIconFill : BellIcon}
-        title="Activity"
+        icon={state.index === 2 ? CalendarIconFill : CalendarIcon}
+        title="Task"
       />
       <BottomNavigationTab
         icon={state.index === 3 ? ProfileIconFill : ProfileIcon}
