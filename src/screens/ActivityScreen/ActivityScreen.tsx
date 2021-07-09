@@ -21,7 +21,6 @@ import {
   USER_SEARCH_SCREEN,
 } from '../../constants/Navigation/Navigation';
 import useFetchUserTask from '../../hooks/Task/useFetchUserTask';
-import {Task} from '../../models/Task/interface';
 import {RootState} from '../../store/rootReducer';
 
 const ActivityScreen = (props: any) => {

@@ -4,6 +4,7 @@ import {timeToString} from '../../utils/Task/timeToString';
 import firestore from '@react-native-firebase/firestore';
 import Toast from 'react-native-toast-message';
 import {ACTIVITY_HOME_SCREEN} from '../../constants/Navigation/Navigation';
+import {AndroidEvent} from '@react-native-community/datetimepicker';
 
 const useOnAddTask = (
   uid: string,
@@ -43,9 +44,9 @@ const useOnAddTask = (
   ];
 
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [openDate, toggleDate] = useState<boolean>(false);
-  const [openStartTime, toggleStartTime] = useState<boolean>(false);
-  const [openEndTime, toggleEndTime] = useState<boolean>(false);
+  const [mode, setMode] = useState<'Date' | 'StartTime' | 'EndTime'>('Date');
+  const [timeValue, setTimeValue] = useState<Date>(new Date());
+  const [openDatePicker, toggleDatePicker] = useState<boolean>(false);
 
   const handleSubmit = async (details: TaskFormState) => {
     try {
@@ -75,15 +76,16 @@ const useOnAddTask = (
           .collection('task')
           .doc();
 
-        taskRef.set({
+        await taskRef.set({
           ...task,
           taskId: taskRef.id,
           title: details.title,
           description: details.description,
         });
       }
-
-      navigation.navigate(ACTIVITY_HOME_SCREEN);
+      setLoading(false);
+      navigation.goBack();
+      // navigation.navigate(ACTIVITY_HOME_SCREEN);
     } catch (error) {
       setLoading(false);
       Toast.show({
@@ -96,49 +98,43 @@ const useOnAddTask = (
     }
   };
 
-  const onToggleDate = () => toggleDate(!openDate);
-  const onToggleStartTime = () => toggleStartTime(!openStartTime);
-  const onToggleEndTime = () => toggleEndTime(!openEndTime);
-
   const onChangeStatus = (type: 'ToDo' | 'Completed' | 'OnGoing') => {
     setTask({...task, status: type});
   };
 
-  const onChange = (
-    event: Event,
+  const onChangeEvent = (
     selectedDate: Date | undefined,
     type: 'Date' | 'StartTime' | 'EndTime',
   ) => {
-    console.log('change');
     const currentDate = selectedDate || new Date();
     switch (type) {
       case 'Date':
         setTask({...task, date: timeToString(currentDate)});
-        onToggleDate();
         break;
       case 'StartTime':
         setTask({...task, startTime: +currentDate});
-        onToggleStartTime();
         break;
       case 'EndTime':
         setTask({...task, endTime: +currentDate});
-        onToggleEndTime();
         break;
     }
+    toggleDatePicker(false);
+    setTimeValue(currentDate);
   };
 
   const onPressIcon = (type: 'Date' | 'StartTime' | 'EndTime') => {
     switch (type) {
       case 'Date':
-        onToggleDate();
+        setMode('Date');
         break;
       case 'StartTime':
-        onToggleStartTime();
+        setMode('StartTime');
         break;
       case 'EndTime':
-        onToggleEndTime();
+        setMode('EndTime');
         break;
     }
+    toggleDatePicker(true);
   };
 
   const onChangeColor = (color: string) => {
@@ -150,17 +146,15 @@ const useOnAddTask = (
     handleSubmit,
     isLoading,
     task,
-    onChange,
-    openDate,
-    openStartTime,
-    openEndTime,
-    onToggleDate,
-    onToggleStartTime,
-    onToggleEndTime,
+    onChangeEvent,
     onPressIcon,
     backgroundColors,
     onChangeColor,
     onChangeStatus,
+    setTask,
+    openDatePicker,
+    mode,
+    timeValue,
   };
 };
 

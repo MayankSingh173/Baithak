@@ -25,7 +25,7 @@ const useFetchUserTask = (uid: string) => {
 
   const loadItemsFromNewChanges = (day: DateObject, fetchedItems: any) => {
     setTimeout(() => {
-      for (let i = -15; i < 15; i++) {
+      for (let i = -15; i < 85; i++) {
         const time = day.timestamp + i * 24 * 60 * 60 * 1000;
         const strTime = timeToString(time);
 
@@ -51,16 +51,16 @@ const useFetchUserTask = (uid: string) => {
         .onSnapshot(
           (querySnapshot) => {
             if (querySnapshot) {
-              const localItems: any = {};
-              for (const doc of querySnapshot.docs) {
-                if (doc.exists) {
-                  const task = doc.data() as Task;
+              const localItems: any = item;
+              querySnapshot.docChanges().forEach((change) => {
+                if (change.type === 'added' && change.doc.exists) {
+                  const task = change.doc.data() as Task;
                   if (!localItems[task.date]) {
                     localItems[task.date] = [];
                   }
                   localItems[task.date].push(task.taskId);
                 }
-              }
+              });
               setItems(localItems);
               loadItemsFromNewChanges(currDate, localItems);
               setFetched(false);

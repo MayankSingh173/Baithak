@@ -24,9 +24,10 @@ import useOnAddTask from '../../hooks/Task/useOnAddTask';
 import ModalActivityIndicator from '../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
 import {addTaskSchema} from '../../utils/validators/task';
 import {NameIcon} from '../../components/Icons/Icons';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import {AndroidEvent} from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import FullDivider from '../../components/Divider/FullDivider';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const AddTaskScreen = (props: any) => {
   const edit = props.route.params.edit;
@@ -49,14 +50,13 @@ const AddTaskScreen = (props: any) => {
     handleSubmit,
     isLoading,
     task,
-    onChange,
-    openDate,
-    openStartTime,
-    openEndTime,
+    onChangeEvent,
     onPressIcon,
     onChangeColor,
     backgroundColors,
     onChangeStatus,
+    openDatePicker,
+    mode,
   } = useOnAddTask(
     firebaseUser.uid,
     appTheme['color-primary-default'],
@@ -92,42 +92,14 @@ const AddTaskScreen = (props: any) => {
             Task
           </Text>
         </Text>
-        {openDate && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={new Date(task.date)}
-            mode="date"
-            is24Hour={true}
-            display="default"
-            onChange={(event: Event, date: Date | undefined) =>
-              onChange(event, date, 'Date')
-            }
-          />
-        )}
-        {openStartTime && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={new Date(task.startTime)}
-            mode="time"
-            is24Hour={false}
-            display="default"
-            onChange={(event: Event, date: Date | undefined) =>
-              onChange(event, date, 'StartTime')
-            }
-          />
-        )}
-        {openEndTime && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={new Date(task.endTime)}
-            mode="time"
-            is24Hour={false}
-            display="default"
-            onChange={(event: Event, date: Date | undefined) =>
-              onChange(event, date, 'EndTime')
-            }
-          />
-        )}
+        <DateTimePickerModal
+          isVisible={openDatePicker}
+          mode={mode === 'Date' ? 'date' : 'time'}
+          onConfirm={(date: Date) => {
+            onChangeEvent(date, mode);
+          }}
+          onCancel={() => {}}
+        />
         <Formik
           initialValues={initialFormState}
           onSubmit={handleSubmit}
