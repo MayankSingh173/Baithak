@@ -3,11 +3,11 @@ import {Task, TaskFormState} from '../../models/Task/interface';
 import {timeToString} from '../../utils/Task/timeToString';
 import firestore from '@react-native-firebase/firestore';
 import Toast from 'react-native-toast-message';
-import {ACTIVITY_HOME_SCREEN} from '../../constants/Navigation/Navigation';
-import {AndroidEvent} from '@react-native-community/datetimepicker';
+import {setScheduleNotification} from '../../utils/Notifications/Task/setScheduleNotification';
+import {UserInterface} from '../../models/User/User';
 
 const useOnAddTask = (
-  uid: string,
+  firebaseUser: UserInterface,
   defaultColor: string,
   navigation: any,
   edit: boolean,
@@ -61,7 +61,7 @@ const useOnAddTask = (
       if (edit) {
         await firestore()
           .collection('users')
-          .doc(uid)
+          .doc(firebaseUser.uid)
           .collection('task')
           .doc(task.taskId)
           .update({
@@ -72,7 +72,7 @@ const useOnAddTask = (
       } else {
         const taskRef = firestore()
           .collection('users')
-          .doc(uid)
+          .doc(firebaseUser.uid)
           .collection('task')
           .doc();
 
@@ -82,6 +82,16 @@ const useOnAddTask = (
           title: details.title,
           description: details.description,
         });
+
+        await setScheduleNotification(
+          {
+            ...task,
+            taskId: taskRef.id,
+            title: details.title,
+            description: details.description,
+          },
+          firebaseUser,
+        );
       }
       setLoading(false);
       navigation.goBack();
@@ -141,6 +151,10 @@ const useOnAddTask = (
     setTask({...task, color: color});
   };
 
+  const onCancel = () => {
+    toggleDatePicker(false);
+  };
+
   return {
     initialFormState,
     handleSubmit,
@@ -155,6 +169,7 @@ const useOnAddTask = (
     openDatePicker,
     mode,
     timeValue,
+    onCancel,
   };
 };
 

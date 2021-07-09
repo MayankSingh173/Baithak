@@ -57,8 +57,9 @@ const AddTaskScreen = (props: any) => {
     onChangeStatus,
     openDatePicker,
     mode,
+    onCancel,
   } = useOnAddTask(
-    firebaseUser.uid,
+    firebaseUser,
     appTheme['color-primary-default'],
     props.navigation,
     edit,
@@ -98,7 +99,7 @@ const AddTaskScreen = (props: any) => {
           onConfirm={(date: Date) => {
             onChangeEvent(date, mode);
           }}
-          onCancel={() => {}}
+          onCancel={onCancel}
         />
         <Formik
           initialValues={initialFormState}
