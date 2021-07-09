@@ -6,7 +6,7 @@ export const uploadToStorage = async (path: string, imageUrl: string) => {
     await storage().ref(path).putFile(imageUrl);
     return await storage().ref(path).getDownloadURL();
   } catch (error) {
-    console.log('Error in uploading image to firebase storage', error);
+    console.log('Error in uploading image/video to firebase storage', error);
     Toast.show({
       type: 'error',
       text1: 'Something went wrong🤔',

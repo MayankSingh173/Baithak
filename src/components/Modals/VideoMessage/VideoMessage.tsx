@@ -8,6 +8,8 @@ import useGetMeetMssg from '../../../hooks/Messages/Meeting/useGetMeetMssg';
 import VideoChat from '../../Messages/VideoChat';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../store/rootReducer';
+import SelectImage from '../SelectImage/SelectImage';
+import ModalActivityIndicator from '../ModalActivityIndicator/ModalActivityIndicator';
 
 interface props {
   baithak: Baithak | undefined;
@@ -26,8 +28,18 @@ const VideoMessage = (props: props) => {
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
   );
 
-  const {messages, handleSend, isMoreLoading, loadMore, lastDoc} =
-    useGetMeetMssg(props.baithak, firebaseUser);
+  const {
+    messages,
+    handleSend,
+    isMoreLoading,
+    loadMore,
+    lastDoc,
+    onCaptureImage,
+    onSelectFromLibrary,
+    loading,
+    selectImage,
+    onToggleSelectImage,
+  } = useGetMeetMssg(props.baithak, firebaseUser);
 
   const styles = useStyleSheet(themedStyles);
   return (
@@ -42,6 +54,13 @@ const VideoMessage = (props: props) => {
       useNativeDriver
       onBackButtonPress={props.onBackDropPress}>
       <Layout style={styles.main} level="2">
+        <SelectImage
+          modalVisible={selectImage}
+          onBackDropPress={onToggleSelectImage}
+          onCaptureImage={onCaptureImage}
+          onSelectFromGallery={onSelectFromLibrary}
+        />
+        <ModalActivityIndicator modalVisible={loading} />
         <View style={styles.header}>
           <BackHeader
             leftIcon="arrow-back-outline"
@@ -58,6 +77,7 @@ const VideoMessage = (props: props) => {
           lastDoc={lastDoc}
           loadMore={loadMore}
           baithak={props.baithak}
+          onPressAccessory={onToggleSelectImage}
         />
       </Layout>
     </Modal>

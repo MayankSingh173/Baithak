@@ -49,3 +49,40 @@ export const requestUserPermission = async () => {
     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
   console.log('Notification Permission ', enabled);
 };
+
+export const checkReadingMediaPermission = async () => {
+  if (Platform.OS === 'android') {
+    const READ_EXTERNAL_STORAGE = await PermissionsAndroid.check(
+      'android.permission.READ_EXTERNAL_STORAGE',
+    );
+    const WRITE_EXTERNAL_STORAGE = await PermissionsAndroid.check(
+      'android.permission.WRITE_EXTERNAL_STORAGE',
+    );
+
+    console.log(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE);
+    if (!READ_EXTERNAL_STORAGE || !WRITE_EXTERNAL_STORAGE) {
+      await requestStoragePermission();
+    }
+  }
+};
+
+export const requestStoragePermission = async () => {
+  try {
+    const granted = await PermissionsAndroid.requestMultiple([
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+    ]);
+    if (
+      granted['android.permission.READ_EXTERNAL_STORAGE'] ===
+        PermissionsAndroid.RESULTS.GRANTED &&
+      granted['android.permission.WRITE_EXTERNAL_STORAGE'] ===
+        PermissionsAndroid.RESULTS.GRANTED
+    ) {
+      console.log('Storage permission accepted');
+    } else {
+      console.log('Permission denied');
+    }
+  } catch (err) {
+    console.warn(err);
+  }
+};

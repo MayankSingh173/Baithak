@@ -6,6 +6,8 @@ export interface Message {
   createdAt: number;
   uid: string;
   system?: boolean;
+  image?: string;
+  video?: string;
 }
 
 export interface Group {

@@ -26,6 +26,7 @@ interface props {
   loadMore: any;
   lastDoc: FirebaseFirestoreTypes.DocumentData | undefined;
   baithak: Baithak;
+  onPressAccessory: () => void;
 }
 
 const customtInputToolbar = (props: any, color: string) => {
@@ -176,7 +177,7 @@ const VideoChat = (props: props) => {
           )
         }
         renderActions={(props5) => renderAction(props5)}
-        onPressActionButton={() => console.log('Plus')}
+        onPressActionButton={props.onPressAccessory}
         onLongPress={(context, message) =>
           onLongPress(context, message, props.baithak.groupId, firebaseUser.uid)
         }

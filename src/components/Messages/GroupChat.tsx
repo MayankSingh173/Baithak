@@ -19,6 +19,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import {RALEWAY_MEDIUM} from '../../constants/Fonts/Fonts';
 import {Group} from '../../models/Messages/interface';
 import {REMOTE_USER_PROFILE_SCREEN} from '../../constants/Navigation/Navigation';
+import FastImage from 'react-native-fast-image';
 
 interface props {
   message: IMessage[];
@@ -28,6 +29,7 @@ interface props {
   lastDoc: FirebaseFirestoreTypes.DocumentData | undefined;
   group: Group;
   navigation: any;
+  onPressAccessory: () => void;
 }
 
 const customtInputToolbar = (props: any, color: string) => {
@@ -39,23 +41,38 @@ const customtInputToolbar = (props: any, color: string) => {
   );
 };
 
+const renderPhoto = (props: any) => {
+  const message: IMessage = props.currentMessage;
+  console.log(message);
+  if (message.image) {
+    return (
+      <FastImage
+        source={{uri: message.image}}
+        style={{height: 100, width: 100}}
+      />
+    );
+  } else return null;
+};
+
 const renderBubble = (
   props: any,
   rightBubbleColor: string,
   leftBubbleColor: string,
 ) => {
   return (
-    <Bubble
-      {...props}
-      wrapperStyle={{
-        left: {
-          backgroundColor: leftBubbleColor,
-        },
-        right: {
-          backgroundColor: rightBubbleColor,
-        },
-      }}
-    />
+    <View>
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          left: {
+            backgroundColor: leftBubbleColor,
+          },
+          right: {
+            backgroundColor: rightBubbleColor,
+          },
+        }}
+      />
+    </View>
   );
 };
 
@@ -183,7 +200,7 @@ const GroupChat = (props: props) => {
           )
         }
         renderActions={(props5) => renderAction(props5)}
-        onPressActionButton={() => console.log('Plus')}
+        onPressActionButton={props.onPressAccessory}
         onLongPress={(context, message) =>
           onLongPress(context, message, props.group.groupId, firebaseUser.uid)
         }

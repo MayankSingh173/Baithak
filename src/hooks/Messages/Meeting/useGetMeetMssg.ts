@@ -12,11 +12,21 @@ import Toast from 'react-native-toast-message';
 import Sound from 'react-native-sound';
 import {UserInterface} from '../../../models/User/User';
 import {writeAsync} from '../../../utils/Firestore/write';
+import {
+  CameraOptions,
+  launchCamera,
+  launchImageLibrary,
+  ImageLibraryOptions,
+} from 'react-native-image-picker';
+import {checkReadingMediaPermission} from '../../../utils/Permissions/Permission';
+import {uploadToStorage} from '../../../utils/Storage/uploadToStorage';
 
 const useGetMeetMssg = (Baithak: Baithak, firebaseUser: UserInterface) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [lastDoc, setLastDoc] = useState<FirebaseFirestoreTypes.DocumentData>();
   const [isMoreLoading, setIsMoreLoading] = useState<boolean>(false);
+  const [selectImage, toggelSelectImage] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   let sound = useRef<Sound | null>(null);
 
@@ -39,6 +49,7 @@ const useGetMeetMssg = (Baithak: Baithak, firebaseUser: UserInterface) => {
                 createdAt: local_message.createdAt,
                 user: getBaithakPartiFromUid(local_message.uid, Baithak),
                 system: local_message.system,
+                ...(local_message.image && {image: local_message.image}),
               });
             });
 
@@ -77,6 +88,7 @@ const useGetMeetMssg = (Baithak: Baithak, firebaseUser: UserInterface) => {
                     createdAt: local_message.createdAt,
                     user: getBaithakPartiFromUid(local_message.uid, Baithak),
                     system: local_message.system,
+                    ...(local_message.image && {image: local_message.image}),
                   });
                 });
 
@@ -180,7 +192,115 @@ const useGetMeetMssg = (Baithak: Baithak, firebaseUser: UserInterface) => {
     }
   };
 
-  return {messages, handleSend, isMoreLoading, loadMore, lastDoc};
+  const onToggleSelectImage = () => toggelSelectImage(!selectImage);
+
+  const onCaptureImage = async () => {
+    onToggleSelectImage();
+    await checkReadingMediaPermission();
+    const options: CameraOptions = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+
+    launchCamera(options, async (response) => {
+      if (response.errorMessage || response.errorCode) {
+        Toast.show({
+          type: 'error',
+          text1: 'Try Again!!',
+          text2: 'Something went wrong',
+          position: 'top',
+        });
+      } else if (response.assets) {
+        await onCreateImageMessage(response.assets[0].uri);
+      }
+    });
+  };
+
+  const onSelectFromLibrary = async () => {
+    onToggleSelectImage();
+    await checkReadingMediaPermission();
+    const options: ImageLibraryOptions = {
+      selectionLimit: 0,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+
+    launchImageLibrary(options, async (response) => {
+      if (response.errorCode || response.errorMessage) {
+        Toast.show({
+          type: 'error',
+          text1: 'Try Again!!',
+          text2: 'Something went wrong',
+          position: 'top',
+        });
+      } else if (response.assets) {
+        await onCreateImageMessage(response.assets[0].uri);
+      }
+    });
+  };
+
+  const onCreateImageMessage = async (uri?: string) => {
+    try {
+      setLoading(true);
+      if (uri) {
+        const downloadUrl = await uploadToStorage(
+          `images/${Baithak.groupId}/${uri.substring(
+            uri.lastIndexOf('/') + 1,
+          )}`,
+          uri,
+        );
+        if (downloadUrl) {
+          await createImageMessage(downloadUrl);
+        }
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log('Error in creating image/video message', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Try Again!!',
+        text2: 'Something went wrong',
+        position: 'top',
+      });
+    }
+  };
+
+  const createImageMessage = async (url: string) => {
+    try {
+      const messRef = firestore()
+        .collection('groups')
+        .doc(Baithak.groupId)
+        .collection('messages')
+        .doc();
+
+      const newMessage: Message = {
+        messageId: messRef.id,
+        text: '',
+        createdAt: +new Date(),
+        uid: firebaseUser.uid,
+        image: url,
+      };
+
+      await messRef.set(newMessage);
+    } catch (error) {
+      console.log('Error in creating image/video message', error);
+    }
+  };
+
+  return {
+    messages,
+    handleSend,
+    isMoreLoading,
+    loadMore,
+    lastDoc,
+    onCaptureImage,
+    onSelectFromLibrary,
+    loading,
+    selectImage,
+    onToggleSelectImage,
+  };
 };
 
 export default useGetMeetMssg;

@@ -1,11 +1,12 @@
 import {Layout} from '@ui-kitten/components';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import GroupChatHeader from '../../../components/Headers/GroupChatHeader/GroupChatHeader';
 import GroupChat from '../../../components/Messages/GroupChat';
 import GroupInfoModal from '../../../components/Modals/GroupInfo/GroupInfoModal';
 import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
+import SelectImage from '../../../components/Modals/SelectImage/SelectImage';
 import {CHAT_HOME_SCREEN} from '../../../constants/Navigation/Navigation';
 import useGetMessages from '../../../hooks/Messages/Chat/useGetMessages';
 import {RootState} from '../../../store/rootReducer';
@@ -31,6 +32,11 @@ const GroupChatsScreen = (props: any) => {
     loadMore,
     groupInfo,
     toggleGroupInfoModal,
+    selectImage,
+    onCaptureImage,
+    onSelectFromLibrary,
+    loading,
+    onToggleSelectImage,
   } = useGetMessages(props.route.params.group, props.navigation, firebaseUser);
 
   return (
@@ -41,6 +47,13 @@ const GroupChatsScreen = (props: any) => {
         group={props.route.params.group}
         navigation={props.navigation}
       />
+      <SelectImage
+        modalVisible={selectImage}
+        onBackDropPress={onToggleSelectImage}
+        onCaptureImage={onCaptureImage}
+        onSelectFromGallery={onSelectFromLibrary}
+      />
+      <ModalActivityIndicator modalVisible={loading} />
       <View style={styles.header}>
         <GroupChatHeader
           groupDetails={props.route.params.group}
@@ -59,6 +72,7 @@ const GroupChatsScreen = (props: any) => {
         loadMore={loadMore}
         group={props.route.params.group}
         navigation={props.navigation}
+        onPressAccessory={onToggleSelectImage}
       />
     </Layout>
   );

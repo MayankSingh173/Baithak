@@ -15,6 +15,15 @@ import {CHAT_HOME_SCREEN} from '../../../constants/Navigation/Navigation';
 import {changeGroupActivity} from '../../../utils/Messages/Group/changeGroupActivity';
 import {UserInterface} from '../../../models/User/User';
 import {writeAsync} from '../../../utils/Firestore/write';
+import {
+  CameraOptions,
+  launchCamera,
+  launchImageLibrary,
+  ImageLibraryOptions,
+} from 'react-native-image-picker';
+import Toast from 'react-native-toast-message';
+import {uploadToStorage} from '../../../utils/Storage/uploadToStorage';
+import {checkReadingMediaPermission} from '../../../utils/Permissions/Permission';
 
 const useGetMessages = (
   group: Group,
@@ -25,6 +34,8 @@ const useGetMessages = (
   const [lastDoc, setLastDoc] = useState<FirebaseFirestoreTypes.DocumentData>();
   const [isMoreLoading, setIsMoreLoading] = useState<boolean>(false);
   const [groupInfo, toggleGroupInfo] = useState<boolean>(false);
+  const [selectImage, toggelSelectImage] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     try {
@@ -45,6 +56,7 @@ const useGetMessages = (
                 createdAt: local_message.createdAt,
                 user: getMemberDetailsFromUid(local_message.uid, group),
                 system: local_message.system,
+                ...(local_message.image && {image: local_message.image}),
               });
             });
 
@@ -83,6 +95,7 @@ const useGetMessages = (
                     createdAt: local_message.createdAt,
                     user: getMemberDetailsFromUid(local_message.uid, group),
                     system: local_message.system,
+                    ...(local_message.image && {image: local_message.image}),
                   });
                 });
 
@@ -168,6 +181,101 @@ const useGetMessages = (
     toggleGroupInfo(!groupInfo);
   };
 
+  const onToggleSelectImage = () => toggelSelectImage(!selectImage);
+
+  const onCaptureImage = async () => {
+    onToggleSelectImage();
+    await checkReadingMediaPermission();
+    const options: CameraOptions = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+
+    launchCamera(options, async (response) => {
+      if (response.errorMessage || response.errorCode) {
+        Toast.show({
+          type: 'error',
+          text1: 'Try Again!!',
+          text2: 'Something went wrong',
+          position: 'top',
+        });
+      } else if (response.assets) {
+        await onCreateImageMessage(response.assets[0].uri);
+      }
+    });
+  };
+
+  const onSelectFromLibrary = async () => {
+    onToggleSelectImage();
+    await checkReadingMediaPermission();
+    const options: ImageLibraryOptions = {
+      selectionLimit: 0,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+
+    launchImageLibrary(options, async (response) => {
+      if (response.errorCode || response.errorMessage) {
+        Toast.show({
+          type: 'error',
+          text1: 'Try Again!!',
+          text2: 'Something went wrong',
+          position: 'top',
+        });
+      } else if (response.assets) {
+        await onCreateImageMessage(response.assets[0].uri);
+      }
+    });
+  };
+
+  const onCreateImageMessage = async (uri?: string) => {
+    try {
+      setLoading(true);
+      if (uri) {
+        const downloadUrl = await uploadToStorage(
+          `images/${group.groupId}/${uri.substring(uri.lastIndexOf('/') + 1)}`,
+          uri,
+        );
+        if (downloadUrl) {
+          await createImageMessage(downloadUrl);
+        }
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log('Error in creating image/video message', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Try Again!!',
+        text2: 'Something went wrong',
+        position: 'top',
+      });
+    }
+  };
+
+  const createImageMessage = async (url: string) => {
+    try {
+      const messRef = firestore()
+        .collection('groups')
+        .doc(group.groupId)
+        .collection('messages')
+        .doc();
+
+      const newMessage: Message = {
+        messageId: messRef.id,
+        text: '',
+        createdAt: +new Date(),
+        uid: firebaseUser.uid,
+        image: url,
+      };
+
+      await messRef.set(newMessage);
+    } catch (error) {
+      console.log('Error in creating image/video message', error);
+    }
+  };
+
   return {
     messages,
     handleSend,
@@ -176,6 +284,11 @@ const useGetMessages = (
     lastDoc,
     groupInfo,
     toggleGroupInfoModal,
+    onCaptureImage,
+    onSelectFromLibrary,
+    loading,
+    selectImage,
+    onToggleSelectImage,
   };
 };
 
