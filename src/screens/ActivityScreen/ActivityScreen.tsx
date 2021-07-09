@@ -1,14 +1,12 @@
-import {Layout, Text, useTheme} from '@ui-kitten/components';
+import {Layout, useTheme} from '@ui-kitten/components';
 import React from 'react';
-import {useState} from 'react';
 import {
   StyleSheet,
   View,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
-import {Agenda, Calendar, DateObject} from 'react-native-calendars';
+import {Agenda} from 'react-native-calendars';
 import {useSelector} from 'react-redux';
 import AddTaskButton from '../../components/Buttons/AddTaskButton/AddTaskButton';
 import CalendarCard from '../../components/Card/CalendarCard/CalendarCard';
@@ -34,12 +32,14 @@ const ActivityScreen = (props: any) => {
 
   const appTheme = useTheme();
 
-  const {fetched, caledarItems, loadItems, item, onDayChange} =
-    useFetchUserTask(firebaseUser.uid);
+  const {fetched, caledarItems, loadItems, onDayChange} = useFetchUserTask(
+    firebaseUser.uid,
+  );
 
   const renderItem = (item: string, firstDayInDay: boolean) => {
     return (
       <CalendarCard
+        key={item}
         taskId={item}
         uid={firebaseUser.uid}
         onPress={(task) =>
@@ -131,6 +131,7 @@ const ActivityScreen = (props: any) => {
               agendaDayNumColor: 'lightgrey',
               agendaDayTextColor: 'grey',
               monthTextColor: appTheme['color-primary-default'],
+              agendaKnobColor: appTheme['color-primary-default'],
             }}
           />
         </View>

@@ -2,6 +2,7 @@ import React from 'react';
 import {View, ActivityIndicator, Dimensions, StyleSheet} from 'react-native';
 import Modal from 'react-native-modal';
 import {useTheme} from '@ui-kitten/components';
+import LottieView from 'lottie-react-native';
 
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
@@ -19,9 +20,11 @@ const ModalActivityIndicator = (props: any) => {
       animationOut={props.animationIn ? props.animationIn : 'fadeOut'}
       useNativeDriver>
       <View style={styles.main}>
-        <ActivityIndicator
-          size="large"
-          color={theme['color-primary-default']}
+        <LottieView
+          source={require('../../../assets/Animations/loading.json')}
+          autoPlay
+          loop
+          style={styles.image}
         />
       </View>
     </Modal>
@@ -37,6 +40,10 @@ const styles = StyleSheet.create({
   modal: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  image: {
+    height: 200,
+    width: 200,
   },
 });
 

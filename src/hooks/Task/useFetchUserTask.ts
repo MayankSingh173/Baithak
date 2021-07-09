@@ -40,7 +40,7 @@ const useFetchUserTask = (uid: string) => {
         newItems[key] = caledarItems[key];
       });
       setCalendarItems(newItems);
-    }, 1500);
+    }, 1000);
   };
   useEffect(() => {
     try {

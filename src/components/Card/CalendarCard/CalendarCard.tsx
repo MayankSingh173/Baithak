@@ -5,13 +5,14 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import {Text, Button, useTheme, Layout} from '@ui-kitten/components';
+import {Text, useTheme, Layout} from '@ui-kitten/components';
 import {Task} from '../../../models/Task/interface';
 import firestore from '@react-native-firebase/firestore';
 
 import {
   RALEWAY_BOLD,
   RALEWAY_EXTRA_BOLD,
+  RALEWAY_MEDIUM,
   RALEWAY_REGULAR,
 } from '../../../constants/Fonts/Fonts';
 import moment from 'moment';
@@ -72,10 +73,16 @@ const CalendarCard = (props: props) => {
         {moment(task?.startTime).format('LT')} -{' '}
         {moment(task?.endTime).format('LT')}
       </Text>
-      {/* {props.task.description && (
-        <Text style={styles.description}>{props.task.description}</Text>
-      )} */}
-      <View>
+      {task?.description ? (
+        <Text style={styles.description}>{task.description}</Text>
+      ) : null}
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginTop: 20,
+        }}>
         {task?.status === 'ToDo' ? (
           <View
             style={[
@@ -90,7 +97,7 @@ const CalendarCard = (props: props) => {
           <View
             style={[
               styles.statusBtn,
-              {backgroundColor: appTheme['color-info-500']},
+              {backgroundColor: appTheme['color-info-400']},
             ]}>
             <Text category="s2" style={styles.status}>
               On-going
@@ -100,13 +107,16 @@ const CalendarCard = (props: props) => {
           <View
             style={[
               styles.statusBtn,
-              {backgroundColor: appTheme['color-success-500']},
+              {backgroundColor: appTheme['color-success-400']},
             ]}>
             <Text category="s2" style={styles.status}>
               Completed
             </Text>
           </View>
         ) : null}
+        <Text category="p2" appearance="hint" style={styles.createdOn}>
+          {moment(task?.createdOn).fromNow()}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -114,11 +124,12 @@ const CalendarCard = (props: props) => {
 
 const styles = StyleSheet.create({
   main: {
-    borderRadius: 10,
-    padding: 20,
+    borderRadius: 20,
+    padding: 15,
     marginRight: 10,
     marginTop: 17,
     flex: 1,
+    elevation: 7,
   },
   title: {
     fontFamily: RALEWAY_BOLD,
@@ -138,7 +149,6 @@ const styles = StyleSheet.create({
   },
   statusBtn: {
     borderRadius: 20,
-    marginTop: 20,
     padding: 8,
     width: '40%',
     alignItems: 'center',
@@ -146,6 +156,11 @@ const styles = StyleSheet.create({
   },
   status: {
     fontFamily: RALEWAY_EXTRA_BOLD,
+    color: 'white',
+  },
+  createdOn: {
+    fontFamily: RALEWAY_MEDIUM,
+    color: 'black',
   },
 });
 

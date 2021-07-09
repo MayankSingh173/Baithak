@@ -83,6 +83,7 @@ const useOnAddTask = (
           description: details.description,
         });
 
+        //schedule a reminder notification
         await setScheduleNotification(
           {
             ...task,
