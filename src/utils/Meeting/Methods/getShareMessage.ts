@@ -21,3 +21,23 @@ Get Vaccinated Soon!`;
     return 'No Baithak Info';
   }
 };
+
+export const getScheduleMessage = (
+  baithak: Baithak,
+  joinOn: number,
+  name: string | undefined,
+) => {
+  return `${
+    name ? name : 'Someone'
+  } would like you to join baithak? Here's a info
+
+Topic: ${baithak.channelName}
+${baithak.description ? 'Decription: ' + baithak?.description : ''}
+Join At: ${moment(joinOn).format('MMMM Do YYYY, h:mm:ss a')}  
+  
+Baithak Id: ${baithak.meetId}
+Password: ${baithak.password}
+  
+Cheers!
+Get Vaccinated Soon!`;
+};

@@ -5,8 +5,9 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  Pressable,
 } from 'react-native';
-import {RALEWAY_BOLD, RALEWAY_MEDIUM} from '../../constants/Fonts/Fonts';
+import {RALEWAY_BOLD, RALEWAY_MEDIUM} from '../../../constants/Fonts/Fonts';
 import {
   useTheme,
   useStyleSheet,
@@ -18,19 +19,22 @@ import {
 } from '@ui-kitten/components';
 import {Formik} from 'formik';
 import {useSelector} from 'react-redux';
-import BackHeader from '../../components/Headers/BackHeader/BackHeader';
-import {RootState} from '../../store/rootReducer';
-import useOnAddTask from '../../hooks/Task/useOnAddTask';
-import ModalActivityIndicator from '../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
-import {addTaskSchema} from '../../utils/validators/task';
-import {NameIcon} from '../../components/Icons/Icons';
 import moment from 'moment';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import BackHeader from '../../../components/Headers/BackHeader/BackHeader';
+import {RootState} from '../../../store/rootReducer';
+import {scheduleMeetingSchema} from '../../../utils/validators/meeting';
+import {NameIcon} from '../../../components/Icons/Icons';
+import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
+import useOnScheduleMeet from '../../../hooks/Meeting/useOnScheduleMeet';
+import AddParticipants from '../../../components/UI/AddParticipants/AddParticipants';
 
-const AddTaskScreen = (props: any) => {
-  const edit = props.route.params.edit;
-  const existingTask = props.route.params.existingTask;
+//On schedule meet
+//  1 .need to create a Baithak doc on host info
+//  2. Create a groupObject
+//  3. Create a task;
 
+const ScheduleMeetScreen = (props: any) => {
   const appTheme = useTheme();
 
   const styles = useStyleSheet(themedStyles);
@@ -50,18 +54,16 @@ const AddTaskScreen = (props: any) => {
     task,
     onChangeEvent,
     onPressIcon,
-    onChangeColor,
-    backgroundColors,
-    onChangeStatus,
     openDatePicker,
     mode,
     onCancel,
-  } = useOnAddTask(
+    onPressAdd,
+    selectedMembers,
+    onRemoveMember,
+  } = useOnScheduleMeet(
     firebaseUser,
     appTheme['color-primary-default'],
     props.navigation,
-    edit,
-    existingTask,
   );
 
   const CalendarIcon = (props: any, type: 'Date' | 'StartTime' | 'EndTime') => (
@@ -80,7 +82,7 @@ const AddTaskScreen = (props: any) => {
           onLeftPress={() => props.navigation.goBack()}
         />
         <Text category="h3" style={styles.heading}>
-          {edit ? 'Edit' : 'Add'}
+          Schedule
           <Text
             category="h2"
             style={[
@@ -88,7 +90,7 @@ const AddTaskScreen = (props: any) => {
               {color: appTheme['color-primary-default']},
             ]}>
             {' '}
-            Task
+            Baithak
           </Text>
         </Text>
         <DateTimePickerModal
@@ -102,7 +104,7 @@ const AddTaskScreen = (props: any) => {
         <Formik
           initialValues={initialFormState}
           onSubmit={handleSubmit}
-          validationSchema={addTaskSchema}
+          validationSchema={scheduleMeetingSchema}
           validateOnBlur>
           {(formikProps) => (
             <View style={styles.formContainer}>
@@ -110,16 +112,16 @@ const AddTaskScreen = (props: any) => {
                 textStyle={{fontFamily: RALEWAY_MEDIUM}}
                 style={styles.nameInput}
                 status="basic"
-                placeholder={edit ? existingTask.title : 'Title'}
-                onBlur={() => formikProps.setFieldTouched('title')}
+                placeholder="Baithak Name"
+                onBlur={() => formikProps.setFieldTouched('name')}
                 keyboardType="default"
                 accessoryLeft={NameIcon}
-                value={formikProps.values.title}
-                onChangeText={formikProps.handleChange('title')}
+                value={formikProps.values.name}
+                onChangeText={formikProps.handleChange('name')}
                 size="large"
                 caption={
-                  formikProps.errors.title && formikProps.touched.title
-                    ? formikProps.errors.title
+                  formikProps.errors.name && formikProps.touched.name
+                    ? formikProps.errors.name
                     : ''
                 }
               />
@@ -127,9 +129,7 @@ const AddTaskScreen = (props: any) => {
                 textStyle={{fontFamily: RALEWAY_MEDIUM, minHeight: 70}}
                 style={styles.descriptionInput}
                 status="basic"
-                placeholder={
-                  edit ? existingTask.description : 'Descriptional (optional)'
-                }
+                placeholder={'Descriptional (optional)'}
                 onBlur={() => formikProps.setFieldTouched('description')}
                 value={formikProps.values.description}
                 onChangeText={formikProps.handleChange('description')}
@@ -171,54 +171,11 @@ const AddTaskScreen = (props: any) => {
                   value={moment(task.endTime).format('LT')}
                 />
               </View>
-              <View style={styles.statusView}>
-                <Button
-                  appearance={task.status === 'ToDo' ? 'filled' : 'outline'}
-                  status="danger"
-                  onPress={() => onChangeStatus('ToDo')}
-                  style={styles.statusBtn}>
-                  To-Do
-                </Button>
-                <Button
-                  appearance={task.status === 'OnGoing' ? 'filled' : 'outline'}
-                  status="info"
-                  onPress={() => onChangeStatus('OnGoing')}
-                  style={styles.statusBtn}>
-                  On-going
-                </Button>
-                <Button
-                  appearance={
-                    task.status === 'Completed' ? 'filled' : 'outline'
-                  }
-                  onPress={() => onChangeStatus('Completed')}
-                  status="success"
-                  style={styles.statusBtn}>
-                  Completed
-                </Button>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: 20,
-                }}>
-                <FlatList
-                  horizontal={true}
-                  keyExtractor={(c) => c}
-                  data={backgroundColors}
-                  renderItem={({item}) => {
-                    return (
-                      <TouchableOpacity
-                        key={item}
-                        style={[styles.colorSelect, {backgroundColor: item}]}
-                        onPress={() => onChangeColor(item)}
-                      />
-                    );
-                  }}
-                  ItemSeparatorComponent={() => <View style={{width: 15}} />}
-                  showsHorizontalScrollIndicator={false}
-                />
-              </View>
+              <AddParticipants
+                onPressAdd={onPressAdd}
+                selectedMembers={selectedMembers}
+                onRemoveMember={onRemoveMember}
+              />
               <Button
                 style={[
                   styles.createButton,
@@ -229,7 +186,7 @@ const AddTaskScreen = (props: any) => {
                 ]}
                 size="large"
                 onPress={formikProps.handleSubmit}>
-                {edit ? 'Edit Task' : 'Add Task'}
+                Schedule Baithak
               </Button>
             </View>
           )}
@@ -292,4 +249,4 @@ const themedStyles = StyleSheet.create({
   },
 });
 
-export default AddTaskScreen;
+export default ScheduleMeetScreen;

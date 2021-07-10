@@ -1,14 +1,6 @@
-import {Text, useStyleSheet, Layout} from '@ui-kitten/components';
-import React from 'react';
-import {
-  StyleSheet,
-  Dimensions,
-  View,
-  Alert,
-  GestureResponderEvent,
-  Pressable,
-  Animated,
-} from 'react-native';
+import {useStyleSheet, Layout} from '@ui-kitten/components';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, Dimensions, Pressable, Animated} from 'react-native';
 import useStartMeeting from '../../../hooks/Meeting/useStartMeeting';
 import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
 import {VideoStreamParams} from '../../../models/Meeting/CreateMeeting/interface';
@@ -23,8 +15,6 @@ import VideoMessage from '../../../components/Modals/VideoMessage/VideoMessage';
 import MeetInfo from '../../../components/Modals/MeetInfo/MeetInfo';
 import MeetParticpants from '../../../components/Modals/MeetParticipants/MeetParticipants';
 import {getRefinedText} from '../../../utils/Miscellaneous/utils';
-import {useState} from 'react';
-import {useEffect} from 'react';
 
 const dimensions = {
   width: Dimensions.get('window').width,
@@ -37,29 +27,6 @@ const VideoStream = (props: any) => {
   const firebaseUser = useSelector(
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
   );
-
-  const [HeadFootHeight, toggleHeadFootHeight] = useState({
-    head: new Animated.Value(0),
-    foot: new Animated.Value(0),
-  });
-
-  useEffect(() => {
-    Animated.sequence([
-      Animated.delay(10000),
-      Animated.parallel([
-        Animated.spring(HeadFootHeight.head, {
-          toValue: -200,
-          useNativeDriver: true,
-          tension: -20,
-        }),
-        Animated.spring(HeadFootHeight.foot, {
-          toValue: 200,
-          useNativeDriver: true,
-          tension: -20,
-        }),
-      ]),
-    ]).start(() => {});
-  }, [HeadFootHeight.head, HeadFootHeight.foot]);
 
   const {
     joinSucceed,
@@ -89,6 +56,8 @@ const VideoStream = (props: any) => {
     onCamerFlashOn,
     autoFocus,
     enableAutoCameraFocus,
+    HeadFootHeight,
+    onPressMainStreamView,
   } = useStartMeeting(
     {
       appId: APP_ID,
@@ -99,13 +68,6 @@ const VideoStream = (props: any) => {
   );
 
   const styles = useStyleSheet(themedStyles);
-
-  const onPressMainStreamView = () => {
-    toggleHeadFootHeight({
-      head: new Animated.Value(0),
-      foot: new Animated.Value(0),
-    });
-  };
 
   if (!joinSucceed) {
     return <ModalActivityIndicator modalVisible={modalVisible} />;
@@ -174,6 +136,8 @@ const VideoStream = (props: any) => {
           peerId={peerIds}
           uid={firebaseUser.uid}
           baithak={baithak}
+          incomingVideos={inVideoOff}
+          incomingAudios={speakerOff}
         />
       </Pressable>
       <Animated.View

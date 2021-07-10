@@ -6,6 +6,7 @@ import GeneralHeader from '../../../components/Headers/GeneralHeader/GeneralHead
 import SelectMeet from '../../../components/Modals/SelectMeet/SelectMeet';
 import {RALEWAY_BOLD, RALEWAY_REGULAR} from '../../../constants/Fonts/Fonts';
 import {
+  CREATE_GROUP_SCREEN,
   CREATE_MEET_SCREEN,
   GROUP_CHAT_SCREEN,
   JOIN_MEET_SCREEN,
@@ -15,10 +16,11 @@ import {
 } from '../../../constants/Navigation/Navigation';
 import {RootState} from '../../../store/rootReducer';
 import CreateGroupButton from '../../../components/Buttons/CreateGroupButton/CreateGroupButton';
-import useGetGroups from '../../../hooks/Messages/Chat/useGetGroups';
+import useGetGroups from '../../../hooks/Messages/Group/useGetGroups';
 import NoChatsHome from '../../../components/UI/Chats/NoChatsHome';
 import UserGroupCardView from '../../../components/UI/Group/UserGroupCardView';
 import {Group} from '../../../models/Messages/interface';
+import {UserInterface} from '../../../models/User/User';
 
 const ChatHome = (props: any) => {
   const firebaseUser = useSelector(
@@ -43,18 +45,6 @@ const ChatHome = (props: any) => {
 
   return (
     <Layout level="1" style={styles.main}>
-      <SelectMeet
-        modalVisible={selectMeet}
-        onBackDropPress={() => setSelectMeet(!selectMeet)}
-        onJoinMeet={() => {
-          setSelectMeet(!selectMeet);
-          props.navigation.navigate(JOIN_MEET_SCREEN);
-        }}
-        onCreateMeet={() => {
-          setSelectMeet(!selectMeet);
-          props.navigation.navigate(CREATE_MEET_SCREEN);
-        }}
-      />
       <GeneralHeader
         firebaseUser={firebaseUser}
         heading="Chat"
@@ -69,7 +59,11 @@ const ChatHome = (props: any) => {
         onPressSearch={() => props.navigation.navigate(USER_SEARCH_SCREEN)}
       />
       <CreateGroupButton
-        onPress={() => props.navigation.navigate(USER_ADD_SEARCH_SCREEN)}
+        onPress={() =>
+          props.navigation.navigate(USER_ADD_SEARCH_SCREEN, {
+            toScreen: CREATE_GROUP_SCREEN,
+          })
+        }
       />
       {!fetched ? (
         <Layout style={[styles.main, styles.center]}>

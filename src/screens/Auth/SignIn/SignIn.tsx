@@ -138,14 +138,14 @@ const SignIn = (props: props) => {
                   buttonType="google"
                   title="Sign in with Google"
                   style={styles.buttonHolder}
-                  src={{uri: GOOGLE_LOGO}}
+                  src={require('../../../assets/Images/googleButton.png')}
                 />
                 <LogoButton
                   onPress={onFacebookAuth}
                   buttonType="facebook"
                   title="Sign in with Facebook"
                   style={styles.buttonHolder}
-                  src={{uri: FACEBOOK_LOGO}}
+                  src={require('../../../assets/Images/facebookIcon.png')}
                 />
               </View>
             )}

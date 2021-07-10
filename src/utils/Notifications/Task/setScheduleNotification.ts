@@ -3,10 +3,7 @@ import {UserInterface} from '../../../models/User/User';
 import PushNotification from 'react-native-push-notification';
 import moment from 'moment';
 
-export const setScheduleNotification = async (
-  task: Task,
-  firebaseUser: UserInterface,
-) => {
+export const setScheduleNotification = async (task: Task, uid: string) => {
   try {
     const reminderTime =
       +new Date(task.date + ' ' + moment(task.startTime).format('LTS')) -
@@ -14,7 +11,7 @@ export const setScheduleNotification = async (
 
     PushNotification.localNotificationSchedule({
       title: 'Reminder🔔',
-      channelId: firebaseUser.uid,
+      channelId: uid,
       message: task.title,
       date: new Date(reminderTime),
       repeatTime: 1,

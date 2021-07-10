@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import {Text, useTheme, Layout} from '@ui-kitten/components';
+import {Text, useTheme, Layout, Icon} from '@ui-kitten/components';
 import {Task} from '../../../models/Task/interface';
 import firestore from '@react-native-firebase/firestore';
 
@@ -18,11 +18,13 @@ import {
 import moment from 'moment';
 import {useState} from 'react';
 import {useEffect} from 'react';
+import {JOIN_MEET_SCREEN} from '../../../constants/Navigation/Navigation';
 
 interface props {
   taskId: string;
   uid: string;
   onPress: (task: Task | undefined) => void;
+  navigation: any;
 }
 
 const CalendarCard = (props: props) => {
@@ -49,7 +51,18 @@ const CalendarCard = (props: props) => {
       console.log('Error in fetching one task', error);
       setFetched(true);
     }
-  });
+  }, [props.uid, props.taskId]);
+
+  const onPressCard = () => {
+    if (task?.isMeeting) {
+      props.navigation.navigate(JOIN_MEET_SCREEN, {
+        meetId: task.meetId,
+        password: task.password,
+      });
+    } else {
+      props.onPress(task);
+    }
+  };
 
   return !fetched ? (
     <Layout
@@ -62,13 +75,18 @@ const CalendarCard = (props: props) => {
     </Layout>
   ) : (
     <TouchableOpacity
-      onPress={() => props.onPress(task)}
+      onPress={onPressCard}
       style={[styles.main, {backgroundColor: task?.color}]}>
-      <Text
-        category="h6"
-        style={[styles.title, task?.status === 'Completed' && styles.strike]}>
-        {task?.title}
-      </Text>
+      <View style={styles.firstRow}>
+        {task?.isMeeting && (
+          <Icon name="calendar-outline" fill="black" style={styles.icon} />
+        )}
+        <Text
+          category="h6"
+          style={[styles.title, task?.status === 'Completed' && styles.strike]}>
+          {task?.title}
+        </Text>
+      </View>
       <Text category="s2" style={styles.timeSeries}>
         {moment(task?.startTime).format('LT')} -{' '}
         {moment(task?.endTime).format('LT')}
@@ -80,10 +98,11 @@ const CalendarCard = (props: props) => {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: !task?.isMeeting ? 'space-between' : 'flex-end',
           marginTop: 20,
+          flex: 1,
         }}>
-        {task?.status === 'ToDo' ? (
+        {!task?.isMeeting && task?.status === 'ToDo' ? (
           <View
             style={[
               styles.statusBtn,
@@ -93,7 +112,7 @@ const CalendarCard = (props: props) => {
               To-do
             </Text>
           </View>
-        ) : task?.status === 'OnGoing' ? (
+        ) : !task?.isMeeting && task?.status === 'OnGoing' ? (
           <View
             style={[
               styles.statusBtn,
@@ -103,7 +122,7 @@ const CalendarCard = (props: props) => {
               On-going
             </Text>
           </View>
-        ) : task?.status === 'Completed' ? (
+        ) : !task?.isMeeting && task?.status === 'Completed' ? (
           <View
             style={[
               styles.statusBtn,
@@ -131,9 +150,15 @@ const styles = StyleSheet.create({
     flex: 1,
     elevation: 7,
   },
+  firstRow: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   title: {
     fontFamily: RALEWAY_BOLD,
     color: 'black',
+    flex: 4,
   },
   strike: {
     textDecorationLine: 'line-through',
@@ -161,6 +186,11 @@ const styles = StyleSheet.create({
   createdOn: {
     fontFamily: RALEWAY_MEDIUM,
     color: 'black',
+  },
+  icon: {
+    height: 20,
+    width: 20,
+    marginRight: 5,
   },
 });
 

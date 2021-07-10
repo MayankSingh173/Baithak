@@ -24,7 +24,9 @@ const useOnAddTask = (
     description: existingTask?.description ? existingTask.description : '',
     date: existingTask?.date ? existingTask.date : timeToString(new Date()),
     startTime: existingTask?.startTime ? existingTask.startTime : +new Date(),
-    endTime: existingTask?.endTime ? existingTask.endTime : +new Date(),
+    endTime: existingTask?.endTime
+      ? existingTask.endTime
+      : +new Date() + 60 * 60 * 1000,
     status: existingTask?.status ? existingTask.status : 'ToDo',
     createdOn: existingTask?.createdOn ? existingTask.createdOn : +new Date(),
     color:
@@ -91,7 +93,7 @@ const useOnAddTask = (
             title: details.title,
             description: details.description,
           },
-          firebaseUser,
+          firebaseUser.uid,
         );
       }
       setLoading(false);

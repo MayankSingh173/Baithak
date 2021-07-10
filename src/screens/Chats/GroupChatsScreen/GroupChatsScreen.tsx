@@ -83,12 +83,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    borderBottomWidth: 0.3,
-    borderColor: 'grey',
-    position: 'absolute',
-    top: 0,
-    zIndex: 2,
     width: '100%',
+    flex: 0.1,
   },
 });
 

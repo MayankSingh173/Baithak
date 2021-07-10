@@ -27,7 +27,7 @@ export const generateToken = async (channelName: string, agoraId: number) => {
   return {token: req.token};
 };
 
-const generateMeetIdAndPassword = () => {
+export const generateMeetIdAndPassword = () => {
   const meetId = randPassword(0, 9, 0);
   const password = randPassword(0, 4, 5);
   return {meetId, password};

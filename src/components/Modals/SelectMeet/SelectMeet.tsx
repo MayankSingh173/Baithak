@@ -13,6 +13,7 @@ interface props {
   onBackDropPress: () => void;
   onCreateMeet: () => void;
   onJoinMeet: () => void;
+  onScheduleMeet: () => void;
 }
 
 const SelectMeet = (props: props) => {
@@ -22,12 +23,17 @@ const SelectMeet = (props: props) => {
     {
       icon: 'plus-circle-outline',
       onPress: props.onCreateMeet,
-      text: 'Create Baithak',
+      text: 'Start Instant Baithak',
     },
     {
       icon: 'video-outline',
       onPress: props.onJoinMeet,
       text: 'Join Baithak',
+    },
+    {
+      icon: 'calendar-outline',
+      onPress: props.onScheduleMeet,
+      text: 'Schedule Baithak',
     },
   ];
 

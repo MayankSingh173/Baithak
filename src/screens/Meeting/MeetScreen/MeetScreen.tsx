@@ -7,6 +7,7 @@ import {
   CREATE_MEET_SCREEN,
   JOIN_MEET_SCREEN,
   PROFILE_SCREEN,
+  SCHEDULE_MEET_SCREEN,
   USER_SEARCH_SCREEN,
 } from '../../../constants/Navigation/Navigation';
 import {RootState} from '../../../store/rootReducer';
@@ -25,8 +26,6 @@ const MeetScreen = (props: any) => {
 
   const appTheme = useTheme();
 
-  const sendNotification = () => {};
-
   return (
     <Layout level="1" style={styles.main}>
       <SelectMeet
@@ -39,6 +38,10 @@ const MeetScreen = (props: any) => {
         onCreateMeet={() => {
           setSelectMeet(!selectMeet);
           props.navigation.navigate(CREATE_MEET_SCREEN);
+        }}
+        onScheduleMeet={() => {
+          setSelectMeet(!selectMeet);
+          props.navigation.navigate(SCHEDULE_MEET_SCREEN, {edit: false});
         }}
       />
       <GeneralHeader

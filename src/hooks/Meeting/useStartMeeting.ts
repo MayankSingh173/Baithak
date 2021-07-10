@@ -1,4 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
+import {Animated} from 'react-native';
 import RtcEngine from 'react-native-agora';
 import {generalErrorN} from '../../components/Alerts/GeneralError';
 import {MEET_HOME_SCREEN} from '../../constants/Navigation/Navigation';
@@ -48,6 +49,10 @@ const useStartMeeting = (
   const [inVideoOff, toogleInVideoOff] = useState<boolean>(false);
   const [flashOn, toggleFlash] = useState<boolean>(false);
   const [autoFocus, toggleAutoFocus] = useState<boolean>(false);
+  const [HeadFootHeight, toggleHeadFootHeight] = useState({
+    head: new Animated.Value(0),
+    foot: new Animated.Value(0),
+  });
 
   let engine = useRef<RtcEngine | null>(null);
   let sound = useRef<Sound | null>(
@@ -76,7 +81,7 @@ const useStartMeeting = (
       await engine.current?.destroy();
 
       //remove the user from the list
-      await onMemberLeftMeet(meetConfig, firebaseUser);
+      baithak && (await onMemberLeftMeet(firebaseUser.uid, baithak));
 
       setPeerIds([]);
       setJoinSucceed(false);
@@ -141,6 +146,7 @@ const useStartMeeting = (
           if (meetConfig.creater === 'Host') {
             await onHostJoinMeet(meetConfig, firebaseUser);
           } else {
+            console.log(meetConfig);
             await onMemberJoinMeet(meetConfig, firebaseUser);
           }
           onPressMeetInfo();
@@ -160,6 +166,7 @@ const useStartMeeting = (
       engine.current?.addListener('Error', (err) => {
         console.log('Error', err);
         toggleModal(false);
+        endCall();
         navigation.goBack();
         Toast.show({
           type: 'error',
@@ -335,6 +342,31 @@ const useStartMeeting = (
     }
   };
 
+  useEffect(() => {
+    Animated.sequence([
+      Animated.delay(10000),
+      Animated.parallel([
+        Animated.spring(HeadFootHeight.head, {
+          toValue: -200,
+          useNativeDriver: true,
+          tension: -20,
+        }),
+        Animated.spring(HeadFootHeight.foot, {
+          toValue: 200,
+          useNativeDriver: true,
+          tension: -20,
+        }),
+      ]),
+    ]).start(() => {});
+  }, [HeadFootHeight.head, HeadFootHeight.foot]);
+
+  const onPressMainStreamView = () => {
+    toggleHeadFootHeight({
+      head: new Animated.Value(0),
+      foot: new Animated.Value(0),
+    });
+  };
+
   return {
     peerIds,
     joinSucceed,
@@ -366,6 +398,8 @@ const useStartMeeting = (
     onCamerFlashOn,
     autoFocus,
     enableAutoCameraFocus,
+    HeadFootHeight,
+    onPressMainStreamView,
   };
 };
 

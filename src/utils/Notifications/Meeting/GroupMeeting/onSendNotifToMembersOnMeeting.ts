@@ -14,7 +14,7 @@ export const onSendNotifToMembersOnMeeting = async (baithak: Baithak) => {
       baithak.host.uid,
     )) as UserInterface;
 
-    if (result && creator && result.group) {
+    if (result && creator && result.group && result.tokens.length !== 0) {
       const title = `Baithak is going on!🤩`;
       const body = `${
         creator.name ? creator.name : 'Someone'
@@ -34,8 +34,6 @@ export const onSendNotifToMembersOnMeeting = async (baithak: Baithak) => {
       };
 
       const URL = `${BASE_URL}${NOTIFICATION}`;
-
-      console.log(URL, payload);
 
       const response = await postRequest(URL, payload);
     }
@@ -59,6 +57,7 @@ export const getMemberTokens = async (groupId: string, hostUid: string) => {
           if (
             membersDetails &&
             membersDetails.tokens &&
+            membersDetails.notifications &&
             membersDetails.notifications
           ) {
             tokens = tokens.concat(membersDetails.tokens);

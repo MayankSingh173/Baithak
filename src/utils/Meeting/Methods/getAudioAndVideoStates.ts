@@ -34,9 +34,9 @@ export const getRemoteAudioAndVideoStates = (
     for (const member of baithak.members) {
       if (member.agoraId === peerId) {
         return {
-          video: member.video ? member.video : true,
-          audio: member.audio ? member.audio : true,
-          imageUrl: member.imageUrl ? member.imageUrl : DEFAULT_AVATAR,
+          video: member.video,
+          audio: member.audio,
+          imageUrl: member.imageUrl,
         };
       }
     }

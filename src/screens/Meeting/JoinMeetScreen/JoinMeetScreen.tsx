@@ -27,6 +27,8 @@ import {RootState} from '../../../store/rootReducer';
 const JoinMeetScreen = (props: any) => {
   const appTheme = useTheme();
   const styles = useStyleSheet(themedStyles);
+  const existingMeetId = props.route.params.meetId;
+  const existingPassword = props.route.params.password;
 
   const firebaseUser = useSelector(
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
@@ -42,7 +44,12 @@ const JoinMeetScreen = (props: any) => {
     onPasswordIconPress,
     handleSubmit,
     isLoading,
-  } = useJoinMeet(props.navigation, firebaseUser.agoraId);
+  } = useJoinMeet(
+    props.navigation,
+    firebaseUser.agoraId,
+    existingMeetId,
+    existingPassword,
+  );
 
   const EyeIcon = (props: any) => (
     <TouchableOpacity onPress={onPasswordIconPress}>

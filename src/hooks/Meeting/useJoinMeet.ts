@@ -2,23 +2,24 @@ import {useEffect, useState} from 'react';
 import {generalError} from '../../components/Alerts/GeneralError';
 import {TITLE} from '../../constants/Alerts/GeneralError';
 import {VIDEO_STREAM} from '../../constants/Navigation/Navigation';
-import {
-  JoinMeetForm,
-  VideoStreamParams,
-} from '../../models/Meeting/CreateMeeting/interface';
+import {JoinMeetForm} from '../../models/Meeting/CreateMeeting/interface';
 import {onJoinMeet} from '../../utils/Meeting/Methods/joinMeeting';
 
-const initialFormState: JoinMeetForm = {
-  meetId: '',
-  password: '',
-};
-
-const useJoinMeet = (navigation: any, agoraId: number) => {
+const useJoinMeet = (
+  navigation: any,
+  agoraId: number,
+  existingMeetId?: string,
+  existingPassword?: string,
+) => {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [isLoading, toggleModal] = useState<boolean>(false);
-  const [formState, setFormState] = useState<JoinMeetForm>(initialFormState);
 
   const onPasswordIconPress = () => setPasswordVisible(!passwordVisible);
+
+  const initialFormState: JoinMeetForm = {
+    meetId: existingMeetId ? existingMeetId : '',
+    password: existingPassword ? existingPassword : '',
+  };
 
   //Here meetId = channelName
   const handleSubmit = async (meetDetails: JoinMeetForm) => {

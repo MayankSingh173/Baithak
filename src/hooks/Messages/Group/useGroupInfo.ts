@@ -10,15 +10,13 @@ const useGroupInfo = (group: Group, uid: string, navigation: any) => {
   const onLeaveGroup = async () => {
     try {
       setLoading(true);
-      const newMemberDetails = group.membersDetails.filter(
-        (m) => m.uid !== uid,
-      );
+
       const newMemberID = group.membersID.filter((m) => m !== uid);
 
       await firestore()
         .collection('groups')
         .doc(group.groupId)
-        .update({membersID: newMemberID, membersDetails: newMemberDetails});
+        .update({membersID: newMemberID});
 
       navigation.navigate(CHAT_HOME_SCREEN);
     } catch (error) {

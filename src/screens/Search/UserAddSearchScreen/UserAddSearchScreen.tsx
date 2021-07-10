@@ -28,13 +28,22 @@ const UserAddSearchScreen = (props: any) => {
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
   );
 
+  const getSelectedMembers = props.route.params.getSelectedMembers;
+  const toScreen = props.route.params.toScreen;
+
   const appTheme = useTheme();
 
   const {filteredUsers, loading, query, handleQuery} = useGetUsers(
     firebaseUser.uid,
   );
+
   const {selectedUsers, onSelectUser, onPressNext, newGroupForming} =
-    useGetSelecteMembers(firebaseUser, props.navigation);
+    useGetSelecteMembers(
+      firebaseUser,
+      props.navigation,
+      toScreen,
+      getSelectedMembers,
+    );
 
   return (
     <Layout style={styles.main}>

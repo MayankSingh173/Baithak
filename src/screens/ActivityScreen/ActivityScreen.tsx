@@ -49,6 +49,7 @@ const ActivityScreen = (props: any) => {
             existingTask: task,
           })
         }
+        navigation={props.navigation}
       />
     );
   };

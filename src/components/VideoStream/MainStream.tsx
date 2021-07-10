@@ -8,16 +8,25 @@ import {
   getRemoteAudioAndVideoStates,
 } from '../../utils/Meeting/Methods/getAudioAndVideoStates';
 import {getRemoteStreamDimensions} from '../../utils/Screen/screen';
-import {Icon} from '@ui-kitten/components';
+import {Icon, Layout} from '@ui-kitten/components';
 
 interface props {
   channelName: string;
   peerId: number[];
   uid: string;
   baithak?: Baithak;
+  incomingVideos: boolean;
+  incomingAudios: boolean;
 }
 
-const MainStream = ({peerId, channelName, baithak, uid}: props) => {
+const MainStream = ({
+  peerId,
+  channelName,
+  baithak,
+  uid,
+  incomingAudios,
+  incomingVideos,
+}: props) => {
   const {height, width} = getRemoteStreamDimensions(peerId.length);
 
   const localMediaStates = getLocalAudioAndVideoStates(baithak, uid);
@@ -36,7 +45,7 @@ const MainStream = ({peerId, channelName, baithak, uid}: props) => {
 
   if (peerId.length === 0) {
     return (
-      <View style={styles.main}>
+      <Layout level="1" style={styles.main}>
         {localMediaStates?.video ? (
           <RtcLocalView.SurfaceView
             channelId={channelName}
@@ -52,13 +61,13 @@ const MainStream = ({peerId, channelName, baithak, uid}: props) => {
           </View>
         )}
         {rendorMicBar(localMediaStates?.audio)}
-      </View>
+      </Layout>
     );
   }
 
   return (
     <View style={styles.main}>
-      <View style={styles.localView}>
+      <Layout level="1" style={styles.localView}>
         {localMediaStates?.video ? (
           <RtcLocalView.SurfaceView
             channelId={channelName}
@@ -75,7 +84,7 @@ const MainStream = ({peerId, channelName, baithak, uid}: props) => {
           </View>
         )}
         {rendorMicBar(localMediaStates?.audio)}
-      </View>
+      </Layout>
       {peerId.length <= 2 ? (
         <FlatList
           key={'#'}
@@ -92,7 +101,7 @@ const MainStream = ({peerId, channelName, baithak, uid}: props) => {
                   height: height,
                   width: width,
                 }}>
-                {remoteVideoStates?.video ? (
+                {remoteVideoStates?.video && !incomingVideos ? (
                   <RtcRemoteView.SurfaceView
                     style={{flex: 1}}
                     uid={item}
@@ -108,7 +117,7 @@ const MainStream = ({peerId, channelName, baithak, uid}: props) => {
                     />
                   </View>
                 )}
-                {rendorMicBar(remoteVideoStates?.audio)}
+                {rendorMicBar(remoteVideoStates?.audio && !incomingAudios)}
               </View>
             );
           }}
@@ -130,7 +139,7 @@ const MainStream = ({peerId, channelName, baithak, uid}: props) => {
                   height: height,
                   width: width,
                 }}>
-                {remoteVideoStates?.video ? (
+                {remoteVideoStates?.video && !incomingVideos ? (
                   <RtcRemoteView.SurfaceView
                     style={{flex: 1}}
                     uid={item}
@@ -146,7 +155,7 @@ const MainStream = ({peerId, channelName, baithak, uid}: props) => {
                     />
                   </View>
                 )}
-                {rendorMicBar(remoteVideoStates?.audio)}
+                {rendorMicBar(remoteVideoStates?.audio && !incomingAudios)}
               </View>
             );
           }}

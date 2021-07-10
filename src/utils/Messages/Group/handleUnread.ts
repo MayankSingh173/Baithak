@@ -23,13 +23,14 @@ export const handleUnread = async (
       const memberData = await getRemoteUser(member.uid);
       if (
         memberData &&
+        memberData.uid !== firebaseUser.uid &&
         (!memberData.activeOnGroup ||
           memberData.activeOnGroup !== group.groupId)
       ) {
         member.unread++;
 
         //check is the user has turned off his notification or not
-        if (!memberData.notifications) {
+        if (memberData.notifications && memberData.notifications) {
           tokensObject.push({
             uid: member.uid,
             tokens: memberData.tokens,

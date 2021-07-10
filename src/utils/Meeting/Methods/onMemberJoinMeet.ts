@@ -1,4 +1,7 @@
-import {VideoStreamParams} from '../../../models/Meeting/CreateMeeting/interface';
+import {
+  Baithak,
+  VideoStreamParams,
+} from '../../../models/Meeting/CreateMeeting/interface';
 import {UserInterface} from '../../../models/User/User';
 import firestore from '@react-native-firebase/firestore';
 import {writeAsync} from '../../Firestore/write';
@@ -58,21 +61,14 @@ export const onMemberJoinMeet = async (
 };
 
 //On Member left meet we need to update our member list of baithak in db
-export const onMemberLeftMeet = async (
-  meetConfig: VideoStreamParams,
-  firebaseUser: UserInterface,
-) => {
+export const onMemberLeftMeet = async (myUid: string, baithak: Baithak) => {
   try {
+    const updatedMemberList = baithak.members.filter((m) => m.uid !== myUid);
     await firestore()
       .collection('Baithak')
-      .doc(`${meetConfig.meetId}${meetConfig.password}`)
+      .doc(`${baithak.meetId}${baithak.password}`)
       .update({
-        members: firestore.FieldValue.arrayRemove({
-          uid: firebaseUser.uid,
-          name: firebaseUser.name,
-          agoraId: meetConfig.agoraId,
-          imageUrl: firebaseUser.photoURL,
-        }),
+        members: updatedMemberList,
       });
   } catch (err) {
     console.log('Error in remove the member', err);

@@ -27,6 +27,8 @@ export const sendMessageNotification = async (
       }
     }
 
+    if (tokens.length === 0) return;
+
     const payload: NotificationPayload = {
       title: title ? title : 'New Message!!',
       body: body,

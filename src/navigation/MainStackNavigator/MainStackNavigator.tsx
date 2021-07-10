@@ -10,6 +10,7 @@ import {
   JOIN_MEET_SCREEN,
   MAIN_TAB,
   REMOTE_USER_PROFILE_SCREEN,
+  SCHEDULE_MEET_SCREEN,
   USER_ADD_SEARCH_SCREEN,
   USER_SEARCH_SCREEN,
   VIDEO_STREAM,
@@ -25,6 +26,7 @@ import GroupChatsScreen from '../../screens/Chats/GroupChatsScreen/GroupChatsScr
 import useGetMessagePerm from '../../hooks/Notifications/useGetMessagePerm';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import AddTaskScreen from '../../screens/AddTaskScreen/AddTaskScreen';
+import ScheduleMeetScreen from '../../screens/Meeting/ScheduleMeetScreen/ScheduleMeetScreen';
 
 const Stack = createStackNavigator();
 
@@ -51,6 +53,10 @@ const MainStackNavigator = () => {
       <Stack.Screen name={CREATE_GROUP_SCREEN} component={CreateGroupScreen} />
       <Stack.Screen name={GROUP_CHAT_SCREEN} component={GroupChatsScreen} />
       <Stack.Screen name={ADD_TASK_SCREEN} component={AddTaskScreen} />
+      <Stack.Screen
+        name={SCHEDULE_MEET_SCREEN}
+        component={ScheduleMeetScreen}
+      />
     </Stack.Navigator>
   );
 };

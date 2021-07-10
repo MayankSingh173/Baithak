@@ -7,7 +7,12 @@ import {
 import {UserInterface} from '../../models/User/User';
 import {createDM} from '../../utils/Messages/Group/onCreateGroup';
 
-const useGetSelecteMembers = (firebaseUser: UserInterface, navigation: any) => {
+const useGetSelecteMembers = (
+  firebaseUser: UserInterface,
+  navigation: any,
+  toScreen: string,
+  getSelectedMembers?: (member: UserInterface[] | undefined) => void,
+) => {
   const [newGroupForming, setNewGroupForming] = useState<boolean>(false);
   const [selectedUsers, setSelectedUsers] = useState<UserInterface[]>([
     firebaseUser,
@@ -17,18 +22,23 @@ const useGetSelecteMembers = (firebaseUser: UserInterface, navigation: any) => {
     try {
       setNewGroupForming(true);
 
-      //Is selctedUsers length > 1 create a group and ask for group name, description and group photo.
-      //else create a dm
-      if (selectedUsers.length > 2) {
-        navigation.navigate(CREATE_GROUP_SCREEN, {
-          selectedUsers: selectedUsers,
-        });
+      if (toScreen === CREATE_GROUP_SCREEN) {
+        //Is selctedUsers length > 1 create a group and ask for group name, description and group photo.
+        //else create a dm
+        if (selectedUsers.length > 2) {
+          navigation.navigate(CREATE_GROUP_SCREEN, {
+            selectedUsers: selectedUsers,
+          });
+        } else {
+          //Function to create a dm and move to chat screen
+          const newDM = await createDM(selectedUsers, firebaseUser);
+          navigation.navigate(GROUP_CHAT_SCREEN, {
+            group: newDM,
+          });
+        }
       } else {
-        //Function to create a dm and move to chat screen
-        const newDM = await createDM(selectedUsers, firebaseUser);
-        navigation.navigate(GROUP_CHAT_SCREEN, {
-          group: newDM,
-        });
+        getSelectedMembers && getSelectedMembers(selectedUsers);
+        navigation.goBack();
       }
       setNewGroupForming(false);
     } catch (error) {
