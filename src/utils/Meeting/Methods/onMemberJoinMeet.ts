@@ -20,6 +20,8 @@ export const onMemberJoinMeet = async (
           agoraId: meetConfig.agoraId,
           imageUrl: firebaseUser.photoURL,
           unread: 0,
+          audio: true,
+          video: true,
         }),
       },
       true,

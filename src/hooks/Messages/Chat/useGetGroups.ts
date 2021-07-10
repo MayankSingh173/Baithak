@@ -53,7 +53,7 @@ const useGetGroups = (uid: string) => {
             .where('membersID', 'array-contains', uid)
             .orderBy('createdAt', 'desc')
             .startAfter(lastDoc)
-            .limit(3)
+            .limit(5)
             .onSnapshot((querySnapshot) => {
               if (querySnapshot) {
                 const localGroups: Group[] = [];

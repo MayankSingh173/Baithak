@@ -23,6 +23,8 @@ export interface MembersDetails {
   agoraId: number;
   imageUrl?: string;
   unread: number;
+  video?: boolean;
+  audio?: boolean;
 }
 export interface VideoStreamParams {
   token: string;

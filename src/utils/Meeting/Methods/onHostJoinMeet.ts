@@ -77,6 +77,8 @@ export const createBaithak = (
         agoraId: meetConfig.agoraId,
         imageUrl: firebaseUser.photoURL,
         unread: 0,
+        video: true,
+        audio: true,
       },
     ],
   };

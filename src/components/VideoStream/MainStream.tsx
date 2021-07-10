@@ -1,36 +1,80 @@
 import React from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
 import {RtcLocalView, RtcRemoteView, VideoRenderMode} from 'react-native-agora';
-import {screenHeight, screenWidth} from '../../constants/screen/screenInfo';
+import FastImage from 'react-native-fast-image';
+import {Baithak} from '../../models/Meeting/CreateMeeting/interface';
+import {
+  getLocalAudioAndVideoStates,
+  getRemoteAudioAndVideoStates,
+} from '../../utils/Meeting/Methods/getAudioAndVideoStates';
 import {getRemoteStreamDimensions} from '../../utils/Screen/screen';
+import {Icon} from '@ui-kitten/components';
 
 interface props {
   channelName: string;
   peerId: number[];
+  uid: string;
+  baithak?: Baithak;
 }
 
-const MainStream = ({peerId, channelName}: props) => {
+const MainStream = ({peerId, channelName, baithak, uid}: props) => {
   const {height, width} = getRemoteStreamDimensions(peerId.length);
+
+  const localMediaStates = getLocalAudioAndVideoStates(baithak, uid);
+
+  const rendorMicBar = (audio?: boolean) => {
+    if (audio) return null;
+    return (
+      <View style={styles.micBar}>
+        <View
+          style={[styles.iconView, {backgroundColor: 'rgba(0, 0, 0, 0.2)'}]}>
+          <Icon name={'mic-off-outline'} style={[styles.icon]} fill="red" />
+        </View>
+      </View>
+    );
+  };
 
   if (peerId.length === 0) {
     return (
-      <RtcLocalView.SurfaceView
-        channelId={channelName}
-        style={styles.main}
-        renderMode={VideoRenderMode.Hidden}
-      />
+      <View style={styles.main}>
+        {localMediaStates?.video ? (
+          <RtcLocalView.SurfaceView
+            channelId={channelName}
+            style={styles.main}
+            renderMode={VideoRenderMode.Hidden}
+          />
+        ) : (
+          <View style={styles.imageView}>
+            <FastImage
+              source={{uri: localMediaStates?.imageUrl}}
+              style={styles.image}
+            />
+          </View>
+        )}
+        {rendorMicBar(localMediaStates?.audio)}
+      </View>
     );
   }
 
   return (
     <View style={styles.main}>
       <View style={styles.localView}>
-        <RtcLocalView.SurfaceView
-          channelId={channelName}
-          style={{flex: 1, borderRadius: 30}}
-          renderMode={VideoRenderMode.Hidden}
-          zOrderMediaOverlay={true}
-        />
+        {localMediaStates?.video ? (
+          <RtcLocalView.SurfaceView
+            channelId={channelName}
+            style={{flex: 1, borderRadius: 30}}
+            renderMode={VideoRenderMode.Hidden}
+            zOrderMediaOverlay={true}
+          />
+        ) : (
+          <View style={styles.imageView}>
+            <FastImage
+              source={{uri: localMediaStates?.imageUrl}}
+              style={{height: 50, width: 50, borderRadius: 50}}
+            />
+          </View>
+        )}
+        {rendorMicBar(localMediaStates?.audio)}
       </View>
       {peerId.length <= 2 ? (
         <FlatList
@@ -38,19 +82,33 @@ const MainStream = ({peerId, channelName}: props) => {
           data={peerId}
           keyExtractor={(item) => '#' + item}
           renderItem={({index, item}) => {
+            const remoteVideoStates = getRemoteAudioAndVideoStates(
+              baithak,
+              item,
+            );
             return (
               <View
                 style={{
                   height: height,
                   width: width,
                 }}>
-                <RtcRemoteView.SurfaceView
-                  style={{flex: 1}}
-                  uid={item}
-                  channelId={channelName}
-                  renderMode={VideoRenderMode.Hidden}
-                  key={index}
-                />
+                {remoteVideoStates?.video ? (
+                  <RtcRemoteView.SurfaceView
+                    style={{flex: 1}}
+                    uid={item}
+                    channelId={channelName}
+                    renderMode={VideoRenderMode.Hidden}
+                    key={index}
+                  />
+                ) : (
+                  <View style={styles.imageView}>
+                    <FastImage
+                      source={{uri: remoteVideoStates?.imageUrl}}
+                      style={styles.image}
+                    />
+                  </View>
+                )}
+                {rendorMicBar(remoteVideoStates?.audio)}
               </View>
             );
           }}
@@ -62,14 +120,34 @@ const MainStream = ({peerId, channelName}: props) => {
           key={'_'}
           keyExtractor={(item) => '_' + item}
           renderItem={({index, item}) => {
+            const remoteVideoStates = getRemoteAudioAndVideoStates(
+              baithak,
+              item,
+            );
             return (
-              <RtcRemoteView.SurfaceView
-                style={{height: height, width: width}}
-                uid={item}
-                channelId={channelName}
-                renderMode={VideoRenderMode.Hidden}
-                key={index}
-              />
+              <View
+                style={{
+                  height: height,
+                  width: width,
+                }}>
+                {remoteVideoStates?.video ? (
+                  <RtcRemoteView.SurfaceView
+                    style={{flex: 1}}
+                    uid={item}
+                    channelId={channelName}
+                    renderMode={VideoRenderMode.Hidden}
+                    key={index}
+                  />
+                ) : (
+                  <View style={styles.imageView}>
+                    <FastImage
+                      source={{uri: remoteVideoStates?.imageUrl}}
+                      style={styles.image}
+                    />
+                  </View>
+                )}
+                {rendorMicBar(remoteVideoStates?.audio)}
+              </View>
             );
           }}
           numColumns={2}
@@ -93,6 +171,32 @@ const styles = StyleSheet.create({
     zIndex: 5,
     borderWidth: 2,
     borderColor: 'white',
+  },
+  imageView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    height: 120,
+    width: 120,
+    borderRadius: 100,
+  },
+  iconView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 30,
+    padding: 5,
+  },
+  icon: {
+    width: 15,
+    height: 15,
+  },
+  micBar: {
+    width: '100%',
+    padding: 10,
+    alignItems: 'flex-end',
+    marginTop: -50,
   },
 });
 

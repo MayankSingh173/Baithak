@@ -66,9 +66,13 @@ const ProfileScreen = (props: any) => {
   const onMessagePress = async () => {
     try {
       setGoingToMessage(true);
-      const selectedMemeber = [firebaseUser, user];
-      const new_group = await createDM(selectedMemeber, firebaseUser);
-      props.navigation.navigate(GROUP_CHAT_SCREEN, {group: new_group});
+      if (user) {
+        const selectedMemeber = [firebaseUser, user];
+        if (selectedMemeber) {
+          const new_group = await createDM(selectedMemeber, firebaseUser);
+          props.navigation.navigate(GROUP_CHAT_SCREEN, {group: new_group});
+        }
+      }
     } catch (error) {
       console.log('Error in Pressing Message Button', error);
       setGoingToMessage(false);
@@ -81,7 +85,7 @@ const ProfileScreen = (props: any) => {
     }
   };
 
-  return loading ? (
+  if (!user || loading) {
     <Layout
       style={[styles.main, {justifyContent: 'center', alignItems: 'center'}]}
       level="1">
@@ -89,8 +93,10 @@ const ProfileScreen = (props: any) => {
         size="large"
         color={appTheme['color-primary-default']}
       />
-    </Layout>
-  ) : (
+    </Layout>;
+  }
+
+  return (
     <Layout style={styles.main} level="1">
       <SelectImage
         modalVisible={selectImage}
@@ -120,7 +126,7 @@ const ProfileScreen = (props: any) => {
         <View style={[styles.imgView, {marginTop: !myProfile ? '10%' : 10}]}>
           <FastImage
             source={{
-              uri: user.photoURL ? user.photoURL : DEFAULT_AVATAR,
+              uri: user?.photoURL ? user.photoURL : DEFAULT_AVATAR,
             }}
             style={[
               styles.image,
@@ -147,31 +153,31 @@ const ProfileScreen = (props: any) => {
                   color: appTheme['color-primary-default'],
                   fontFamily: RALEWAY_EXTRA_BOLD,
                 }}>
-                {user.name ? user.name : DEFAULT_USER_NAME}
+                {user?.name ? user.name : DEFAULT_USER_NAME}
               </Text>
             </Text>
             <View style={{width: '100%', alignItems: 'center'}}>
               <Text style={styles.tagLine}>
-                {user.tagLine ? user.tagLine : DEFAULT_USER_TAGLINE}
+                {user?.tagLine ? user.tagLine : DEFAULT_USER_TAGLINE}
               </Text>
             </View>
           </View>
         </View>
-        <SocialProfile firebaseUser={user} />
+        {user && <SocialProfile firebaseUser={user} />}
         <FullDivider />
         <View style={styles.bioView}>
           <Text category="h5" style={styles.bioHeading}>
             Bio
           </Text>
-          <Text style={styles.bio}>{user.bio ? user.bio : DEFAULT_BIO}</Text>
+          <Text style={styles.bio}>{user?.bio ? user.bio : DEFAULT_BIO}</Text>
           <FullDivider style={{marginVertical: 15}} />
           <Text category="h5" style={styles.bioHeading}>
             Email
           </Text>
           <Text
             style={[styles.bio, {color: appTheme['color-info-400']}]}
-            onPress={() => Linking.openURL(`mailto:${user.email}`)}>
-            {user.email}
+            onPress={() => Linking.openURL(`mailto:${user?.email}`)}>
+            {user?.email}
           </Text>
           {myProfile && <FullDivider style={{marginVertical: 15}} />}
           {myProfile && (

@@ -1,6 +1,14 @@
 import {Text, useStyleSheet, Layout} from '@ui-kitten/components';
 import React from 'react';
-import {StyleSheet, Dimensions, View, Alert} from 'react-native';
+import {
+  StyleSheet,
+  Dimensions,
+  View,
+  Alert,
+  GestureResponderEvent,
+  Pressable,
+  Animated,
+} from 'react-native';
 import useStartMeeting from '../../../hooks/Meeting/useStartMeeting';
 import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
 import {VideoStreamParams} from '../../../models/Meeting/CreateMeeting/interface';
@@ -15,6 +23,8 @@ import VideoMessage from '../../../components/Modals/VideoMessage/VideoMessage';
 import MeetInfo from '../../../components/Modals/MeetInfo/MeetInfo';
 import MeetParticpants from '../../../components/Modals/MeetParticipants/MeetParticipants';
 import {getRefinedText} from '../../../utils/Miscellaneous/utils';
+import {useState} from 'react';
+import {useEffect} from 'react';
 
 const dimensions = {
   width: Dimensions.get('window').width,
@@ -27,6 +37,29 @@ const VideoStream = (props: any) => {
   const firebaseUser = useSelector(
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
   );
+
+  const [HeadFootHeight, toggleHeadFootHeight] = useState({
+    head: new Animated.Value(0),
+    foot: new Animated.Value(0),
+  });
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.delay(10000),
+      Animated.parallel([
+        Animated.spring(HeadFootHeight.head, {
+          toValue: -200,
+          useNativeDriver: true,
+          tension: -20,
+        }),
+        Animated.spring(HeadFootHeight.foot, {
+          toValue: 200,
+          useNativeDriver: true,
+          tension: -20,
+        }),
+      ]),
+    ]).start(() => {});
+  }, [HeadFootHeight.head, HeadFootHeight.foot]);
 
   const {
     joinSucceed,
@@ -67,6 +100,13 @@ const VideoStream = (props: any) => {
 
   const styles = useStyleSheet(themedStyles);
 
+  const onPressMainStreamView = () => {
+    toggleHeadFootHeight({
+      head: new Animated.Value(0),
+      foot: new Animated.Value(0),
+    });
+  };
+
   if (!joinSucceed) {
     return <ModalActivityIndicator modalVisible={modalVisible} />;
   }
@@ -102,7 +142,18 @@ const VideoStream = (props: any) => {
         onBackDropPress={onPressParticipants}
         participants={baithak?.members}
       />
-      <View style={[styles.header, {backgroundColor: 'rgba(0, 0, 0, 0.4)'}]}>
+      <Animated.View
+        style={[
+          styles.header,
+          {
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+            transform: [
+              {
+                translateY: HeadFootHeight.head,
+              },
+            ],
+          },
+        ]}>
         <BackHeader
           leftIcon="arrow-back-outline"
           onLeftPress={confirmEnd}
@@ -116,11 +167,26 @@ const VideoStream = (props: any) => {
           rightLeftIconColor="white"
           onPressRightLeftIcon={onCamerFlashOn}
         />
-      </View>
-      <View style={styles.mainStream}>
-        <MainStream channelName={meetConfig.channelName} peerId={peerIds} />
-      </View>
-      <View style={styles.footer}>
+      </Animated.View>
+      <Pressable onPress={onPressMainStreamView} style={styles.mainStream}>
+        <MainStream
+          channelName={meetConfig.channelName}
+          peerId={peerIds}
+          uid={firebaseUser.uid}
+          baithak={baithak}
+        />
+      </Pressable>
+      <Animated.View
+        style={[
+          styles.footer,
+          {
+            transform: [
+              {
+                translateY: HeadFootHeight.foot,
+              },
+            ],
+          },
+        ]}>
         <VideoFooter
           onClickCamera={onClickCamera}
           endCall={confirmEnd}
@@ -130,7 +196,7 @@ const VideoStream = (props: any) => {
           muteAudio={muteAudio}
           muteVideo={muteVideo}
         />
-      </View>
+      </Animated.View>
     </Layout>
   );
 };
@@ -140,7 +206,6 @@ const themedStyles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    // marin: 10,
     paddingHorizontal: 15,
     paddingBottom: 15,
     paddingRight: 20,

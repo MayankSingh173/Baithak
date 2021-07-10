@@ -34,6 +34,7 @@ const ActivityScreen = (props: any) => {
 
   const {fetched, caledarItems, loadItems, onDayChange} = useFetchUserTask(
     firebaseUser.uid,
+    theme,
   );
 
   const renderItem = (item: string, firstDayInDay: boolean) => {

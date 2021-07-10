@@ -6,7 +6,7 @@ import {DateObject} from 'react-native-calendars';
 import {debounce} from 'lodash';
 import moment from 'moment';
 
-const useFetchUserTask = (uid: string) => {
+const useFetchUserTask = (uid: string, theme: 'dark' | 'light') => {
   const newDate = new Date();
   const [fetched, setFetched] = useState<boolean>(true);
   const [item, setItems] = useState<any>({});
@@ -44,6 +44,7 @@ const useFetchUserTask = (uid: string) => {
   };
   useEffect(() => {
     try {
+      setFetched(true);
       const subscriber = firestore()
         .collection('users')
         .doc(uid)
@@ -76,7 +77,7 @@ const useFetchUserTask = (uid: string) => {
       setFetched(false);
       console.log('Error in fetching users task', error);
     }
-  }, [uid]);
+  }, [uid, theme]);
 
   const onDayChange = useCallback(
     debounce((date: DateObject | undefined) => {

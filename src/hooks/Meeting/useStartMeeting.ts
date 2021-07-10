@@ -19,6 +19,10 @@ import {getShareMessage} from '../../utils/Meeting/Methods/getShareMessage';
 import Toast from 'react-native-toast-message';
 import Sound from 'react-native-sound';
 import {getRemoteUserByAgoraId} from '../../utils/User/Methods/getRemoteUser';
+import {
+  updateAudio,
+  updateVideo,
+} from '../../utils/Meeting/Methods/updateVideoAndMic';
 
 interface props {
   appId: string;
@@ -263,6 +267,7 @@ const useStartMeeting = (
     try {
       setMuteAudio(!muteAudio);
       await engine.current?.enableLocalAudio(muteAudio);
+      await updateAudio(baithak, firebaseUser.uid, muteAudio);
     } catch (err) {
       console.log('Error in toggle mic', err);
     }
@@ -280,8 +285,13 @@ const useStartMeeting = (
 
   //Camera open and close
   const onClickCamera = async () => {
-    setMuteVideo(!muteVideo);
-    await engine.current?.enableLocalVideo(muteVideo);
+    try {
+      setMuteVideo(!muteVideo);
+      await engine.current?.enableLocalVideo(muteVideo);
+      await updateVideo(baithak, firebaseUser.uid, muteVideo);
+    } catch (error) {
+      console.log('Error in toggle locak video', error);
+    }
   };
 
   //Display alert for ending

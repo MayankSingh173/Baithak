@@ -19,7 +19,7 @@ import {showLogOutNotifi} from '../../utils/User/Methods/showWelcomeNotifi';
 
 const useGetUserForProfile = (uid: string) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<UserInterface>(defaultUser);
+  const [user, setUser] = useState<UserInterface>();
   const [settingOpen, toggleSetting] = useState<boolean>(false);
   const [goingToMessage, setGoingToMessage] = useState<boolean>(false);
   const [selectImage, toggleSelectImage] = useState<boolean>(false);
@@ -27,7 +27,6 @@ const useGetUserForProfile = (uid: string) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        setLoading(true);
         const subscriber = firestore()
           .collection('users')
           .doc(uid)
@@ -37,7 +36,6 @@ const useGetUserForProfile = (uid: string) => {
             }
           });
         setLoading(false);
-
         return () => subscriber();
       } catch (error) {
         console.log('Eror in profile fecthing', error);
@@ -59,7 +57,7 @@ const useGetUserForProfile = (uid: string) => {
   const signOut = async () => {
     try {
       await auth().signOut();
-      await showLogOutNotifi(user.tokens, user.name);
+      await showLogOutNotifi(user?.tokens, user?.name);
       storeDispatch(updateFirebaseUserStatus(FAIL));
     } catch (err) {
       Toast.show({
