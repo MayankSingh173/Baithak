@@ -138,7 +138,7 @@ const useGetMeetMssg = (Baithak: Baithak, firebaseUser: UserInterface) => {
                 sound.current?.play();
 
                 Toast.show({
-                  type: 'success',
+                  type: 'info',
                   text1: lastMessgageUser.name
                     ? lastMessgageUser.name
                     : 'Someone',
@@ -155,7 +155,7 @@ const useGetMeetMssg = (Baithak: Baithak, firebaseUser: UserInterface) => {
     } catch (error) {
       console.log('Error in listinening to doc changes', error);
     }
-  }, [Baithak]);
+  }, [Baithak.groupId, firebaseUser.uid]);
 
   const handleSend = async (mssgs: IMessage[]) => {
     try {
