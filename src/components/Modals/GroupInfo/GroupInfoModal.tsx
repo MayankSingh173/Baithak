@@ -6,6 +6,7 @@ import {
   useStyleSheet,
   useTheme,
   Button,
+  Icon,
 } from '@ui-kitten/components';
 import Modal from 'react-native-modal';
 import BackHeader from '../../Headers/BackHeader/BackHeader';
@@ -28,6 +29,7 @@ import {DEFAULT_USER_NAME} from '../../../constants/User/User';
 import useGroupInfo from '../../../hooks/Messages/Group/useGroupInfo';
 import ModalActivityIndicator from '../ModalActivityIndicator/ModalActivityIndicator';
 import {REMOTE_USER_PROFILE_SCREEN} from '../../../constants/Navigation/Navigation';
+import SelectImage from '../SelectImage/SelectImage';
 
 interface props {
   group: Group;
@@ -49,11 +51,15 @@ const GroupInfoModal = (props: props) => {
 
   const appTheme = useTheme();
 
-  const {isLoading, confirmEnd} = useGroupInfo(
-    props.group,
-    firebaseUser.uid,
-    props.navigation,
-  );
+  const {
+    isLoading,
+    confirmEnd,
+    selectImage,
+    onCaptureImage,
+    onCloseSelectImage,
+    onSelectFromLibrary,
+    imageUrl,
+  } = useGroupInfo(props.group, firebaseUser.uid, props.navigation);
 
   const styles = useStyleSheet(themedStyles);
 
@@ -70,6 +76,12 @@ const GroupInfoModal = (props: props) => {
       onBackButtonPress={props.onBackDropPress}>
       <Layout style={styles.main} level="1">
         <ModalActivityIndicator modalVisible={isLoading} />
+        <SelectImage
+          modalVisible={selectImage}
+          onBackDropPress={onCloseSelectImage}
+          onCaptureImage={onCaptureImage}
+          onSelectFromGallery={onSelectFromLibrary}
+        />
         <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
             <BackHeader
@@ -89,11 +101,18 @@ const GroupInfoModal = (props: props) => {
                 borderWidth: 2,
               }}
               source={{
-                uri: props.group.groupImage
-                  ? props.group.groupImage
-                  : DEFAULT_GROUP_IMAGE,
+                uri: imageUrl,
               }}
             />
+            <TouchableOpacity
+              onPress={onCloseSelectImage}
+              style={[styles.iconView, {backgroundColor: 'white'}]}>
+              <Icon
+                name="camera-outline"
+                style={styles.editIcon}
+                fill={appTheme['color-primary-default']}
+              />
+            </TouchableOpacity>
           </View>
           <View style={styles.content}>
             <View style={styles.nameView}>
@@ -225,6 +244,16 @@ const themedStyles = StyleSheet.create({
   },
   button: {
     marginTop: 10,
+  },
+  iconView: {
+    padding: 3,
+    borderRadius: 30,
+    marginLeft: 60,
+    marginTop: -20,
+  },
+  editIcon: {
+    height: 25,
+    width: 25,
   },
 });
 
