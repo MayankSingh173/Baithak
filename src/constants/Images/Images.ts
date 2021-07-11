@@ -23,3 +23,12 @@ export const INSTA_LOGO =
 
 export const BAITHAK_ICON =
   'https://firebasestorage.googleapis.com/v0/b/baithak-4a1fe.appspot.com/o/ic_launcher.png?alt=media&token=e86442a0-7691-41cb-97ec-66bc8e2f88fd';
+
+export const ONBOARDING_MEET =
+  'https://firebasestorage.googleapis.com/v0/b/baithak-4a1fe.appspot.com/o/meeting.jpg?alt=media&token=6e29d5e6-aacc-4c24-b0bf-49ecd396e29e';
+
+export const ONBOARDING_CHAT =
+  'https://firebasestorage.googleapis.com/v0/b/baithak-4a1fe.appspot.com/o/chatting.jpg?alt=media&token=a3bc4d43-0fd6-4fdd-95af-ebaa2dd417b3';
+
+export const ONBOARDING_TASK =
+  'https://firebasestorage.googleapis.com/v0/b/baithak-4a1fe.appspot.com/o/task.jpg?alt=media&token=bb171303-6bc4-460f-8879-a3804a114305';
