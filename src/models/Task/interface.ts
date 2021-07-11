@@ -5,7 +5,7 @@ export interface Task {
   title: string;
   description?: string;
   createdOn: number;
-  date: string;
+  date: number;
   startTime: number;
   endTime: number;
   status: 'ToDo' | 'Completed' | 'OnGoing';

@@ -20,14 +20,12 @@ export const createBaithakForSchedule = async (
   name: string,
   firebaseUser: UserInterface,
   task: Task,
+  joinOn: number,
   description?: string,
 ) => {
   const createdAt: number = +new Date();
   const {meetId, password} = generateMeetIdAndPassword();
   const groupId = `${meetId}${password}`;
-  const joinOn = +new Date(
-    task.date + ' ' + moment(task.startTime).format('LTS'),
-  );
 
   //create a new baithak
   const baithak = await formScheduleBaithak(
@@ -60,6 +58,7 @@ export const createBaithakForSchedule = async (
     createdAt,
     meetId,
     password,
+    joinOn,
     description,
   );
 
@@ -110,6 +109,7 @@ const createScheduleTask = async (
   createdAt: number,
   meetId: string,
   password: string,
+  joinOn: number,
   description?: string,
 ) => {
   try {
@@ -141,6 +141,7 @@ const createScheduleTask = async (
           createdOn: createdAt,
         },
         member.uid,
+        joinOn,
       );
     }
   } catch (error) {

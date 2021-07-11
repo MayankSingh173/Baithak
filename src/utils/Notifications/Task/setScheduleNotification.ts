@@ -3,11 +3,13 @@ import {UserInterface} from '../../../models/User/User';
 import PushNotification from 'react-native-push-notification';
 import moment from 'moment';
 
-export const setScheduleNotification = async (task: Task, uid: string) => {
+export const setScheduleNotification = async (
+  task: Task,
+  uid: string,
+  joinOn: number,
+) => {
   try {
-    const reminderTime =
-      +new Date(task.date + ' ' + moment(task.startTime).format('LTS')) -
-      15 * 60 * 1000;
+    const reminderTime = joinOn - 15 * 60 * 1000;
 
     PushNotification.localNotificationSchedule({
       title: 'Reminder🔔',

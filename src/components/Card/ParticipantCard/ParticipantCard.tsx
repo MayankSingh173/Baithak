@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     borderRadius: 10,
+    marginVertical: 7,
   },
   imgView: {
     justifyContent: 'center',

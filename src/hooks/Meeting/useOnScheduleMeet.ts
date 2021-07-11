@@ -27,7 +27,7 @@ const useOnScheduleMeet = (
     taskId: '',
     title: '',
     description: '',
-    date: timeToString(new Date()),
+    date: +new Date(),
     startTime: +new Date(),
     endTime: +new Date() + 60 * 60 * 1000,
     status: 'ToDo',
@@ -55,6 +55,15 @@ const useOnScheduleMeet = (
         description: details.description,
       });
 
+      const joinOn = +new Date(
+        new Date(task.date).getFullYear(),
+        new Date(task.date).getMonth(),
+        new Date(task.date).getDate(),
+        new Date(task.startTime).getHours(),
+        new Date(task.startTime).getMinutes(),
+        new Date(task.startTime).getSeconds(),
+      );
+
       await createBaithakForSchedule(
         selectedMembers,
         details.name,
@@ -64,6 +73,7 @@ const useOnScheduleMeet = (
           title: details.name,
           description: details.description,
         },
+        joinOn,
         details.description,
       );
 
@@ -72,9 +82,9 @@ const useOnScheduleMeet = (
       Toast.show({
         type: 'success',
         text1: 'Baithak Schedule',
-        text2: `New Baithak has been schedule on ${moment(
-          +new Date(task.date + ' ' + moment(task.startTime).format('LTS')),
-        ).format('MMMM Do YYYY, h:mm a')}`,
+        text2: `New Baithak has been schedule on ${moment(joinOn).format(
+          'MMMM Do YYYY, h:mm a',
+        )}`,
         position: 'top',
       });
     } catch (error) {
@@ -96,7 +106,7 @@ const useOnScheduleMeet = (
     const currentDate = selectedDate || new Date();
     switch (type) {
       case 'Date':
-        setTask({...task, date: timeToString(currentDate)});
+        setTask({...task, date: +currentDate});
         break;
       case 'StartTime':
         setTask({...task, startTime: +currentDate});

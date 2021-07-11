@@ -56,10 +56,11 @@ const useFetchUserTask = (uid: string, theme: 'dark' | 'light') => {
               querySnapshot.docChanges().forEach((change) => {
                 if (change.type === 'added' && change.doc.exists) {
                   const task = change.doc.data() as Task;
-                  if (!localItems[task.date]) {
-                    localItems[task.date] = [];
+                  const date = moment(task.date).format('YYYY-MM-DD');
+                  if (!localItems[date]) {
+                    localItems[date] = [];
                   }
-                  localItems[task.date].push(task.taskId);
+                  localItems[date].push(task.taskId);
                 }
               });
               setItems(localItems);

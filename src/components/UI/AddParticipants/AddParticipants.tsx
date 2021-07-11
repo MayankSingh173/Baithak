@@ -21,9 +21,13 @@ const AddParticipants = (props: props) => {
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
   );
 
-  const renderItems = ({item}: any) => {
+  const renderItems = (item: UserInterface, index: number) => {
     return item.uid !== firebaseUser.uid ? (
-      <ParticipantCard user={item} onPressCross={props.onRemoveMember} />
+      <ParticipantCard
+        key={index}
+        user={item}
+        onPressCross={props.onRemoveMember}
+      />
     ) : null;
   };
 
@@ -48,13 +52,9 @@ const AddParticipants = (props: props) => {
             No Participants Selected
           </Text>
         ) : (
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={props.selectedMembers}
-            keyExtractor={(item) => item.uid}
-            renderItem={renderItems}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-          />
+          props.selectedMembers.map((member, index) => {
+            return renderItems(member, index);
+          })
         )}
       </View>
     </View>

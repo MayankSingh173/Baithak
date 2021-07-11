@@ -22,7 +22,7 @@ const useOnAddTask = (
     taskId: existingTask?.taskId ? existingTask.taskId : '',
     title: existingTask?.title ? existingTask.title : '',
     description: existingTask?.description ? existingTask.description : '',
-    date: existingTask?.date ? existingTask.date : timeToString(new Date()),
+    date: existingTask?.date ? existingTask.date : +new Date(),
     startTime: existingTask?.startTime ? existingTask.startTime : +new Date(),
     endTime: existingTask?.endTime
       ? existingTask.endTime
@@ -85,6 +85,15 @@ const useOnAddTask = (
           description: details.description,
         });
 
+        const joinOn = +new Date(
+          new Date(task.date).getFullYear(),
+          new Date(task.date).getMonth(),
+          new Date(task.date).getDate(),
+          new Date(task.startTime).getHours(),
+          new Date(task.startTime).getMinutes(),
+          new Date(task.startTime).getSeconds(),
+        );
+
         //schedule a reminder notification
         await setScheduleNotification(
           {
@@ -94,6 +103,7 @@ const useOnAddTask = (
             description: details.description,
           },
           firebaseUser.uid,
+          joinOn,
         );
       }
       setLoading(false);
@@ -122,7 +132,7 @@ const useOnAddTask = (
     const currentDate = selectedDate || new Date();
     switch (type) {
       case 'Date':
-        setTask({...task, date: timeToString(currentDate)});
+        setTask({...task, date: +currentDate});
         break;
       case 'StartTime':
         setTask({...task, startTime: +currentDate});
