@@ -186,7 +186,13 @@ const ProfileScreen = (props: any) => {
           </Text>
           {myProfile && <FullDivider style={{marginVertical: 15}} />}
           {myProfile && (
-            <TouchableOpacity style={styles.inviteView}>
+            <TouchableOpacity
+              style={styles.inviteView}
+              onPress={() =>
+                Linking.openURL(
+                  'https://drive.google.com/drive/folders/1CNthFvi_Wtyp8V2JXN18udlOarTzRPyP?usp=sharing',
+                )
+              }>
               <Icon
                 name="share-outline"
                 fill={theme === 'dark' ? 'white' : 'black'}
@@ -198,14 +204,18 @@ const ProfileScreen = (props: any) => {
             </TouchableOpacity>
           )}
           {myProfile && (
-            <TouchableOpacity style={[styles.inviteView, {marginTop: 20}]}>
+            <TouchableOpacity
+              style={[styles.inviteView, {marginTop: 20}]}
+              onPress={() =>
+                Linking.openURL('https://forms.gle/AopoezZbhsaBbLux7')
+              }>
               <Icon
                 name="edit-2-outline"
                 fill={theme === 'dark' ? 'white' : 'black'}
                 style={styles.icon}
               />
               <Text category="s1" style={styles.invite}>
-                Any Feedback
+                Feedback
               </Text>
             </TouchableOpacity>
           )}
