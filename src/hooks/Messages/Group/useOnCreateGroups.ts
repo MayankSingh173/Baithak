@@ -12,6 +12,7 @@ import {uploadToStorage} from '../../../utils/Storage/uploadToStorage';
 import {onCreateGroup} from '../../../utils/Messages/Group/onCreateGroup';
 import {groupForm} from '../../../models/Messages/interface';
 import {GROUP_CHAT_SCREEN} from '../../../constants/Navigation/Navigation';
+import {checkReadingMediaPermission} from '../../../utils/Permissions/Permission';
 
 const useOnCreateGroup = (selectedUsers: UserInterface[], navigation: any) => {
   const [initialFormState, setInitialFormState] = useState<groupForm>({
@@ -23,8 +24,9 @@ const useOnCreateGroup = (selectedUsers: UserInterface[], navigation: any) => {
   const [imageURL, setImageURL] = useState<string>(DEFAULT_GROUP_IMAGE);
   const [selectImage, toggleSelectImage] = useState<boolean>(false);
 
-  const onCaptureImage = () => {
+  const onCaptureImage = async () => {
     onCloseSelectImage();
+    await checkReadingMediaPermission();
     const options: CameraOptions = {
       saveToPhotos: true,
       mediaType: 'photo',
@@ -45,8 +47,9 @@ const useOnCreateGroup = (selectedUsers: UserInterface[], navigation: any) => {
     });
   };
 
-  const onSelectFromLibrary = () => {
+  const onSelectFromLibrary = async () => {
     onCloseSelectImage();
+    await checkReadingMediaPermission();
     const options: ImageLibraryOptions = {
       selectionLimit: 0,
       mediaType: 'photo',

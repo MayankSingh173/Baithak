@@ -144,12 +144,12 @@ const useStartMeeting = (
         'JoinChannelSuccess',
         async (channel, uid, elapsed) => {
           if (meetConfig.creater === 'Host') {
+            onPressMeetInfo();
             await onHostJoinMeet(meetConfig, firebaseUser);
           } else {
             console.log(meetConfig);
             await onMemberJoinMeet(meetConfig, firebaseUser);
           }
-          onPressMeetInfo();
           setJoinSucceed(true);
           toggleModal(false);
         },

@@ -184,6 +184,7 @@ const useGetMessages = (
   const onToggleSelectImage = () => toggelSelectImage(!selectImage);
 
   const onCaptureImage = async () => {
+    await checkReadingMediaPermission();
     onToggleSelectImage();
     await checkReadingMediaPermission();
     const options: CameraOptions = {

@@ -13,6 +13,7 @@ import Toast from 'react-native-toast-message';
 import {uploadToStorage} from '../../../utils/Storage/uploadToStorage';
 import {writeAsync} from '../../../utils/Firestore/write';
 import {DEFAULT_GROUP_IMAGE} from '../../../constants/Images/Images';
+import {checkReadingMediaPermission} from '../../../utils/Permissions/Permission';
 
 const useGroupInfo = (group: Group, uid: string, navigation: any) => {
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -58,8 +59,8 @@ const useGroupInfo = (group: Group, uid: string, navigation: any) => {
       ],
     );
   };
-
-  const onCaptureImage = () => {
+  const onCaptureImage = async () => {
+    await checkReadingMediaPermission();
     onCloseSelectImage();
     const options: CameraOptions = {
       saveToPhotos: true,
@@ -81,7 +82,8 @@ const useGroupInfo = (group: Group, uid: string, navigation: any) => {
     });
   };
 
-  const onSelectFromLibrary = () => {
+  const onSelectFromLibrary = async () => {
+    await checkReadingMediaPermission();
     onCloseSelectImage();
     const options: ImageLibraryOptions = {
       selectionLimit: 0,

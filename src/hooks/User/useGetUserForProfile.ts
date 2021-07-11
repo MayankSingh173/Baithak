@@ -16,6 +16,7 @@ import firestore from '@react-native-firebase/firestore';
 import {uploadToStorage} from '../../utils/Storage/uploadToStorage';
 import {writeAsync} from '../../utils/Firestore/write';
 import {showLogOutNotifi} from '../../utils/User/Methods/showWelcomeNotifi';
+import {checkReadingMediaPermission} from '../../utils/Permissions/Permission';
 
 const useGetUserForProfile = (uid: string) => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -99,8 +100,9 @@ const useGetUserForProfile = (uid: string) => {
     toggleSelectImage(!selectImage);
   };
 
-  const onCaptureImage = () => {
+  const onCaptureImage = async () => {
     onCloseSelectImage();
+    await checkReadingMediaPermission();
     const options: CameraOptions = {
       saveToPhotos: true,
       mediaType: 'photo',
@@ -121,8 +123,9 @@ const useGetUserForProfile = (uid: string) => {
     });
   };
 
-  const onSelectFromLibrary = () => {
+  const onSelectFromLibrary = async () => {
     onCloseSelectImage();
+    await checkReadingMediaPermission();
     const options: ImageLibraryOptions = {
       selectionLimit: 0,
       mediaType: 'photo',
