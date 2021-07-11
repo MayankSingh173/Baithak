@@ -215,6 +215,7 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
     paddingBottom: 10,
+    paddingTop: 70,
   },
   activity: {
     flex: 1,

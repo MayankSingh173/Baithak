@@ -28,7 +28,9 @@ const UserAddSearchScreen = (props: any) => {
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
   );
 
+  //This is callback function passed through route - Used in Add participant section of Schedule Baithak Screen
   const getSelectedMembers = props.route.params.getSelectedMembers;
+
   const toScreen = props.route.params.toScreen;
 
   const appTheme = useTheme();

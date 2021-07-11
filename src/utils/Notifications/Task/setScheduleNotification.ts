@@ -1,8 +1,7 @@
 import {Task} from '../../../models/Task/interface';
-import {UserInterface} from '../../../models/User/User';
 import PushNotification from 'react-native-push-notification';
-import moment from 'moment';
 
+//This method will schedule a push notification for a particular channel(uid) and time
 export const setScheduleNotification = async (
   task: Task,
   uid: string,

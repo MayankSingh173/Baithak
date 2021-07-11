@@ -10,8 +10,6 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../store/rootReducer';
 import MeetScreen from '../../screens/Meeting/MeetScreen/MeetScreen';
 import {
-  BellIcon,
-  BellIconFill,
   CalendarIcon,
   CalendarIconFill,
   ChatIcon,
@@ -93,7 +91,7 @@ const MainTabNavigator = (props: any) => {
   return (
     <Navigator
       tabBar={(props: any) => <BottomTabBar {...props} />}
-      initialRouteName="Home">
+      initialRouteName={MEET_HOME_SCREEN}>
       <Screen name={MEET_HOME_SCREEN} component={MeetScreen} />
       <Screen name={CHAT_HOME_SCREEN} component={ChatHome} />
       <Screen name={ACTIVITY_HOME_SCREEN} component={ActivityScreen} />

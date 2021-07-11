@@ -21,7 +21,6 @@ const useJoinMeet = (
     password: existingPassword ? existingPassword : '',
   };
 
-  //Here meetId = channelName
   const handleSubmit = async (meetDetails: JoinMeetForm) => {
     toggleModal(true);
     await joinMeet(meetDetails);

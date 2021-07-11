@@ -1,5 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 
+// write a doc in firestorea
 export const writeAsync = (
   collectionId: string,
   documentId: string,

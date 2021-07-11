@@ -1,6 +1,7 @@
 import {IMessage} from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
 
+//This method fill delete a message doc in the firestore
 export const onDeleteMessage = async (
   message: IMessage,
   docId: string,

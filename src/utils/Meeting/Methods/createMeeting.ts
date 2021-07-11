@@ -10,8 +10,9 @@ export const onCreateMeet = async (
     //create a random id and password
     const {meetId, password} = generateMeetIdAndPassword();
 
-    //generate tokens
+    //generate tokens for channel name - meetDetails.name
     const {token} = await generateToken(meetDetails.name, agoraId);
+
     return {token, meetId, password};
   } catch (err) {
     console.log('Error in genrating token', err);

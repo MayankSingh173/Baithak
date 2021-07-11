@@ -20,7 +20,7 @@ const MainNavigator = () => {
   //check the status and get firebaseUser
   const {status, firebaseUser} = useAuth();
 
-  //close splash screeen
+  //close splash screeen acc to status
   useEffect(() => {
     if (status === SUCCESS || status === FAIL) {
       SplashScreen.hide();
@@ -29,16 +29,13 @@ const MainNavigator = () => {
 
   return (
     <NavigationContainer theme={navigatorTheme}>
-      {
-        status === SUCCESS && firebaseUser.uid ? (
-          <MainStackNavigator /> //Main App
-        ) : status === FAIL ||
-          (status === SUCCESS && firebaseUser.uid !== '') ? (
-          <AuthStackNavigator /> //Auth Stack
-        ) : (
-          <PendingStackNavigator />
-        ) //Edge case
-      }
+      {status === SUCCESS && firebaseUser.uid ? (
+        <MainStackNavigator /> //Main App
+      ) : status === FAIL || (status === SUCCESS && firebaseUser.uid !== '') ? (
+        <AuthStackNavigator /> //Auth Stack
+      ) : (
+        <PendingStackNavigator /> //Edge case
+      )}
     </NavigationContainer>
   );
 };

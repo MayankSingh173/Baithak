@@ -29,6 +29,7 @@ const MainStream = ({
 }: props) => {
   const {height, width} = getRemoteStreamDimensions(peerId.length);
 
+  //Fetch the state (audio and video) for the local user
   const localMediaStates = getLocalAudioAndVideoStates(baithak, uid);
 
   const rendorMicBar = (audio?: boolean) => {
@@ -91,6 +92,7 @@ const MainStream = ({
           data={peerId}
           keyExtractor={(item) => '#' + item}
           renderItem={({index, item}) => {
+            //Fetch the state (audio and video) for the remote user
             const remoteVideoStates = getRemoteAudioAndVideoStates(
               baithak,
               item,

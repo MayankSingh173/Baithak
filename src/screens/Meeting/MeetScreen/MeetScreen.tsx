@@ -41,7 +41,7 @@ const MeetScreen = (props: any) => {
         }}
         onScheduleMeet={() => {
           setSelectMeet(!selectMeet);
-          props.navigation.navigate(SCHEDULE_MEET_SCREEN, {edit: false});
+          props.navigation.navigate(SCHEDULE_MEET_SCREEN);
         }}
       />
       <GeneralHeader
@@ -84,7 +84,6 @@ const MeetScreen = (props: any) => {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    // padding: 10,
   },
   container: {
     flex: 1,

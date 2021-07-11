@@ -52,6 +52,7 @@ export const handleUnread = async (
   }
 };
 
+//This will remove the unreads when user open the chats
 export const removeUnread = async (group: Group, uid: string) => {
   try {
     const membersDetails = group.membersDetails;

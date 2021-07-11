@@ -2,6 +2,7 @@ import moment from 'moment';
 import {Baithak} from '../../../models/Meeting/CreateMeeting/interface';
 import {getBaithakPartiFromUid} from '../../Messages/Meeting/utils';
 
+//The method contruct a share message when sharing the meet info from the meeting
 export const getShareMessage = (baithak: Baithak | undefined) => {
   if (baithak) {
     return `${
@@ -22,6 +23,7 @@ Get Vaccinated Soon!`;
   }
 };
 
+//The method contruct a share message when sharing the meet info from the schedule baithak screen
 export const getScheduleMessage = (
   baithak: Baithak,
   joinOn: number,

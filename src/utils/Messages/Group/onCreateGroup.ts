@@ -5,6 +5,7 @@ import {MembersDetails} from '../../../models/Meeting/CreateMeeting/interface';
 import {checkDMExist} from './checkDMExists';
 import {DEFAULT_AVATAR} from '../../../constants/Images/Images';
 
+//This function will create group with selected members chosen from user add search screen
 export const onCreateGroup = async (
   name: string,
   selectedMemeber: UserInterface[],
@@ -46,6 +47,7 @@ export const onCreateGroup = async (
   }
 };
 
+//This will create a DM. If DM already, then it will return the details of it
 export const createDM = async (
   selectedMemeber: UserInterface[],
   firebaseUser: UserInterface,

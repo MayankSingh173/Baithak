@@ -1,5 +1,6 @@
 import {UserInterface} from '../../../models/User/User';
 
+//This method will create a new user object
 export const createNewUserObj = (
   agoraId: number,
   uid: string,

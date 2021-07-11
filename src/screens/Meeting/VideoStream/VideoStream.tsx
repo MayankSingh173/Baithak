@@ -22,6 +22,7 @@ const dimensions = {
 };
 
 const VideoStream = (props: any) => {
+  //get the neccessary parameters coming from CREATE_MEET_SCREEN and JOIN_MEET_SCREEN
   const meetConfig: VideoStreamParams = props.route.params;
 
   const firebaseUser = useSelector(

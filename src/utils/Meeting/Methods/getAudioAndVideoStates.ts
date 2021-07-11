@@ -7,6 +7,7 @@ export interface mediaState {
   imageUrl?: string;
 }
 
+//Get the audio and video state for the local user from the firestore
 export const getLocalAudioAndVideoStates = (
   baithak: Baithak | undefined,
   uid: string,
@@ -26,6 +27,7 @@ export const getLocalAudioAndVideoStates = (
   }
 };
 
+//Get the audio and video state for the remote user from the firestore
 export const getRemoteAudioAndVideoStates = (
   baithak: Baithak | undefined,
   peerId: number,

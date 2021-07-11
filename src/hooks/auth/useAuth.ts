@@ -62,18 +62,6 @@ const useAuth = () => {
             );
           }
 
-          // else {
-          //   //Update the User
-          //   await updateUserObjOnAuth(
-          //     user.uid,
-          //     Platform.OS,
-          //     user.displayName ? user.displayName : 'Robot',
-          //     user.phoneNumber ? user.phoneNumber : undefined,
-          //     user.email ? user.email : 'example@gmail.com',
-          //     user.photoURL ? user.photoURL : DEFAULT_AVATAR,
-          //   );
-          // }
-
           //update the firebase user with success status 'SUCCESS' in redux
           storeDispatch(updateFirebaseUserStatus(SUCCESS));
 
@@ -99,7 +87,7 @@ const useAuth = () => {
     };
   }, [storeDispatch]);
 
-  //This is callback for update firebase user
+  //This is callback for update firebase user in redux state when there's some change in the firebase user in database
   const userFetchCallback = useCallback(
     (fetchedUser: UserInterface) => {
       if (fetchedUser) {
@@ -114,6 +102,7 @@ const useAuth = () => {
     [storeDispatch],
   );
 
+  //This hook will see the changes in doc ref and if change occcur it will call the callback function
   useFirestore(firebaseUserRef, {}, 'document', userFetchCallback);
 
   return {

@@ -27,7 +27,6 @@ import {
 import LogoButton from '../../../components/Buttons/LogoButton/LogoButton';
 import Divider from '../../../components/Divider/Divider';
 import useOnLogin from '../../../hooks/auth/useOnLogin';
-import {FACEBOOK_LOGO, GOOGLE_LOGO} from '../../../constants/Images/Images';
 
 interface props {
   navigation: any;
@@ -42,11 +41,12 @@ const SignIn = (props: props) => {
     onFacebookAuth,
     onSignInButtonPress,
     onGoogleAuth,
-  } = useOnLogin();
+  } = useOnLogin(); //custom hook for logic
 
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
+
   const styles = useStyleSheet(themedStyles);
 
   const EyeIcon = (props: any) => (

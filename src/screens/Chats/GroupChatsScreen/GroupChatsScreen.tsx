@@ -84,7 +84,9 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    flex: 0.1,
+    position: 'absolute',
+    zIndex: 2,
+    top: 0,
   },
 });
 

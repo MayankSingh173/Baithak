@@ -8,6 +8,7 @@ const useGetUsers = (uid: string) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [query, setQuery] = useState<string>('');
 
+  //Fetch all users other the current user
   useEffect(() => {
     const subscriber = firestore()
       .collection('users')
@@ -34,6 +35,7 @@ const useGetUsers = (uid: string) => {
     return () => subscriber();
   }, [uid]);
 
+  //Keyword search on the names of users
   const handleQuery = (text: string) => {
     const filterUsers = users?.filter((user) => {
       return user.name

@@ -5,11 +5,13 @@ import {generalError} from '../../components/Alerts/GeneralError';
 import {SignUpForm} from '../../models/Auth/interface';
 
 const useOnSignUp = () => {
+  //Initial state
   const initialFormState: SignUpForm = {
     email: '',
     password: '',
     passwordRepeat: '',
   };
+
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [isLoading, toggleModal] = useState<boolean>(false);
 
@@ -18,9 +20,9 @@ const useOnSignUp = () => {
   };
 
   const onSignUp = async (props: any) => {
-    console.log('Signup');
     toggleModal(true);
     try {
+      //API for signup
       await auth().createUserWithEmailAndPassword(props.email, props.password);
     } catch (error) {
       generalError(() => toggleModal(false), {

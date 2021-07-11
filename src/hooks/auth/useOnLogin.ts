@@ -14,6 +14,7 @@ GoogleSignin.configure({
 });
 
 const useOnLogin = () => {
+  //Initial form state
   const initialFormState: SignInForm = {
     email: '',
     password: '',

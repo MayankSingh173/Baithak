@@ -7,6 +7,7 @@ import {readAsync} from '../../../Firestore/read';
 
 export const onSendNotifToMembersOnMeeting = async (baithak: Baithak) => {
   try {
+    //Fetching members tokens other the current user - tokens needed for sending notfication
     const result = await getMemberTokens(baithak.groupId, baithak.host.uid);
 
     const creator = (await readAsync(
@@ -26,6 +27,7 @@ export const onSendNotifToMembersOnMeeting = async (baithak: Baithak) => {
         ? creator.photoURL
         : result.group.groupImage;
 
+      //creating a payload
       const payload: NotificationPayload = {
         title: title,
         body: body,

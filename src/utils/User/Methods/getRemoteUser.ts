@@ -1,6 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
 import {UserInterface} from '../../../models/User/User';
 
+//fetch user with uid
 export const getRemoteUser = async (uid: string) => {
   try {
     const userRef = await firestore().collection('users').doc(uid).get();
@@ -13,6 +14,7 @@ export const getRemoteUser = async (uid: string) => {
   }
 };
 
+//fetch user with agoraId
 export const getRemoteUserByAgoraId = async (uid: number) => {
   try {
     let data: UserInterface | undefined;

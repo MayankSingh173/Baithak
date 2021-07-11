@@ -3,12 +3,14 @@ import {
   VideoStreamParams,
 } from '../../../models/Meeting/CreateMeeting/interface';
 import {UserInterface} from '../../../models/User/User';
-import {Group} from '../../../models/Messages/interface';
+import {Group, Message} from '../../../models/Messages/interface';
 import {writeAsync} from '../../Firestore/write';
 import {DEFAULT_GROUP_MEETING_IMAGE} from '../../../constants/Images/Images';
 import {onSendNotifToMembersOnMeeting} from '../../Notifications/Meeting/GroupMeeting/onSendNotifToMembersOnMeeting';
+import {getShareMessage} from './getShareMessage';
+import firestore from '@react-native-firebase/firestore';
 
-//On host joining the meet we are create a doc of baithak in db
+//On host joining the meet we are creating a doc of baithak in db and also creating a group
 export const onHostJoinMeet = async (
   meetConfig: VideoStreamParams,
   firebaseUser: UserInterface,
@@ -20,6 +22,7 @@ export const onHostJoinMeet = async (
     if (!meetConfig.groupId) {
       //If the groundId not present it means we need to form a new group
       const newGroup = createGroupFromMeeting(meetConfig, firebaseUser);
+
       if (baithak && newGroup) {
         Promise.all([
           (await writeAsync(
@@ -37,7 +40,7 @@ export const onHostJoinMeet = async (
         ]);
       }
     } else {
-      //if meet id present we need to that group in baithak object so that we can fetch messages from that
+      //if groupId is present it means user is creating baithak from the group
       await writeAsync(
         'Baithak',
         `${meetConfig.meetId}${meetConfig.password}`,
@@ -47,6 +50,9 @@ export const onHostJoinMeet = async (
 
       //send notification to all others members in the group
       onSendNotifToMembersOnMeeting(baithak);
+
+      //send a message with baithak info in the group
+      onSendMessageToGroup(baithak, firebaseUser, meetConfig.groupId);
     }
   } catch (err) {
     console.log('Error in creating Baithak at onHostJoinMeet', err);
@@ -106,4 +112,39 @@ export const createGroupFromMeeting = (
       },
     ],
   };
+};
+
+const onSendMessageToGroup = async (
+  baithak: Baithak,
+  firebaseUser: UserInterface,
+  groupId: string,
+) => {
+  try {
+    const shareMessage = getShareMessage(baithak);
+
+    const messageRef = firestore()
+      .collection('groups')
+      .doc(groupId)
+      .collection('messages')
+      .doc();
+    const lastMessageRef = firestore().collection('groups').doc(groupId);
+
+    const message = {
+      uid: baithak.host.uid,
+      createdAt: +new Date(),
+      text: shareMessage,
+      messageId: messageRef.id,
+    } as Message;
+
+    Promise.all([
+      await messageRef.set(message),
+
+      await lastMessageRef.update({lastMessage: message}),
+    ]);
+  } catch (error) {
+    console.log(
+      'Error in last message in group while initiating baithak from group',
+      error,
+    );
+  }
 };

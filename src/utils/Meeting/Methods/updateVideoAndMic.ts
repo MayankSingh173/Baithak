@@ -4,6 +4,7 @@ import {
 } from '../../../models/Meeting/CreateMeeting/interface';
 import {writeAsync} from '../../Firestore/write';
 
+//update the video state for the local user in the firestore
 export const updateVideo = async (
   baithak: Baithak | undefined,
   uid: string,
@@ -32,6 +33,7 @@ export const updateVideo = async (
   }
 };
 
+//update the audio state for the local user in the firestore
 export const updateAudio = async (
   baithak: Baithak | undefined,
   uid: string,

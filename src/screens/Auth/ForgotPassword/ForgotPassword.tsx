@@ -26,7 +26,7 @@ interface props {
   navigation: any;
 }
 
-const ForgotPassword: FC<props> = ({navigation}) => {
+const ForgotPassword = ({navigation}: props) => {
   //custom hook for forgot password logic
   const {isLoading, onPasswordReset, initialFormState} =
     useForgotPassword(navigation);

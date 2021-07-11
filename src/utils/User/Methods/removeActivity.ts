@@ -2,6 +2,7 @@ import firestore from '@react-native-firebase/firestore';
 import {UserInterface} from '../../../models/User/User';
 import {writeAsync} from '../../Firestore/write';
 
+//This method will remove and update the activeOnGroup field
 export const removeActivityFromUser = async (firebaseUser: UserInterface) => {
   try {
     if (firebaseUser.activeOnGroup) {

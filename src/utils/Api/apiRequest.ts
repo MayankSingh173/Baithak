@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+//APIs get and post request
 export const getRequest = async (url: string) => {
   const data = await axios
     .get(url)

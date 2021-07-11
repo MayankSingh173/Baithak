@@ -4,6 +4,7 @@ import {UserInterface} from '../../../models/User/User';
 import {postRequest} from '../../Api/apiRequest';
 import {tokensObj} from '../../Messages/Group/handleUnread';
 
+//This method will send message notification to all the offline members in the group
 export const sendMessageNotification = async (
   tokensObj: tokensObj[],
   newMess: Message,

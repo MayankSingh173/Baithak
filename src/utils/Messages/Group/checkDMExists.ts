@@ -2,6 +2,7 @@ import {Group} from '../../../models/Messages/interface';
 import {UserInterface} from '../../../models/User/User';
 import firestore from '@react-native-firebase/firestore';
 
+//this methoda check is the there already DM exist with user who you wants to chat
 export const checkDMExist = async (
   otherMember: UserInterface,
   firbaseUser: UserInterface,

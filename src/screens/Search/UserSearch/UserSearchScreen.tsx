@@ -18,6 +18,7 @@ const UserSearchScreen = (props: any) => {
   const {filteredUsers, loading, query, handleQuery} = useGetUsers(
     firebaseUser.uid,
   );
+
   const appTheme = useTheme();
 
   return (

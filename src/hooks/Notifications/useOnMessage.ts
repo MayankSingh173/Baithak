@@ -11,6 +11,8 @@ const useOnMessage = () => {
   const [notification, setNotification] = useState<TopBarNotificationUI>();
 
   useEffect(() => {
+    //This listeners run when there's some notification comming while the app is running
+    //We need to show top bar notification
     const subscriber = messaging().onMessage((remoteMessage) => {
       if (remoteMessage && remoteMessage.notification) {
         setNotification({
@@ -21,6 +23,7 @@ const useOnMessage = () => {
       }
     });
 
+    // Listener - When the application is opened from a quit state
     messaging()
       .getInitialNotification()
       .then((remoteMessage) => {
@@ -28,6 +31,7 @@ const useOnMessage = () => {
       })
       .catch((err) => console.log(err));
 
+    //Listener - When the application is running, but in the background.
     messaging().onNotificationOpenedApp((remoteMessage) => {
       // console.log(remoteMessage);
     });

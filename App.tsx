@@ -18,6 +18,7 @@ import {removeActivityFromUser} from './src/utils/User/Methods/removeActivity';
 import PushNotification from 'react-native-push-notification';
 import {DEFAULT_USER_NAME} from './src/constants/User/User';
 
+//Remove warning signs in the app
 LogBox.ignoreAllLogs();
 
 const App = () => {
@@ -31,6 +32,8 @@ const App = () => {
 
   const {notification, setNotification} = useOnMessage();
 
+  //Appstate listeners- when the app is in background or inactive state
+  // we need to remove activity i.e. activeOnGroup field of UserInterface so that neccessary notification can triggers
   AppState.addEventListener('change', async (state) => {
     if (state === 'background' || state === 'inactive') {
       //Remove activeOnGroup so that we can send notifications if there's any
@@ -40,18 +43,19 @@ const App = () => {
 
   PushNotification.createChannel(
     {
-      channelId: firebaseUser.uid, // (required)
+      channelId: firebaseUser.uid, //subscribe the firebase user to its channel...this is required to trigger schedule notification
       channelName: firebaseUser.name ? firebaseUser.name : DEFAULT_USER_NAME, // (required)
       channelDescription: 'A default channel', // (optional) default: undefined.
       soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
-      vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+      vibrate: true, // (optional) default: true.
     },
-    (created) => {},
+    (created) => {}, //callback funct
   );
 
   return (
     <React.Fragment>
       <IconRegistry icons={EvaIconsPack} />
+      {/* Theme provider */}
       <ApplicationProvider
         {...eva}
         theme={{...(theme && eva[theme]), ...appTheme}}>
@@ -66,6 +70,7 @@ const App = () => {
           )}
           <MainNavigator />
         </View>
+        {/* Setting a ref for toast messages */}
         <Toast ref={(ref) => Toast.setRef(ref)} />
       </ApplicationProvider>
     </React.Fragment>
@@ -84,6 +89,7 @@ const styles = StyleSheet.create({
 export default () => {
   return (
     <SafeAreaProvider>
+      {/* Provide Redux store to the app */}
       <Provider store={store}>
         <App />
       </Provider>

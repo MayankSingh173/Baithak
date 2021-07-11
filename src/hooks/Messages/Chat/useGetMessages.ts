@@ -39,6 +39,7 @@ const useGetMessages = (
 
   useEffect(() => {
     try {
+      //Fetching latest messages
       const unsubscribe = firestore()
         .collection('groups')
         .doc(`${group.groupId}`)
@@ -72,6 +73,7 @@ const useGetMessages = (
     }
   }, [group]);
 
+  //pagination
   const loadMore = useCallback(
     debounce(async () => {
       try {
@@ -113,7 +115,7 @@ const useGetMessages = (
         console.log('error next page', error);
       }
     }, 40),
-    [lastDoc],
+    [lastDoc, group],
   );
 
   const handleSend = async (mssgs: IMessage[]) => {
@@ -133,6 +135,7 @@ const useGetMessages = (
           true,
         );
 
+        //create a new message doc
         const ref = firestore()
           .collection('groups')
           .doc(`${group.groupId}`)
@@ -149,7 +152,7 @@ const useGetMessages = (
 
         await ref.set(newMess);
 
-        //This wiil change the unread for offline users in the group
+        //This wiil change the unread and send notification to offline users in the group
         await handleUnread(group, newMess, firebaseUser);
       });
     } catch (err) {

@@ -14,21 +14,9 @@ const Stack = createStackNavigator();
 const AuthStackNavigator = () => {
   return (
     <Stack.Navigator headerMode="none">
-      <Stack.Screen
-        name={SIGN_IN_SCREEN}
-        component={SignIn}
-        options={{animationTypeForReplace: 'push'}}
-      />
-      <Stack.Screen
-        name={SIGN_UP_SCREEN}
-        component={SignUp}
-        options={{animationTypeForReplace: 'push'}}
-      />
-      <Stack.Screen
-        name={FORGOT_PASSWORD_SCREEN}
-        component={ForgotPassword}
-        options={{animationTypeForReplace: 'push'}}
-      />
+      <Stack.Screen name={SIGN_IN_SCREEN} component={SignIn} />
+      <Stack.Screen name={SIGN_UP_SCREEN} component={SignUp} />
+      <Stack.Screen name={FORGOT_PASSWORD_SCREEN} component={ForgotPassword} />
     </Stack.Navigator>
   );
 };

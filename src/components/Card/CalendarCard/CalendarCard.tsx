@@ -32,6 +32,7 @@ const CalendarCard = (props: props) => {
   const [fetched, setFetched] = useState<boolean>(false);
   const [task, setTask] = useState<Task>();
 
+  //fetch the card details from remote
   useEffect(() => {
     try {
       const subscriber = firestore()
@@ -55,6 +56,7 @@ const CalendarCard = (props: props) => {
 
   const onPressCard = () => {
     if (task?.isMeeting) {
+      //Is the card is related to meet then wee need to navigate join Meet scrren
       props.navigation.navigate(JOIN_MEET_SCREEN, {
         meetId: task.meetId,
         password: task.password,

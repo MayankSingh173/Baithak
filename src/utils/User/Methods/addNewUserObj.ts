@@ -2,6 +2,7 @@ import {UserInterface} from '../../../models/User/User';
 import {writeAsync} from '../../Firestore/write';
 import {createNewUserObj} from './createNewUserObj';
 
+//Add new user to users collection in firestore
 export const addNewUserObj = async (
   uid: string,
   os: 'android' | 'ios' | 'windows' | 'macos' | 'web',
@@ -33,6 +34,7 @@ export const writeUserObj = async (
   await writeAsync('users', user.uid, user, mergeCondition);
 };
 
+//This will generate a random uid that will be called as agoraId
 export const randomUId = () => {
   var maxInt = 2147483647; // max 32-bit signed int
   // generate random value between 1 and maxInt inclusive of both values

@@ -16,7 +16,7 @@ import {
   Button,
 } from '@ui-kitten/components';
 import {Formik} from 'formik';
-import {DescriptionIcon, NameIcon} from '../../../components/Icons/Icons';
+import {NameIcon} from '../../../components/Icons/Icons';
 import {createMeetingSchema} from '../../../utils/validators/meeting';
 import useOnCreateMeet from '../../../hooks/Meeting/useOnCreateMeet';
 import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
@@ -25,8 +25,11 @@ import {RootState} from '../../../store/rootReducer';
 
 const CreateMeetScreen = (props: any) => {
   const appTheme = useTheme();
+
   const styles = useStyleSheet(themedStyles);
 
+  //getting the groupId - GroupId will be there when the user is
+  // creating baithak from the chat so that we can import those chats to the meeting also
   const groupId = props.route.params && props.route.params.groupId;
 
   const firebaseUser = useSelector(
@@ -37,6 +40,7 @@ const CreateMeetScreen = (props: any) => {
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
 
+  //Custom hook for logic
   const {initialFormState, handleSubmit, isLoading} = useOnCreateMeet(
     props.navigation,
     firebaseUser.agoraId,

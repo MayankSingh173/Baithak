@@ -30,7 +30,7 @@ import useOnScheduleMeet from '../../../hooks/Meeting/useOnScheduleMeet';
 import AddParticipants from '../../../components/UI/AddParticipants/AddParticipants';
 
 //On schedule meet
-//  1 .need to create a Baithak doc on host info
+//  1 .need to create a Baithak doc
 //  2. Create a groupObject
 //  3. Create a task;
 

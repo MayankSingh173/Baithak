@@ -1,6 +1,7 @@
 import storage from '@react-native-firebase/storage';
 import Toast from 'react-native-toast-message';
 
+//This method will upload a file to particular path in the firebase storage
 export const uploadToStorage = async (path: string, imageUrl: string) => {
   try {
     await storage().ref(path).putFile(imageUrl);

@@ -8,7 +8,7 @@ import {debounce} from 'lodash';
 const useGetGroups = (uid: string) => {
   const [groups, setGroups] = useState<Group[]>([]);
   const [fetched, setFetched] = useState<boolean>(false);
-  const [lastDoc, setLastDoc] = useState<FirebaseFirestoreTypes.DocumentData>();
+  const [lastDoc, setLastDoc] = useState<FirebaseFirestoreTypes.DocumentData>(); //for pagination
   const [isMoreLoading, setIsMoreLoading] = useState<boolean>(false);
   const [selectMeet, setSelectMeet] = useState<boolean>(false);
 
@@ -43,6 +43,7 @@ const useGetGroups = (uid: string) => {
     return () => suscriber();
   }, [uid]);
 
+  //Pagination
   const nextPage = useCallback(
     debounce(async () => {
       try {

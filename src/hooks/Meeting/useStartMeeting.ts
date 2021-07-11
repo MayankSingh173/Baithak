@@ -49,12 +49,17 @@ const useStartMeeting = (
   const [inVideoOff, toogleInVideoOff] = useState<boolean>(false);
   const [flashOn, toggleFlash] = useState<boolean>(false);
   const [autoFocus, toggleAutoFocus] = useState<boolean>(false);
+
+  //Instial value of the header and footer of the stream
   const [HeadFootHeight, toggleHeadFootHeight] = useState({
     head: new Animated.Value(0),
     foot: new Animated.Value(0),
   });
 
+  //setting the reference for the engine
   let engine = useRef<RtcEngine | null>(null);
+
+  //setting the ref for creating sounf
   let sound = useRef<Sound | null>(
     new Sound('joined.mp3', Sound.MAIN_BUNDLE, (error) => {
       if (error) {
@@ -78,6 +83,7 @@ const useStartMeeting = (
     try {
       await engine.current?.leaveChannel();
 
+      //destroy the engine for the current user
       await engine.current?.destroy();
 
       //remove the user from the list
@@ -93,8 +99,11 @@ const useStartMeeting = (
 
   const intializeRTC = async () => {
     try {
+      //check the mic and video permissions
       await checkPermission();
 
+      //AppId - Agora project App Id
+      // creating an new engine and setting the ref
       engine.current = await RtcEngine.create(appId);
 
       // Enable the video module.
@@ -144,10 +153,9 @@ const useStartMeeting = (
         'JoinChannelSuccess',
         async (channel, uid, elapsed) => {
           if (meetConfig.creater === 'Host') {
-            onPressMeetInfo();
+            onPressMeetInfo(); //initiallay show meet details
             await onHostJoinMeet(meetConfig, firebaseUser);
           } else {
-            console.log(meetConfig);
             await onMemberJoinMeet(meetConfig, firebaseUser);
           }
           setJoinSucceed(true);
@@ -155,18 +163,15 @@ const useStartMeeting = (
         },
       );
 
-      //Listen for the Warning callback.
-      //This callback occurs when there is some warning
-      // engine.current?.addListener('Warning', (warn) => {
-      //   console.log('Warn', warn);
-      // });
-
-      //Listen for the Warning callback.
-      //This callback occurs when there is some warning
+      //Listen for the Error callback.
+      //This callback occurs when there is some error while doing video call
       engine.current?.addListener('Error', (err) => {
         console.log('Error', err);
         toggleModal(false);
+
+        //We need to end the call for this user
         endCall();
+
         navigation.goBack();
         Toast.show({
           type: 'error',
@@ -191,7 +196,14 @@ const useStartMeeting = (
     }
   };
 
+  //Main useEffect...After component did mount initialize RTC
   useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
+      e.preventDefault();
+      unsubscribe();
+      confirmEnd();
+    });
+
     //Call the initialize RTC method
     intializeRTC();
   }, []);
@@ -274,6 +286,8 @@ const useStartMeeting = (
     try {
       setMuteAudio(!muteAudio);
       await engine.current?.enableLocalAudio(muteAudio);
+
+      //update audio param in the DB to...this is needed to show photo when the user turn off there video
       await updateAudio(baithak, firebaseUser.uid, muteAudio);
     } catch (err) {
       console.log('Error in toggle mic', err);
@@ -295,6 +309,8 @@ const useStartMeeting = (
     try {
       setMuteVideo(!muteVideo);
       await engine.current?.enableLocalVideo(muteVideo);
+
+      //update video param in the DB to...this is needed to show photo when the user turn off there video
       await updateVideo(baithak, firebaseUser.uid, muteVideo);
     } catch (error) {
       console.log('Error in toggle locak video', error);
@@ -332,6 +348,7 @@ const useStartMeeting = (
     toogleParticipants(!showParticipants);
   };
 
+  //Method when the user is sharing meet info
   const onShare = async () => {
     try {
       if (menuOpen) setMenuOpen(!menuOpen);
@@ -343,6 +360,7 @@ const useStartMeeting = (
   };
 
   useEffect(() => {
+    //After 10 seconds header and footer will go up and down respectively
     Animated.sequence([
       Animated.delay(10000),
       Animated.parallel([
@@ -360,6 +378,7 @@ const useStartMeeting = (
     ]).start(() => {});
   }, [HeadFootHeight.head, HeadFootHeight.foot]);
 
+  //When user tap on the screen header and footer should come back
   const onPressMainStreamView = () => {
     toggleHeadFootHeight({
       head: new Animated.Value(0),

@@ -30,9 +30,6 @@ const CreateGroupScreen = (props: any) => {
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
 
-  const firebaseUser = useSelector(
-    (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
-  );
   const {
     initialFormState,
     handleSubmit,
@@ -129,7 +126,8 @@ const CreateGroupScreen = (props: any) => {
               </Button>
               <View
                 style={{
-                  marginTop: '10%',
+                  marginTop: '40%',
+                  flex: 1,
                 }}>
                 <Text style={styles.worry}>
                   Wanna chat with{' '}
@@ -148,7 +146,7 @@ const CreateGroupScreen = (props: any) => {
                     styles.tagLine,
                     {color: appTheme['color-basic-500']},
                   ]}>
-                  Head on to create a group
+                  Head on to create a group and have fun!
                 </Text>
               </View>
             </View>

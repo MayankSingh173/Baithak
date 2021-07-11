@@ -40,6 +40,7 @@ const SignUp = (props: props) => {
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
+
   const styles = useStyleSheet(themedStyles);
 
   const EyeIcon = (props: any) => (

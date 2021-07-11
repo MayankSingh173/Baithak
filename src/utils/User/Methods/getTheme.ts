@@ -1,6 +1,7 @@
 import {Appearance} from 'react-native';
 import {getRemoteUser} from './getRemoteUser';
 
+//This method will return the theme based on theme of the users phone
 export const getTheme = (): 'dark' | 'light' => {
   const theme = Appearance.getColorScheme();
 

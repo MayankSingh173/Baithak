@@ -3,13 +3,11 @@ import React from 'react';
 import {StyleSheet, View, ActivityIndicator} from 'react-native';
 import {useSelector} from 'react-redux';
 import GeneralHeader from '../../../components/Headers/GeneralHeader/GeneralHeader';
-import SelectMeet from '../../../components/Modals/SelectMeet/SelectMeet';
 import {RALEWAY_BOLD, RALEWAY_REGULAR} from '../../../constants/Fonts/Fonts';
 import {
   CREATE_GROUP_SCREEN,
   CREATE_MEET_SCREEN,
   GROUP_CHAT_SCREEN,
-  JOIN_MEET_SCREEN,
   PROFILE_SCREEN,
   USER_ADD_SEARCH_SCREEN,
   USER_SEARCH_SCREEN,
@@ -20,22 +18,16 @@ import useGetGroups from '../../../hooks/Messages/Group/useGetGroups';
 import NoChatsHome from '../../../components/UI/Chats/NoChatsHome';
 import UserGroupCardView from '../../../components/UI/Group/UserGroupCardView';
 import {Group} from '../../../models/Messages/interface';
-import {UserInterface} from '../../../models/User/User';
 
 const ChatHome = (props: any) => {
   const firebaseUser = useSelector(
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,
   );
 
-  const {
-    selectMeet,
-    setSelectMeet,
-    fetched,
-    groups,
-    lastDoc,
-    isMoreLoading,
-    nextPage,
-  } = useGetGroups(firebaseUser.uid);
+  //Custom hook for fetching groups in which current user is preset
+  const {fetched, groups, lastDoc, isMoreLoading, nextPage} = useGetGroups(
+    firebaseUser.uid,
+  );
 
   const appTheme = useTheme();
 
@@ -60,6 +52,7 @@ const ChatHome = (props: any) => {
       />
       <CreateGroupButton
         onPress={() =>
+          //moven to screen where the user can select the members for the group
           props.navigation.navigate(USER_ADD_SEARCH_SCREEN, {
             toScreen: CREATE_GROUP_SCREEN,
           })

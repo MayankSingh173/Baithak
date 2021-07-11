@@ -26,39 +26,41 @@ const useGetUserForProfile = (uid: string) => {
   const [selectImage, toggleSelectImage] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const subscriber = firestore()
-          .collection('users')
-          .doc(uid)
-          .onSnapshot((doc) => {
-            if (doc) {
-              doc.exists && setUser(doc.data() as UserInterface);
-            }
-          });
-        setLoading(false);
-        return () => subscriber();
-      } catch (error) {
-        console.log('Eror in profile fecthing', error);
-        setLoading(false);
-        Toast.show({
-          type: 'error',
-          position: 'top',
-          text1: 'Something went wrong 😔',
-          text2: 'Please try again!!',
+    try {
+      const subscriber = firestore()
+        .collection('users')
+        .doc(uid)
+        .onSnapshot((doc) => {
+          if (doc) {
+            doc.exists && setUser(doc.data() as UserInterface);
+          }
         });
-      }
-    };
+      setLoading(false);
 
-    fetchUser();
+      return () => subscriber();
+    } catch (error) {
+      console.log('Eror in profile fecthing', error);
+      setLoading(false);
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Something went wrong 😔',
+        text2: 'Please try again!!',
+      });
+    }
   }, [uid]);
 
   const storeDispatch = useDispatch();
 
   const signOut = async () => {
     try {
+      //signout the firebase user
       await auth().signOut();
+
+      //send signout notification
       await showLogOutNotifi(user?.tokens, user?.name);
+
+      //update the user status to fail
       storeDispatch(updateFirebaseUserStatus(FAIL));
     } catch (err) {
       Toast.show({
@@ -100,8 +102,11 @@ const useGetUserForProfile = (uid: string) => {
     toggleSelectImage(!selectImage);
   };
 
+  //When the user is capturing image from the camera
   const onCaptureImage = async () => {
     onCloseSelectImage();
+
+    //check for reading storeage permissions
     await checkReadingMediaPermission();
     const options: CameraOptions = {
       saveToPhotos: true,
@@ -109,6 +114,7 @@ const useGetUserForProfile = (uid: string) => {
       includeBase64: false,
     };
 
+    //launch camera
     launchCamera(options, async (response) => {
       if (response.errorMessage || response.errorCode) {
         Toast.show({
@@ -123,6 +129,7 @@ const useGetUserForProfile = (uid: string) => {
     });
   };
 
+  //When the user is selecting image from the library
   const onSelectFromLibrary = async () => {
     onCloseSelectImage();
     await checkReadingMediaPermission();
@@ -150,11 +157,13 @@ const useGetUserForProfile = (uid: string) => {
     try {
       setLoading(true);
       if (uri) {
+        //upload the file to firebase storage and get the download URL
         const downloadUrl = await uploadToStorage(
           `images/users/${uid}/${uri.substring(uri.lastIndexOf('/') + 1)}`,
           uri,
         );
         if (downloadUrl) {
+          //Update the photo
           await writeAsync('users', uid, {photoURL: downloadUrl}, true);
         }
       }

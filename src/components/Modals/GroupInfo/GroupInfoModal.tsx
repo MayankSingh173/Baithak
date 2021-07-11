@@ -142,7 +142,7 @@ const GroupInfoModal = (props: props) => {
             <FullDivider style={{marginVertical: 20}} />
             <View style={styles.partiView}>
               <Text category="h6" style={styles.description}>
-                Participants
+                Members
               </Text>
               <View style={{paddingVertical: 10}}>
                 {props.group.membersDetails.map((item, index) => {

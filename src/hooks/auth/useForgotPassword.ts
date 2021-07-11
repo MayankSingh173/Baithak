@@ -16,6 +16,7 @@ const useForgotPassword = (props: props) => {
   const onPasswordReset = async (props: any) => {
     toggleModal(true);
     try {
+      //sending password reset mail
       await auth().sendPasswordResetEmail(props.email);
       generalError(
         () => {

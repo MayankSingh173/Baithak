@@ -17,7 +17,7 @@ export const onJoinMeet = async (
       .doc(`${meetDetails.meetId}${meetDetails.password}`)
       .get();
 
-    //He has correct meetId and Password
+    //User has correct meetId and Password and get the channel name and generate tokens
     if (baithRef.exists) {
       const baithak = baithRef.data() as Baithak;
 

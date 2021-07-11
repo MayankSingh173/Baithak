@@ -16,8 +16,6 @@ const useFirestore = (
   const [errorState, setErrorState] = useState(null);
   const [modalVisible, toggleModal] = useState(true);
 
-  // console.log('state', id);
-
   // use effect to make the callback
   useEffect(() => {
     let unsubscribe: any = null;

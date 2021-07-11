@@ -38,6 +38,7 @@ import BackHeader from '../../components/Headers/BackHeader/BackHeader';
 import SelectImage from '../../components/Modals/SelectImage/SelectImage';
 
 const ProfileScreen = (props: any) => {
+  //is myProfile is false is means we are seeing others profile screen
   const {myProfile, uid} = props.route.params;
 
   const theme = useSelector(
@@ -86,14 +87,16 @@ const ProfileScreen = (props: any) => {
   };
 
   if (!user || loading) {
-    <Layout
-      style={[styles.main, {justifyContent: 'center', alignItems: 'center'}]}
-      level="1">
-      <ActivityIndicator
-        size="large"
-        color={appTheme['color-primary-default']}
-      />
-    </Layout>;
+    return (
+      <Layout
+        style={[styles.main, {justifyContent: 'center', alignItems: 'center'}]}
+        level="1">
+        <ActivityIndicator
+          size="large"
+          color={appTheme['color-primary-default']}
+        />
+      </Layout>
+    );
   }
 
   return (
@@ -176,7 +179,9 @@ const ProfileScreen = (props: any) => {
           </Text>
           <Text
             style={[styles.bio, {color: appTheme['color-info-400']}]}
-            onPress={() => Linking.openURL(`mailto:${user?.email}`)}>
+            onPress={() => {
+              !myProfile && Linking.openURL(`mailto:${user?.email}`);
+            }}>
             {user?.email}
           </Text>
           {myProfile && <FullDivider style={{marginVertical: 15}} />}
@@ -189,6 +194,18 @@ const ProfileScreen = (props: any) => {
               />
               <Text category="s1" style={styles.invite}>
                 Invite you friends
+              </Text>
+            </TouchableOpacity>
+          )}
+          {myProfile && (
+            <TouchableOpacity style={[styles.inviteView, {marginTop: 20}]}>
+              <Icon
+                name="edit-2-outline"
+                fill={theme === 'dark' ? 'white' : 'black'}
+                style={styles.icon}
+              />
+              <Text category="s1" style={styles.invite}>
+                Any Feedback
               </Text>
             </TouchableOpacity>
           )}

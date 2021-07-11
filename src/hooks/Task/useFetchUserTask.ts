@@ -42,6 +42,7 @@ const useFetchUserTask = (uid: string, theme: 'dark' | 'light') => {
       setCalendarItems(newItems);
     }, 1000);
   };
+
   useEffect(() => {
     try {
       setFetched(true);
