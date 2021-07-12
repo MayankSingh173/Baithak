@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
-import {Animated} from 'react-native';
+import {Animated, AppState} from 'react-native';
 import RtcEngine from 'react-native-agora';
 import {generalErrorN} from '../../components/Alerts/GeneralError';
 import {MEET_HOME_SCREEN} from '../../constants/Navigation/Navigation';
@@ -97,6 +97,13 @@ const useStartMeeting = (
       console.log('Error in End call', err);
     }
   };
+
+  //When the meet is running in backgroun camera should be off
+  AppState.addEventListener('change', async (state) => {
+    if (state === 'background' || state === 'inactive') {
+      onClickCamera();
+    }
+  });
 
   const intializeRTC = async () => {
     try {
