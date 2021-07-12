@@ -2,7 +2,10 @@ import {useEffect, useState} from 'react';
 import Toast from 'react-native-toast-message';
 import {FAIL} from '../../constants/RemoteStates/remotestates';
 import {defaultUser, UserInterface} from '../../models/User/User';
-import {updateFirebaseUserStatus} from '../../store/User/actionCreator/addFirebaseUser';
+import {
+  setFirebaseUser,
+  updateFirebaseUserStatus,
+} from '../../store/User/actionCreator/addFirebaseUser';
 import auth from '@react-native-firebase/auth';
 import {useDispatch} from 'react-redux';
 import {generalErrorN} from '../../components/Alerts/GeneralError';
@@ -61,7 +64,7 @@ const useGetUserForProfile = (uid: string) => {
       await showLogOutNotifi(user?.tokens, user?.name);
 
       //update the user status to fail
-      storeDispatch(updateFirebaseUserStatus(FAIL));
+      storeDispatch(setFirebaseUser(defaultUser, FAIL));
     } catch (err) {
       Toast.show({
         type: 'error',

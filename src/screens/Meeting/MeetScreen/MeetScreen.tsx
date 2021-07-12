@@ -16,6 +16,7 @@ import LottieView from 'lottie-react-native';
 import {MeetIcon} from '../../../components/Icons/Icons';
 import SelectMeet from '../../../components/Modals/SelectMeet/SelectMeet';
 import {screenHeight} from '../../../constants/screen/screenInfo';
+import ModalActivityIndicator from '../../../components/Modals/ModalActivityIndicator/ModalActivityIndicator';
 
 const MeetScreen = (props: any) => {
   const [selectMeet, setSelectMeet] = useState<boolean>(false);

@@ -43,6 +43,10 @@ const ProfileScreen = (props: any) => {
   //is myProfile is false is means we are seeing others profile screen
   const {myProfile, uid} = props.route.params;
 
+  if (!uid) {
+    return null;
+  }
+
   const theme = useSelector(
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );

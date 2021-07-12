@@ -1,8 +1,9 @@
 import React from 'react';
-import {View, ActivityIndicator, Dimensions, StyleSheet} from 'react-native';
+import {View, Dimensions, StyleSheet} from 'react-native';
 import Modal from 'react-native-modal';
-import {useTheme} from '@ui-kitten/components';
+import {Text, useTheme} from '@ui-kitten/components';
 import LottieView from 'lottie-react-native';
+import {RALEWAY_BOLD} from '../../../constants/Fonts/Fonts';
 
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
@@ -26,6 +27,11 @@ const ModalActivityIndicator = (props: any) => {
           loop
           style={styles.image}
         />
+        <Text
+          category="h6"
+          style={{fontFamily: RALEWAY_BOLD, color: 'white', marginTop: -50}}>
+          Loading...
+        </Text>
       </View>
     </Modal>
   );
@@ -36,6 +42,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
+    marginTop: -50,
   },
   modal: {
     justifyContent: 'center',
