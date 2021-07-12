@@ -28,8 +28,8 @@ import moment from 'moment';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const AddTaskScreen = (props: any) => {
-  const edit = props.route.params.edit;
-  const existingTask = props.route.params.existingTask;
+  const edit = props.route.params && props.route.params.edit;
+  const existingTask = props.route.params && props.route.params.existingTask;
 
   const appTheme = useTheme();
 

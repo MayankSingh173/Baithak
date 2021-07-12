@@ -28,9 +28,9 @@ const JoinMeetScreen = (props: any) => {
   const appTheme = useTheme();
   const styles = useStyleSheet(themedStyles);
 
-  //This params will be coming when the user to trying to join baithak from the Task card
-  const existingMeetId = props.route.params.meetId;
-  const existingPassword = props.route.params.password;
+  //This params will be coming when the user to trying to join baithak from the Task card or with joining link
+  const existingMeetId = props.route.params && props.route.params.meetId;
+  const existingPassword = props.route.params && props.route.params.password;
 
   const firebaseUser = useSelector(
     (reduxState: RootState) => reduxState.UserReducer.firebaseUser,

@@ -29,9 +29,10 @@ const UserAddSearchScreen = (props: any) => {
   );
 
   //This is callback function passed through route - Used in Add participant section of Schedule Baithak Screen
-  const getSelectedMembers = props.route.params.getSelectedMembers;
+  const getSelectedMembers =
+    props.route.params && props.route.params.getSelectedMembers;
 
-  const toScreen = props.route.params.toScreen;
+  const toScreen = props.route.params && props.route.params.toScreen;
 
   const appTheme = useTheme();
 

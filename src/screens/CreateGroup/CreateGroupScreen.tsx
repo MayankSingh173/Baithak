@@ -30,6 +30,8 @@ const CreateGroupScreen = (props: any) => {
     (reduxState: RootState) => reduxState.ThemeReducer.theme,
   );
 
+  if (!props.route.params.selectedUsers) return null;
+
   const {
     initialFormState,
     handleSubmit,
