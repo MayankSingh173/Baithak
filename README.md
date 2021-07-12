@@ -7,6 +7,9 @@ This is an open-source android app made during the [Microsoft Engage Mentorship 
 
 So baithak is a **multi video calling app** where the people could connect virtually through video call and would able to do conversations with other users. The can also schedule task and meetings with other members too.
 
+<a href="https://drive.google.com/drive/u/0/folders/1CNthFvi_Wtyp8V2JXN18udlOarTzRPyP">
+  <img src="https://firebasestorage.googleapis.com/v0/b/baithak-4a1fe.appspot.com/o/android-ver1.svg?alt=media&token=b22cc972-c33f-4d7f-910f-07bc17e9b20e" />
+</a>
 
 ## Demo
 
