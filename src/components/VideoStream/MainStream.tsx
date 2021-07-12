@@ -207,7 +207,8 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 10,
     alignItems: 'flex-end',
-    marginTop: -50,
+    position: 'absolute',
+    bottom: 5,
   },
 });
 
