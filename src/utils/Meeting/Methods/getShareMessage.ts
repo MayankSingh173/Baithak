@@ -15,7 +15,7 @@ Created At: ${moment(baithak.createAt).format('MMMM Do YYYY, h:mm:ss a')}
 
 Joining link: ${link}
 
-You can also join through following credentials
+You can also join with following credentials
 
 Baithak Id: ${baithak.meetId}
 Password: ${baithak.password}
@@ -44,7 +44,7 @@ Join At: ${moment(joinOn).format('MMMM Do YYYY, h:mm:ss a')}
 
 Joining link: ${link}
 
-You can also join through following credentials
+You can also join with following credentials
   
 Baithak Id: ${baithak.meetId}
 Password: ${baithak.password}
