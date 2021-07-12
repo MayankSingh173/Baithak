@@ -36,6 +36,8 @@ import {createDM} from '../../utils/Messages/Group/onCreateGroup';
 import Toast from 'react-native-toast-message';
 import BackHeader from '../../components/Headers/BackHeader/BackHeader';
 import SelectImage from '../../components/Modals/SelectImage/SelectImage';
+import {FEEDBACK_LINK} from '../../constants/Links/links';
+import {onShareInvite} from '../../utils/User/Methods/onShareInvite';
 
 const ProfileScreen = (props: any) => {
   //is myProfile is false is means we are seeing others profile screen
@@ -188,11 +190,7 @@ const ProfileScreen = (props: any) => {
           {myProfile && (
             <TouchableOpacity
               style={styles.inviteView}
-              onPress={() =>
-                Linking.openURL(
-                  'https://drive.google.com/drive/folders/1CNthFvi_Wtyp8V2JXN18udlOarTzRPyP?usp=sharing',
-                )
-              }>
+              onPress={() => onShareInvite(user.name)}>
               <Icon
                 name="share-outline"
                 fill={theme === 'dark' ? 'white' : 'black'}
@@ -206,9 +204,7 @@ const ProfileScreen = (props: any) => {
           {myProfile && (
             <TouchableOpacity
               style={[styles.inviteView, {marginTop: 20}]}
-              onPress={() =>
-                Linking.openURL('https://forms.gle/AopoezZbhsaBbLux7')
-              }>
+              onPress={() => Linking.openURL(FEEDBACK_LINK)}>
               <Icon
                 name="edit-2-outline"
                 fill={theme === 'dark' ? 'white' : 'black'}

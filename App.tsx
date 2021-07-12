@@ -17,6 +17,7 @@ import TopBarNotification from './src/components/UI/TopBarNotification/TopBarNot
 import {removeActivityFromUser} from './src/utils/User/Methods/removeActivity';
 import PushNotification from 'react-native-push-notification';
 import {DEFAULT_USER_NAME} from './src/constants/User/User';
+import useDynamicLink from './src/hooks/User/useDynamicLinks';
 
 //Remove warning signs in the app
 LogBox.ignoreAllLogs();

@@ -14,6 +14,7 @@ import moment from 'moment';
 import {getScheduleMessage} from './getShareMessage';
 import {postRequest} from '../../Api/apiRequest';
 import {BASE_URL, NOTIFICATION} from '../../../constants/Api/apiEndPoints';
+import {createMeetLink} from './onSharingMeetLink';
 
 export const createBaithakForSchedule = async (
   members: UserInterface[],
@@ -231,18 +232,34 @@ const formScheduleGroup = async (
         .collection('messages')
         .doc();
 
-      const message = getScheduleMessage(baithak, joinOn, firebaseUser.name);
+      const link = await createMeetLink(baithak.meetId, baithak.password);
 
-      let newMessage: Message = {
-        text: message,
-        uid: firebaseUser.uid,
-        createdAt: createdAt,
-        messageId: messageRef.id,
-      };
+      if (link) {
+        const message = getScheduleMessage(
+          baithak,
+          joinOn,
+          firebaseUser.name,
+          link,
+        );
 
-      await messageRef.set(newMessage);
+        let newMessage: Message = {
+          text: message,
+          uid: firebaseUser.uid,
+          createdAt: createdAt,
+          messageId: messageRef.id,
+        };
 
-      await writeAsync('groups', groupId, {lastMessage: newMessage}, true);
+        await messageRef.set(newMessage);
+
+        await writeAsync('groups', groupId, {lastMessage: newMessage}, true);
+      } else {
+        await firestore()
+          .collection('groups')
+          .doc(groupId)
+          .collection('messages')
+          .doc(messageRef.id)
+          .delete();
+      }
     }
   } catch (error) {
     console.log('Error in creating schedule group', error);

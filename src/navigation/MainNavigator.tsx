@@ -6,12 +6,13 @@ import {FAIL, SUCCESS} from '../constants/RemoteStates/remotestates';
 import AuthStackNavigator from './AuthStackNavigator/AuthStackNavigator';
 import PendingStackNavigator from './PendingStackNavigator/PendingStackNavigator';
 import SplashScreen from 'react-native-splash-screen';
+import useDynamicLink from '../hooks/User/useDynamicLinks';
+import {navigationRef} from './RootNavigation/RootNavigation';
 
 const navigatorTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    // prevent layout blinking when performing navigation
     background: 'transparent',
   },
 };
@@ -28,7 +29,7 @@ const MainNavigator = () => {
   }, [status]);
 
   return (
-    <NavigationContainer theme={navigatorTheme}>
+    <NavigationContainer ref={navigationRef} theme={navigatorTheme}>
       {status === SUCCESS && firebaseUser.uid ? (
         <MainStackNavigator /> //Main App
       ) : status === FAIL || (status === SUCCESS && firebaseUser.uid !== '') ? (
