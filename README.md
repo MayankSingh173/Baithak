@@ -15,6 +15,9 @@ So baithak is a **multi-video calling app** where people can connect virtually t
 
 Here's a demo [link]('')
 
+## App Flow and Screenshots
+
+Here's a app flow [link](https://drive.google.com/file/d/1vIKdk2OoCO1oKxCmdrN8DEhFD8ms1C8G/view?usp=sharing) (Open with diagrams.net for better view)
   
 ## Features
 
