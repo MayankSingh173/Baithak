@@ -27,6 +27,7 @@ import useGetMessagePerm from '../../hooks/Notifications/useGetMessagePerm';
 import ProfileScreen from '../../screens/ProfileScreen/ProfileScreen';
 import AddTaskScreen from '../../screens/AddTaskScreen/AddTaskScreen';
 import ScheduleMeetScreen from '../../screens/Meeting/ScheduleMeetScreen/ScheduleMeetScreen';
+import useDynamicLink from '../../hooks/User/useDynamicLinks';
 
 const Stack = createStackNavigator();
 
@@ -34,6 +35,7 @@ const MainStackNavigator = () => {
   //Hook for saving tokens to firebase user
   useGetMessagePerm();
 
+  useDynamicLink();
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name={MAIN_TAB} component={MainTabNavigator} />

@@ -24,6 +24,7 @@ import {
   updateAudio,
   updateVideo,
 } from '../../utils/Meeting/Methods/updateVideoAndMic';
+import {createMeetLink} from '../../utils/Meeting/Methods/onSharingMeetLink';
 
 interface props {
   appId: string;
@@ -351,10 +352,18 @@ const useStartMeeting = (
   //Method when the user is sharing meet info
   const onShare = async () => {
     try {
+      toggleModal(true);
       if (menuOpen) setMenuOpen(!menuOpen);
       if (meetInfo) toogleMeetInfo(!meetInfo);
-      await Share.share({message: getShareMessage(baithak)});
+
+      const link = await createMeetLink(meetConfig.meetId, meetConfig.password);
+
+      if (link) {
+        await Share.share({message: getShareMessage(baithak, link)});
+      }
+      toggleModal(false);
     } catch (error) {
+      toggleModal(false);
       console.log('Error in sharing', error);
     }
   };

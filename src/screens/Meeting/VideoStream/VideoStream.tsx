@@ -76,6 +76,7 @@ const VideoStream = (props: any) => {
 
   return (
     <Layout style={styles.main}>
+      <ModalActivityIndicator modalVisible={modalVisible} />
       <VideoOptions
         modalVisible={menuOpen}
         onBackDropPress={onClickMenu}
