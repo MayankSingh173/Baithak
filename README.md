@@ -39,7 +39,7 @@ Here's a app flow [link](https://drive.google.com/file/d/1vIKdk2OoCO1oKxCmdrN8DE
     - User can able to start an **instant** baithak.
     
       On starting an instant baithak, they are requested to add a Name and description(optional).  After creating it, the baithak is secured with `Id` and `password` (auto-generated) which they can share with other users through their favourite messaging app.
-    - User can **join** other user's baithak with Id and password.
+    - User can **join** other user's baithak with **joining link** and also with Id and password.
     - They can **schedule** baithak along with other authenticated users.
       
       This feature allows the user to schedule baithak on a particular date and time, and they will get **reminder notifications** at an appropriate time.
@@ -233,7 +233,7 @@ You can also fill the **feedback form** - [link](https://forms.gle/AopoezZbhsaBb
 
  - [Microsoft Engage Mentorship Program 2021](https://microsoft.acehacker.com/engage2021/?mc_cid=70edf59e1b&mc_eid=a6934c0683)
 
-    I would like to thank Microsoft for providing such a great opportunity where I had to learn a lot from mentors [Aditi Jain](https://www.linkedin.com/in/aditi-jain96/) and [Parth Mehra](https://www.linkedin.com/in/parth-mehra-b3116010a/) and through amazing live sessions.
+    I would like to thank Microsoft for providing such a great opportunity where I had to learn a lot from my mentors [Aditi Jain](https://www.linkedin.com/in/aditi-jain96/) and [Parth Mehra](https://www.linkedin.com/in/parth-mehra-b3116010a/) and through amazing live sessions.
  - [React Native](https://github.com/matiassingers/awesome-readme)
  - [Firebase](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
  - [Node.js](https://nodejs.org/en/)
